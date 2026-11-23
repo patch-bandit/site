@@ -1,5 +1,5 @@
 ---
-title: "CSS star rating with no JavaScript (keyboard friendly, code to copy)"
+title: "CSS star rating with no JavaScript (keyboard ready)"
 h1: "CSS star rating with no JavaScript"
 description: "A CSS star rating built from radio buttons: click or use the arrow keys, screen readers get real labels, and it needs no script. Demo and code to copy."
 phrase: "css star rating"

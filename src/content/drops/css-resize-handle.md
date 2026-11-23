@@ -1,7 +1,7 @@
 ---
-title: "CSS resize handle: the resize property and a custom handle (demos)"
+title: "CSS resize handle: native property and custom handle"
 h1: "CSS resize handle: the property and a custom one"
-description: "How a CSS resize handle works: the resize property, how to style its corner, and how to build a custom drag handle that also works with the keyboard. Code to copy."
+description: "How a CSS resize handle works: the resize property, corner styling, and a custom drag handle that works with the keyboard. Live demos and code to copy."
 phrase: "css resize handle"
 date: 2026-11-22
 snack: "Cheese puff"
