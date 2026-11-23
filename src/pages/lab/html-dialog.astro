@@ -1,0 +1,392 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PageHero from '../../components/PageHero.astro';
+import WhyFree from '../../components/WhyFree.astro';
+import DevNote from '../../components/lab/DevNote.astro';
+
+const htmlSnippet = `<!-- Open and close a real modal with zero JavaScript -->
+<button type="button" commandfor="stash-modal"
+  command="show-modal">Open modal</button>
+
+<!-- Optional: add closedby="any" for backdrop click dismiss -->
+<dialog id="stash-modal" closedby="any"
+  aria-labelledby="modal-h">
+  <h2 id="modal-h">Native HTML dialog</h2>
+  <p>Escape closes it, the page behind is inert,
+     and focus returns on close.</p>
+  <button type="button" commandfor="stash-modal"
+    command="close">Close modal</button>
+</dialog>`;
+
+const baseCss = `dialog {
+  margin: auto;
+  width: min(28rem, calc(100vw - 2rem));
+  padding: 1.5rem 1.6rem;
+  border: 2px solid #86e3be;
+  border-radius: 18px;
+  background: #1e1033;
+  color: #fff2de;
+  box-shadow: 0 28px 70px rgb(0 0 0 / 0.72);
+}
+
+dialog::backdrop {
+  background: rgb(14 6 25 / 0.76);
+  backdrop-filter: blur(5px);
+}`;
+
+const startingCss = `/* Animate dialog in and out from display: none (zero JavaScript) */
+@media (prefers-reduced-motion: no-preference) {
+  dialog {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+    transition:
+      opacity 0.24s ease,
+      transform 0.24s ease,
+      overlay 0.24s allow-discrete,
+      display 0.24s allow-discrete;
+  }
+
+  dialog[open] {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  @starting-style {
+    dialog[open] {
+      opacity: 0;
+      transform: translateY(14px) scale(0.96);
+    }
+  }
+
+  dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 0.24s ease,
+      overlay 0.24s allow-discrete,
+      display 0.24s allow-discrete;
+  }
+
+  dialog[open]::backdrop { opacity: 1; }
+
+  @starting-style {
+    dialog[open]::backdrop { opacity: 0; }
+  }
+}`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'HTML dialog modal with zero JavaScript',
+  datePublished: '2026-11-22',
+  url: 'https://patchbandit.com/lab/html-dialog/',
+};
+---
+<Base
+  title="HTML dialog modal with zero JavaScript: commandfor and @starting-style"
+  description="Build an accessible HTML dialog modal with zero JavaScript using commandfor, @starting-style, and ::backdrop, plus an optional closedby=&quot;any&quot; toggle. Live demo and code."
+  schema={schema}
+  ogType="article"
+>
+  <PageHero art="/art/raccoon-smirk.svg" alt="Snick the raccoon opening a native HTML modal dialog" tone="coral">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Donut hole · 2026-11-22</p>
+    <h1>HTML dialog modal with zero JavaScript</h1>
+    <p class="lead">An HTML dialog element gives you a real accessible modal—top-layer stacking, an inert background, a blurred backdrop, and Escape to close—straight from the browser. Pair it with declarative invoker commands (<code>commandfor</code>) and <code>@starting-style</code>, and the whole HTML modal opens, animates from <code>display: none</code>, and closes with zero lines of JavaScript.</p>
+    <p class="story">Delete the modal library and let the browser handle the trap.</p>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="dlg-play-h">
+      <div class="wrap cols2 wide-right top dlg-lab">
+        <div>
+          <h2 id="dlg-play-h">Try the zero-script modal</h2>
+          <p>Press the launch button to open a real <code>&lt;dialog&gt;</code> modal driven solely by <code>commandfor</code> and <code>command="show-modal"</code>. Notice how the page behind blurs out, keyboard focus moves straight inside, and <kbd>Esc</kbd> returns focus to the button you clicked.</p>
+          <p>Use the optional <code>closedby="any"</code> switch in the launchpad if you also want clicks on the dimmed backdrop to close the modal.</p>
+          <ul class="dlg-checks">
+            <li><strong>Zero JavaScript:</strong> no <code>showModal()</code> boilerplate and no click-outside listener.</li>
+            <li><strong>Smooth <code>display: none</code> fade:</strong> CSS <code>@starting-style</code> handles both entry and exit.</li>
+            <li><strong>Reduced motion safe:</strong> visitors who prefer reduced motion get an instant, steady open and close.</li>
+          </ul>
+        </div>
+
+        <div class="card dlg-pad">
+          <p class="tag">Interactive modal launchpad</p>
+          <h3>Choose backdrop behavior, then launch</h3>
+
+          <fieldset class="dlg-toggle">
+            <legend class="mono small">Optional: closedby="any" light dismiss</legend>
+            <div class="dlg-pills">
+              <input type="radio" name="dlg-mode" id="dlg-strict" checked />
+              <label for="dlg-strict">Button or Esc only (default)</label>
+              <input type="radio" name="dlg-mode" id="dlg-any" />
+              <label for="dlg-any">Backdrop click too (closedby="any")</label>
+            </div>
+          </fieldset>
+
+          <p class="dlg-tag-preview mono" aria-live="polite">
+            <span class="tp-strict">&lt;dialog id="stash-modal"&gt;</span>
+            <span class="tp-any">&lt;dialog id="stash-modal" closedby="any"&gt;</span>
+          </p>
+
+          <div class="dlg-launch-row">
+            <button type="button" class="btn launch-strict" commandfor="demo-dlg-strict" command="show-modal">Open zero-JS modal</button>
+            <button type="button" class="btn launch-any" commandfor="demo-dlg-any" command="show-modal">Open zero-JS modal (closedby="any")</button>
+          </div>
+
+          <p class="muted small dlg-closedby-note">
+            <strong>Optional attribute note:</strong> <code>closedby="any"</code> is supported in Chrome 134+, Edge 134+, and Firefox 141+, and is not yet in Safari (Safari ignores the attribute while keeping <kbd>Esc</kbd> and the close button working normally).
+          </p>
+        </div>
+      </div>
+
+      <dialog id="demo-dlg-strict" class="pb-dialog" aria-labelledby="dlg-strict-h">
+        <p class="tag">Zero JavaScript · default modal</p>
+        <h3 id="dlg-strict-h">Native HTML dialog in the top layer</h3>
+        <p>Opened with <code>commandfor="demo-dlg-strict"</code> and <code>command="show-modal"</code>, then faded in from <code>display: none</code> with CSS <code>@starting-style</code>.</p>
+        <p>The page behind this box is inert right now. Press <kbd>Esc</kbd> or use the close button below to dismiss it and return focus cleanly.</p>
+        <div class="btn-row">
+          <button type="button" class="btn alt" commandfor="demo-dlg-strict" command="close">Close modal</button>
+        </div>
+      </dialog>
+
+      <dialog id="demo-dlg-any" class="pb-dialog is-any" closedby="any" aria-labelledby="dlg-any-h">
+        <p class="tag">Zero JavaScript · closedby="any"</p>
+        <h3 id="dlg-any-h">Backdrop light-dismiss modal</h3>
+        <p>This <code>&lt;dialog&gt;</code> adds <code>closedby="any"</code>, so clicking the blurred backdrop outside this box closes it alongside <kbd>Esc</kbd> and the close button.</p>
+        <p>In Safari (where <code>closedby</code> is not yet supported), the browser safely ignores that attribute and keeps <kbd>Esc</kbd> and the button below working.</p>
+        <div class="btn-row">
+          <button type="button" class="btn" commandfor="demo-dlg-any" command="close">Close modal</button>
+        </div>
+      </dialog>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="parts-dlg-h">
+      <div class="wrap">
+        <div class="split-head">
+          <h2 id="parts-dlg-h">Four native pieces behind a CSS modal</h2>
+          <p class="muted">Putting these four standard features together replaces focus-trap scripts, z-index battles, and transition state timers.</p>
+        </div>
+
+        <ul class="grid g2 sub sub4">
+          <li class="card">
+            <p class="num">01</p>
+            <h3>The HTML dialog element</h3>
+            <p>When opened as a modal, <code>&lt;dialog&gt;</code> jumps into the browser's top layer above sticky headers, marks the rest of the page inert, and renders a styleable <code>::backdrop</code>.</p>
+          </li>
+          <li class="card">
+            <p class="num">02</p>
+            <h3>Declarative invoker commands</h3>
+            <p>Putting <code>commandfor="id"</code> and <code>command="show-modal"</code> or <code>command="close"</code> right on a <code>&lt;button&gt;</code> replaces <code>addEventListener</code> and <code>showModal()</code> scripts.</p>
+          </li>
+          <li class="card">
+            <p class="num">03</p>
+            <h3>Animate display: none with @starting-style</h3>
+            <p>Because closed dialogs are <code>display: none</code>, CSS <code>@starting-style</code> sets the opening frame while <code>allow-discrete</code> transitions <code>overlay</code> and <code>display</code> cleanly on close.</p>
+          </li>
+          <li class="card">
+            <p class="num">04</p>
+            <h3>Optional closedby="any"</h3>
+            <p>Want clicking the dimmed backdrop to close the modal too? One HTML attribute adds light dismiss in supporting browsers without wiring a backdrop click handler.</p>
+          </li>
+        </ul>
+
+        <DevNote>
+          <p>Always add <code>type="button"</code> to invoker buttons so a modal inside a form never triggers an accidental submit. To animate both opening and closing, list <code>overlay</code> and <code>display</code> with <code>allow-discrete</code> inside <code>@media (prefers-reduced-motion: no-preference)</code>. If you also need to support browsers older than Safari 26.2 or Firefox 144, pair <code>commandfor</code> with a tiny feature-checked <code>showModal()</code> listener — the underlying <code>&lt;dialog&gt;</code> element has been widely available since 2024.</p>
+        </DevNote>
+      </div>
+    </section>
+
+    <section class="band" data-node aria-labelledby="code-dlg-h">
+      <div class="wrap">
+        <h2 id="code-dlg-h">Copy the HTML dialog and CSS starting-style code</h2>
+        <div class="cols2 top">
+          <div>
+            <CodeBlock label="Zero-JS modal markup (HTML)" code={htmlSnippet} />
+            <CodeBlock label="Modal surface and ::backdrop (CSS)" code={baseCss} />
+          </div>
+          <div>
+            <CodeBlock label="Smooth open and close with @starting-style (CSS)" code={startingCss} />
+            <p class="note">
+              <strong>Browser support (checked 2026-11-22):</strong> The <code>&lt;dialog&gt;</code> element is Baseline Widely Available across Chrome 37+, Edge 79+, Firefox 98+, and Safari 15.4+ (<a href="https://webstatus.dev/features/dialog" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: dialog</a>). Invoker commands (<code>commandfor</code> / <code>command</code>) are Baseline Newly Available since December 2025 across Chrome 135+, Edge 135+, Firefox 144+, and Safari 26.2+ (<a href="https://webstatus.dev/features/invoker-commands" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: invoker-commands</a>). <code>@starting-style</code> is Baseline Newly Available across Chrome 117+, Edge 117+, Safari 17.5+, and Firefox 129+ (<a href="https://webstatus.dev/features/starting-style" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: starting-style</a>). Optional <code>closedby="any"</code> is Chrome 134+, Edge 134+, and Firefox 141+, not yet in Safari (<a href="https://webstatus.dev/features/dialog-closedby" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: dialog-closedby</a>). Tested in Chromium only.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <WhyFree
+      nextHref="/lab/css-accordion/"
+      nextTitle="CSS accordion with native <details name>"
+      nextBlurb="Exclusive FAQ drawers with ::details-content and progressive interpolate-size height animation."
+    />
+  </div>
+</Base>
+
+<style>
+  .dlg-checks {
+    padding-inline-start: 1.25rem;
+    margin: 1rem 0 0;
+  }
+  .dlg-checks li + li {
+    margin-top: 0.55rem;
+  }
+
+  .dlg-pad {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+  .dlg-pad h3 {
+    margin-bottom: 0;
+  }
+  .dlg-toggle {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .dlg-toggle legend {
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+  .dlg-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .dlg-pills input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .dlg-pills label {
+    font: 600 0.84rem/1.2 var(--mono);
+    padding: 0.6rem 0.9rem;
+    min-height: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 2px solid var(--rim-strong);
+    cursor: pointer;
+  }
+  .dlg-pills input:checked + label {
+    background: var(--k-mint);
+    color: var(--k-ink);
+    border-color: var(--k-ink);
+  }
+  .dlg-pills input:focus-visible + label {
+    outline: 3px solid var(--k-gold);
+    outline-offset: 2px;
+  }
+
+  .dlg-tag-preview {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    background: var(--code-bg);
+    color: var(--k-mint-glow);
+    border: 1px solid var(--rim-strong);
+    font-size: 0.86rem;
+    overflow-wrap: anywhere;
+  }
+  .tp-any,
+  .launch-any {
+    display: none;
+  }
+  .dlg-lab:has(#dlg-any:checked) .tp-strict,
+  .dlg-lab:has(#dlg-any:checked) .launch-strict {
+    display: none;
+  }
+  .dlg-lab:has(#dlg-any:checked) .tp-any {
+    display: inline;
+  }
+  .dlg-lab:has(#dlg-any:checked) .launch-any {
+    display: inline-flex;
+  }
+
+  .dlg-launch-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .dlg-closedby-note {
+    margin: auto 0 0;
+  }
+
+  /* Live native dialogs */
+  .pb-dialog {
+    margin: auto;
+    width: min(30rem, calc(100vw - 2rem));
+    padding: 1.55rem 1.65rem;
+    border: 2px solid var(--k-mint);
+    border-radius: 18px;
+    background: var(--k-deep);
+    color: var(--k-cream);
+    --muted: #d2cae2;
+    --accent: var(--k-mint);
+    box-shadow: 0 28px 70px rgb(0 0 0 / 0.78);
+  }
+  .pb-dialog.is-any {
+    border-color: var(--k-coral);
+    --accent: var(--k-coral);
+  }
+  .pb-dialog h3 {
+    margin-bottom: 0.6rem;
+    color: var(--k-cream);
+  }
+  .pb-dialog p {
+    color: var(--k-cream);
+  }
+  .pb-dialog .tag {
+    color: var(--accent);
+  }
+  .pb-dialog::backdrop {
+    background: rgb(14 6 25 / 0.76);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .pb-dialog {
+      opacity: 0;
+      transform: translateY(14px) scale(0.96);
+      transition:
+        opacity 0.24s ease,
+        transform 0.24s ease,
+        overlay 0.24s allow-discrete,
+        display 0.24s allow-discrete;
+    }
+    .pb-dialog[open] {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    @starting-style {
+      .pb-dialog[open] {
+        opacity: 0;
+        transform: translateY(14px) scale(0.96);
+      }
+    }
+    .pb-dialog::backdrop {
+      opacity: 0;
+      transition: opacity 0.24s ease, overlay 0.24s allow-discrete, display 0.24s allow-discrete;
+    }
+    .pb-dialog[open]::backdrop {
+      opacity: 1;
+    }
+    @starting-style {
+      .pb-dialog[open]::backdrop {
+        opacity: 0;
+      }
+    }
+  }
+</style>

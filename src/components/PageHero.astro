@@ -1,0 +1,43 @@
+---
+// Inner-page hero: night band, words on the left, kit art on the right, a thin skyline along the base.
+// Pass `art` (a path under /art/) and `alt`, or fill the "art" slot with something richer.
+interface Props {
+  art?: string;
+  alt?: string;
+  tone?: 'mint' | 'gold' | 'coral';
+}
+const { art, alt = '', tone = 'mint' } = Astro.props;
+let seed = 11;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+const blocks: { x: number; w: number; h: number }[] = [];
+for (let x = 0; x < 1600; ) { const w = 40 + rnd() * 110; blocks.push({ x, w, h: 18 + rnd() * 70 }); x += w + 3; }
+---
+<section class:list={['page-hero flash', `tone-${tone}`]}>
+  <div class="wrap">
+    <div class="copy"><slot /></div>
+    <div class="art">
+      {Astro.slots.has('art') ? <slot name="art" /> : <img src={art} alt={alt} width="1000" height="1000" />}
+    </div>
+  </div>
+  <svg class="skyline" viewBox="0 0 1600 90" preserveAspectRatio="none" aria-hidden="true">
+    {blocks.map((b) => <rect x={b.x.toFixed(1)} y={(90 - b.h).toFixed(1)} width={b.w.toFixed(1)} height={b.h.toFixed(1)} />)}
+  </svg>
+  <div class="ph-scan" aria-hidden="true"></div>
+</section>
+
+<style>
+  .page-hero { padding-bottom: clamp(3.5rem, 7vw, 6rem); }
+  .copy { min-width: 0; }
+  .copy :global(h1) { font-size: clamp(2.2rem, 5.2vw, 3.9rem); }
+  .art :global(img), .art :global(svg) { display: block; width: 100%; height: auto; }
+  .skyline { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: clamp(2rem, 5vw, 4rem); fill: var(--k-ink); z-index: -1; }
+  .ph-scan { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: url('/art/motif-glitch-scanlines.svg') 0 0 / 480px 240px; opacity: 0.05; }
+  .tone-gold .art::before { background: radial-gradient(circle, rgb(255 200 87 / 0.35), transparent 65%) !important; }
+  .tone-coral .art::before { background: radial-gradient(circle, rgb(255 123 103 / 0.3), transparent 65%) !important; }
+  @media (prefers-reduced-motion: no-preference) {
+    .art:not(:has(.rc-pose)) { animation: ph-float 7s ease-in-out infinite; }
+    .ph-scan { animation: ph-drift 8s linear infinite; }
+  }
+  @keyframes ph-float { 50% { transform: translateY(-10px) rotate(-1deg); } }
+  @keyframes ph-drift { to { background-position: 0 240px; } }
+</style>

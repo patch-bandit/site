@@ -1,0 +1,329 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PageHero from '../../components/PageHero.astro';
+import WhyFree from '../../components/WhyFree.astro';
+import DevNote from '../../components/lab/DevNote.astro';
+
+const cardSnippet = `<div class="deck">
+  <label class="option">
+    <input type="checkbox" />
+    <span>Mint hoodie</span>
+  </label>
+  <label class="option">
+    <input type="checkbox" />
+    <span>Gold flashlight</span>
+  </label>
+  <label class="option">
+    <input type="checkbox" />
+    <span>Pocket wrench</span>
+  </label>
+</div>
+
+<style>
+  /* 1. Style the parent card when its checkbox is checked */
+  .option:has(input:checked) {
+    border-color: #86e3be;
+    background: #2b1a42;
+    transform: translateY(-3px);
+  }
+
+  /* 2. Soften unchecked siblings once at least one card is checked */
+  .deck:has(input:checked) .option:not(:has(input:checked)) {
+    border-style: dashed;
+    background: #140a22;
+    transform: scale(0.98);
+  }
+</style>`;
+
+const siblingCss = `/* Spotlight the hovered or keyboard-focused item and quiet its siblings */
+.row-list:has(.row-btn:hover, .row-btn:focus-visible)
+  .row-btn:not(:hover, :focus-visible) {
+  border-color: transparent;
+  background: #140a22;
+}
+
+.row-btn:hover,
+.row-btn:focus-visible {
+  border-color: #86e3be;
+  background: #2b1a42;
+}`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'CSS parent selector with :has()',
+  datePublished: '2026-11-22',
+  url: 'https://patchbandit.com/lab/css-parent-selector/',
+};
+---
+<Base
+  title="CSS parent selector with :has(): card highlight and sibling dimming"
+  description="Use the CSS parent selector :has() to style a card when a checkbox inside it is checked and dim its quiet siblings, with zero JavaScript. Live demos and code to copy."
+  schema={schema}
+  ogType="article"
+>
+  <PageHero art="/art/raccoon-master.svg" alt="Snick the raccoon inspecting code" tone="mint">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Peanut · 2026-11-22</p>
+    <h1>CSS parent selector with :has()</h1>
+    <p class="lead">A CSS parent selector lets a box change its own look based on what is happening inside it, like a card lighting up when you check its box or dimming the other cards in a row. For twenty years that took JavaScript; now <code>:has()</code> does it in one line of CSS.</p>
+    <p class="story">No toggle classes, no click listeners, no extra script bundle.</p>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="deck-h">
+      <div class="wrap">
+        <div class="split-head">
+          <h2 id="deck-h">Check a card, watch the parent and siblings react</h2>
+          <p class="muted">Click any card below (or tab to a checkbox and press <kbd>Space</kbd>). The checked parent lights up with a mint rim while unchecked siblings step back into dashed frames — zero JavaScript.</p>
+        </div>
+
+        <div class="pick-stage">
+          <div class="grid g3 sub sub4 pick-deck" role="group" aria-label="Selectable kit cards using CSS :has()">
+            <label class="card pick-card" for="kit-1">
+              <span class="pick-top">
+                <input type="checkbox" id="kit-1" />
+                <span class="pick-badge mono">
+                  <span class="st-off">Unchecked</span>
+                  <span class="st-on">Selected</span>
+                </span>
+              </span>
+              <h3>QR generator</h3>
+              <p>Builds SVG and PNG codes right in your browser with no account and no tracking links.</p>
+              <span class="pick-hint mono small">Parent matches <code>:has(input:checked)</code></span>
+            </label>
+
+            <label class="card pick-card" for="kit-2">
+              <span class="pick-top">
+                <input type="checkbox" id="kit-2" />
+                <span class="pick-badge mono">
+                  <span class="st-off">Unchecked</span>
+                  <span class="st-on">Selected</span>
+                </span>
+              </span>
+              <h3>Photo stripper</h3>
+              <p>Clears hidden camera tags and location coordinates locally before you share a picture.</p>
+              <span class="pick-hint mono small">Parent matches <code>:has(input:checked)</code></span>
+            </label>
+
+            <label class="card pick-card" for="kit-3">
+              <span class="pick-top">
+                <input type="checkbox" id="kit-3" />
+                <span class="pick-badge mono">
+                  <span class="st-off">Unchecked</span>
+                  <span class="st-on">Selected</span>
+                </span>
+              </span>
+              <h3>Text diff check</h3>
+              <p>Compares two drafts side by side on your own screen without uploading private notes.</p>
+              <span class="pick-hint mono small">Parent matches <code>:has(input:checked)</code></span>
+            </label>
+          </div>
+
+          <p class="deck-status mono" aria-live="polite">
+            <span class="ds-none">0 cards checked — all three cards sit at full weight.</span>
+            <span class="ds-some">Selection active — checked parent is highlighted and unchecked siblings step back.</span>
+            <span class="ds-all">All three cards checked — every parent matches :has(input:checked).</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="how-h">
+      <div class="wrap cols2 wide-right top">
+        <div>
+          <h2 id="how-h">How the CSS :has() selector works</h2>
+          <p>Normal CSS only looks down the page tree: from a parent to its children, or from one item to the next sibling. The <strong>CSS <code>:has()</code> selector</strong> lets you look up and sideways too.</p>
+          <ol class="steps">
+            <li><strong>Style the parent:</strong> <code>.card:has(input:checked)</code> matches the card itself whenever a checked input sits inside it.</li>
+            <li><strong>Quiet the siblings:</strong> <code>.deck:has(input:checked) .card:not(:has(input:checked))</code> checks whether the whole group has an active pick, then softens only the cards that are not checked.</li>
+            <li><strong>Drive status bars:</strong> Even the readout line under the cards above flips using pure CSS <code>:has()</code> — no script touches the DOM.</li>
+          </ol>
+
+          <DevNote>
+            <p>Keep two rules in mind when shipping <code>:has()</code>: first, you cannot nest one <code>:has()</code> inside another <code>:has()</code>; second, <code>:has()</code> takes the specificity of its strongest selector inside the parentheses. Also avoid dimming siblings with low <code>opacity</code> alone — shifting border style and surface tone keeps text contrast readable for everyone.</p>
+          </DevNote>
+        </div>
+
+        <div class="card dim-card">
+          <h3>Sibling dimming on hover or focus</h3>
+          <p>Move your pointer across the rows below (or press <kbd>Tab</kbd> through them). The active row steps forward while its siblings tuck back quietly.</p>
+          <div class="dim-list" role="group" aria-label="Hover and focus sibling dimming demo">
+            <button type="button" class="dim-row">
+              <span class="mono dim-num">01</span>
+              <span><strong>Zero tracking scripts</strong> — nothing phones home when you click.</span>
+            </button>
+            <button type="button" class="dim-row">
+              <span class="mono dim-num">02</span>
+              <span><strong>Keyboard friendly</strong> — works on <code>:focus-visible</code> as well as hover.</span>
+            </button>
+            <button type="button" class="dim-row">
+              <span class="mono dim-num">03</span>
+              <span><strong>Readable when dimmed</strong> — keeps high contrast instead of fading text out.</span>
+            </button>
+            <button type="button" class="dim-row">
+              <span class="mono dim-num">04</span>
+              <span><strong>No wrapper script</strong> — four lines of CSS handle every row in the list.</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" data-node aria-labelledby="code-h">
+      <div class="wrap">
+        <h2 id="code-h">Copy the CSS :has() code</h2>
+        <div class="cols2 top">
+          <CodeBlock label="Parent card highlight and sibling dimming (HTML and CSS)" code={cardSnippet} />
+          <div>
+            <CodeBlock label="Hover and keyboard sibling dimming (CSS)" code={siblingCss} />
+            <p class="note"><strong>Browser support:</strong> The CSS <code>:has()</code> selector is Baseline Widely Available across current Chrome, Edge, Safari, and Firefox (supported in all major engines since late 2023). Older browsers ignore the <code>:has()</code> rule while checkboxes and buttons keep working normally. Tested in Chromium only.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <WhyFree
+      nextHref="/lab/css-animate-on-scroll/"
+      nextTitle="CSS animate on scroll without JavaScript"
+      nextBlurb="Tie card motion and scroll progress bars straight to the scrollbar with animation-timeline: view()."
+    />
+  </div>
+</Base>
+
+<style>
+  .pick-stage {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .pick-card {
+    cursor: pointer;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--rim-strong);
+  }
+  .pick-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .pick-top input {
+    width: 1.35rem;
+    height: 1.35rem;
+    accent-color: var(--k-mint);
+    cursor: pointer;
+    margin: 0;
+  }
+  .pick-badge {
+    font-size: 0.78rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 1px solid var(--rim-strong);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .st-on { display: none; }
+  .pick-card:has(input:checked) .st-off { display: none; }
+  .pick-card:has(input:checked) .st-on { display: inline; }
+  .pick-card:has(input:checked) .pick-badge {
+    background: var(--k-mint);
+    color: var(--k-ink);
+    border-color: var(--k-ink);
+    font-weight: 700;
+  }
+  .pick-card:has(input:checked) {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+  }
+  .pick-deck:has(input:checked) .pick-card:not(:has(input:checked)) {
+    border-style: dashed;
+    background: var(--surface-2);
+    box-shadow: none;
+  }
+  .pick-hint {
+    color: var(--muted);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .pick-card {
+      transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .pick-card:has(input:checked) {
+      transform: translateY(-4px);
+    }
+    .pick-deck:has(input:checked) .pick-card:not(:has(input:checked)) {
+      transform: scale(0.985);
+    }
+  }
+
+  .deck-status {
+    margin: 0;
+    padding: 0.85rem 1.1rem;
+    border-radius: 12px;
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 1px solid var(--rim-strong);
+    font-size: 0.88rem;
+  }
+  .ds-some, .ds-all { display: none; }
+  .pick-stage:has(input:checked) .ds-none { display: none; }
+  .pick-stage:has(input:checked):not(:has(#kit-1:checked):has(#kit-2:checked):has(#kit-3:checked)) .ds-some { display: inline; }
+  .pick-stage:has(#kit-1:checked):has(#kit-2:checked):has(#kit-3:checked) .ds-all { display: inline; }
+
+  .steps {
+    padding-inline-start: 1.3rem;
+    margin: 0;
+  }
+  .steps li + li {
+    margin-top: 0.65rem;
+  }
+
+  .dim-list {
+    display: grid;
+    gap: 0.65rem;
+    margin-top: 1rem;
+  }
+  .dim-row {
+    width: 100%;
+    text-align: left;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.8rem;
+    align-items: baseline;
+    font: 400 0.96rem/1.5 var(--sans);
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 2px solid rgb(194 255 230 / 0.28);
+    cursor: pointer;
+  }
+  .dim-num {
+    color: var(--k-mint);
+    font-weight: 600;
+  }
+  .dim-list:has(.dim-row:hover, .dim-row:focus-visible) .dim-row:not(:hover, :focus-visible) {
+    border-color: rgb(194 255 230 / 0.12);
+    border-style: dashed;
+    background: #140a22;
+  }
+  .dim-row:hover,
+  .dim-row:focus-visible {
+    border-color: var(--k-mint);
+    background: var(--k-night);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .dim-row {
+      transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+    }
+    .dim-row:hover,
+    .dim-row:focus-visible {
+      transform: translateX(4px);
+    }
+  }
+</style>

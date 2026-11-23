@@ -1,0 +1,437 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PageHero from '../../components/PageHero.astro';
+import WhyFree from '../../components/WhyFree.astro';
+import DevNote from '../../components/lab/DevNote.astro';
+
+const shapes = [
+  {
+    id: 'round',
+    label: 'round',
+    title: 'Round',
+    css: 'corner-shape: round;',
+    blurb: 'Standard circular arc (superellipse 1). This is what every browser draws today.',
+    path: 'M 26 4 H 74 A 22 22 0 0 1 96 26 V 74 A 22 22 0 0 1 74 96 H 26 A 22 22 0 0 1 4 74 V 26 A 22 22 0 0 1 26 4 Z',
+  },
+  {
+    id: 'squircle',
+    label: 'squircle',
+    title: 'Squircle',
+    css: 'corner-shape: squircle;',
+    blurb: 'Continuous smooth curve (superellipse 2) that softens the seam between straight edge and corner.',
+    path: 'M 50 4 C 84 4 96 16 96 50 C 96 84 84 96 50 96 C 16 96 4 84 4 50 C 4 16 16 4 50 4 Z',
+  },
+  {
+    id: 'scoop',
+    label: 'scoop',
+    title: 'Scoop',
+    css: 'corner-shape: scoop;',
+    blurb: 'Inward ticket-stub curve (superellipse -1) that bites cleanly into each corner.',
+    path: 'M 26 4 H 74 A 22 22 0 0 0 96 26 V 74 A 22 22 0 0 0 74 96 H 26 A 22 22 0 0 0 4 74 V 26 A 22 22 0 0 0 26 4 Z',
+  },
+  {
+    id: 'bevel',
+    label: 'bevel',
+    title: 'Bevel',
+    css: 'corner-shape: bevel;',
+    blurb: 'Straight diagonal chamfer (superellipse 0) for crisp octagonal badges and hardware tags.',
+    path: 'M 26 4 H 74 L 96 26 V 74 L 74 96 H 26 L 4 74 V 26 Z',
+  },
+  {
+    id: 'notch',
+    label: 'notch',
+    title: 'Notch',
+    css: 'corner-shape: notch;',
+    blurb: 'Right-angle step cut inward (superellipse -infinity) for pixel-inspired frames.',
+    path: 'M 26 4 H 74 V 26 H 96 V 74 H 74 V 96 H 26 V 74 H 4 V 26 H 26 Z',
+  },
+  {
+    id: 'super',
+    label: 'superellipse(1.5)',
+    title: 'Superellipse',
+    css: 'corner-shape: superellipse(1.5);',
+    blurb: 'Pick any custom bend between round (1) and squircle (2), or negative values for softer scoops.',
+    path: 'M 50 4 C 80 4 96 20 96 50 C 96 80 80 96 50 96 C 20 96 4 80 4 50 C 4 20 20 4 50 4 Z',
+  },
+];
+
+const cssCornerShape = `/* Always set border-radius too: corner-shape sculpts that radius */
+.squircle-card {
+  border-radius: 36px;
+}
+
+/* Progressive enhancement: browsers without corner-shape keep border-radius */
+@supports (corner-shape: squircle) {
+  .squircle-card {
+    corner-shape: squircle;
+  }
+}
+
+/* Other keywords: round | squircle | scoop | bevel | notch | superellipse(1.5) */`;
+
+const cssFallback = `<!-- Exact squircle in browsers without corner-shape via inline SVG clip-path -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <clipPath id="sq-clip" clipPathUnits="objectBoundingBox">
+      <path d="M 0.5,0 C 0.88,0 1,0.12 1,0.5 C 1,0.88 0.88,1 0.5,1 C 0.12,1 0,0.88 0,0.5 C 0,0.12 0.12,0 0.5,0 Z" />
+    </clipPath>
+  </defs>
+</svg>
+
+<style>
+  .squircle-box {
+    width: 10rem; height: 10rem;
+    background: #86e3be;
+    border-radius: 28%;            /* baseline fallback */
+    clip-path: url(#sq-clip);      /* works in Chrome, Safari, and Firefox */
+  }
+  @supports (corner-shape: squircle) {
+    .squircle-box {
+      clip-path: none;
+      border-radius: 44px;
+      corner-shape: squircle;
+    }
+  }
+</style>`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'Squircle CSS with corner-shape',
+  datePublished: '2026-11-22',
+  url: 'https://patchbandit.com/lab/css-squircle/',
+};
+---
+<Base
+  title="Squircle CSS with corner-shape: round, scoop, bevel, notch, and fallback"
+  description="Build squircle CSS shapes with the new corner-shape property: compare round, squircle, scoop, bevel, notch, and superellipse() live, with a @supports check and plain fallback."
+  schema={schema}
+  ogType="article"
+>
+  <PageHero art="/art/raccoon-smirk.svg" alt="Snick the raccoon with a knowing smirk" tone="coral">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Apple slice · 2026-11-22</p>
+    <h1>Squircle CSS with corner-shape</h1>
+    <p class="lead">Squircle CSS lets you turn a plain rounded box into a smooth app-icon squircle, a ticket-stub scoop, a chamfered bevel, or a crisp notch using one new CSS property: <code>corner-shape</code>. Test all six shapes below with zero JavaScript, plus a live check for your browser.</p>
+    <p class="story">A sharper corner trick, without hand-coding twenty path points.</p>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="sq-play-h">
+      <div class="wrap">
+        <div class="support-bar" role="status">
+          <span class="sup-pill sup-yes mono">This browser supports <code>corner-shape</code> natively — live tiles below use real CSS.</span>
+          <span class="sup-pill sup-no mono">This browser does not support <code>corner-shape</code> yet — live tiles show the plain <code>border-radius</code> fallback beside SVG silhouettes.</span>
+        </div>
+
+        <div class="cols2 wide-left top sq-lab">
+          <div class="card">
+            <h2 id="sq-play-h">Pick a CSS corner-shape</h2>
+            <p>Choose a shape and corner size below. The whole switcher runs on radio buttons and CSS <code>:has()</code> — no script at all.</p>
+
+            <fieldset class="pick-group">
+              <legend class="mono small">Corner shape</legend>
+              <div class="pill-grid">
+                <input type="radio" name="cs-shape" id="sh-squircle" checked />
+                <label for="sh-squircle">squircle</label>
+                <input type="radio" name="cs-shape" id="sh-round" />
+                <label for="sh-round">round</label>
+                <input type="radio" name="cs-shape" id="sh-scoop" />
+                <label for="sh-scoop">scoop</label>
+                <input type="radio" name="cs-shape" id="sh-bevel" />
+                <label for="sh-bevel">bevel</label>
+                <input type="radio" name="cs-shape" id="sh-notch" />
+                <label for="sh-notch">notch</label>
+                <input type="radio" name="cs-shape" id="sh-super" />
+                <label for="sh-super">superellipse(1.5)</label>
+              </div>
+            </fieldset>
+
+            <fieldset class="pick-group">
+              <legend class="mono small">Corner radius</legend>
+              <div class="pill-grid">
+                <input type="radio" name="cs-rad" id="rad-24" />
+                <label for="rad-24">24px</label>
+                <input type="radio" name="cs-rad" id="rad-44" checked />
+                <label for="rad-44">44px</label>
+                <input type="radio" name="cs-rad" id="rad-50" />
+                <label for="rad-50">50%</label>
+              </div>
+            </fieldset>
+
+            <p class="live-rule mono" aria-live="polite">
+              <span class="rule-shape rs-squircle">corner-shape: squircle;</span>
+              <span class="rule-shape rs-round">corner-shape: round;</span>
+              <span class="rule-shape rs-scoop">corner-shape: scoop;</span>
+              <span class="rule-shape rs-bevel">corner-shape: bevel;</span>
+              <span class="rule-shape rs-notch">corner-shape: notch;</span>
+              <span class="rule-shape rs-super">corner-shape: superellipse(1.5);</span>
+              <span class="rule-rad rr-24"> border-radius: 24px;</span>
+              <span class="rule-rad rr-44"> border-radius: 44px;</span>
+              <span class="rule-rad rr-50"> border-radius: 50%;</span>
+            </p>
+          </div>
+
+          <div class="sq-stage" role="group" aria-label="Live corner-shape preview beside standard border-radius">
+            <div class="sq-pair">
+              <div class="sq-slot">
+                <div class="sq-tile sq-live" aria-hidden="true"></div>
+                <p class="mono small">Active <code>corner-shape</code></p>
+              </div>
+              <div class="sq-slot">
+                <div class="sq-tile sq-plain" aria-hidden="true"></div>
+                <p class="mono small">Plain <code>border-radius</code></p>
+              </div>
+            </div>
+            <p class="sq-cap small">Notice how both boxes share the exact same <code>border-radius</code>. In a supporting browser, the left tile sculpts its corners to match your pick while the right tile stays a standard circle arc.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="all-h">
+      <div class="wrap">
+        <div class="split-head">
+          <h2 id="all-h">All six CSS corner-shape keywords</h2>
+          <p class="muted">Each card pairs a live CSS box (left) with an SVG geometry silhouette (right) so you can compare the exact curve even in browsers that do not support <code>corner-shape</code> yet.</p>
+        </div>
+
+        <ul class="grid g3 sub sub3">
+          {shapes.map((s) => (
+            <li class="card">
+              <p class="tag">{s.label}</p>
+              <h3>{s.title}</h3>
+              <div class="sq-card-body">
+                <div class="sq-mini-pair" aria-hidden="true">
+                  <div class={`sq-mini m-${s.id}`}></div>
+                  <svg class="sq-ref" viewBox="0 0 100 100" width="64" height="64">
+                    <path d={s.path} />
+                  </svg>
+                </div>
+                <p>{s.blurb}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="band" data-node aria-labelledby="code-h">
+      <div class="wrap cols2 top">
+        <div>
+          <h2 id="code-h">Progressive CSS squircle</h2>
+          <CodeBlock label="Progressive corner-shape (CSS)" code={cssCornerShape} />
+          <DevNote>
+            <p><code>corner-shape</code> only works alongside a non-zero <code>border-radius</code>. Every keyword maps to a <code>superellipse(K)</code> number: <code>round</code> is <code>1</code>, <code>squircle</code> is <code>2</code>, <code>bevel</code> is <code>0</code>, <code>scoop</code> is <code>-1</code>, and <code>notch</code> is <code>-infinity</code>. For decorative cards, letting Firefox and Safari keep plain <code>border-radius</code> is usually the cleanest upgrade path.</p>
+          </DevNote>
+        </div>
+
+        <div>
+          <h2>Cross-browser fallback for today</h2>
+          <CodeBlock label="SVG clip-path squircle fallback (HTML and CSS)" code={cssFallback} />
+          <p class="note"><strong>Browser support:</strong> <code>corner-shape</code> is cutting-edge CSS shipping in Chromium (Chrome and Edge 139+). Firefox and Safari do not support it yet and show standard <code>border-radius</code> unless you layer an SVG <code>clip-path</code> fallback like the snippet above. Tested in Chromium only.</p>
+        </div>
+      </div>
+    </section>
+
+    <WhyFree
+      nextHref="/lab/css-parent-selector/"
+      nextTitle="CSS parent selector with :has()"
+      nextBlurb="Make a card light up when its checkbox is checked, and quiet its siblings — no script."
+    />
+  </div>
+</Base>
+
+<style>
+  .support-bar {
+    margin-bottom: 1.5rem;
+  }
+  .sup-pill {
+    display: inline-block;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 2px solid var(--k-gold);
+  }
+  .sup-yes {
+    display: none;
+    border-color: var(--k-mint);
+  }
+  @supports (corner-shape: squircle) {
+    .sup-yes { display: inline-block; }
+    .sup-no { display: none; }
+  }
+
+  .pick-group {
+    border: 0;
+    padding: 0;
+    margin: 1rem 0 0;
+  }
+  .pick-group legend {
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .pill-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .pill-grid input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .pill-grid label {
+    font: 600 0.85rem/1 var(--mono);
+    padding: 0.6rem 0.85rem;
+    min-height: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 2px solid var(--rim-strong);
+    cursor: pointer;
+  }
+  .pill-grid input:checked + label {
+    background: var(--k-mint);
+    color: var(--k-ink);
+    border-color: var(--k-ink);
+  }
+  .pill-grid input:focus-visible + label {
+    outline: 3px solid var(--k-gold);
+    outline-offset: 2px;
+  }
+
+  .live-rule {
+    margin: 1.2rem 0 0;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    background: var(--code-bg);
+    color: var(--k-mint-glow);
+    font-size: 0.86rem;
+    border: 1px solid var(--rim-strong);
+  }
+  .rule-shape, .rule-rad { display: none; }
+  .sq-lab:has(#sh-squircle:checked) .rs-squircle,
+  .sq-lab:has(#sh-round:checked) .rs-round,
+  .sq-lab:has(#sh-scoop:checked) .rs-scoop,
+  .sq-lab:has(#sh-bevel:checked) .rs-bevel,
+  .sq-lab:has(#sh-notch:checked) .rs-notch,
+  .sq-lab:has(#sh-super:checked) .rs-super,
+  .sq-lab:has(#rad-24:checked) .rr-24,
+  .sq-lab:has(#rad-44:checked) .rr-44,
+  .sq-lab:has(#rad-50:checked) .rr-50 { display: inline; }
+
+  .sq-stage {
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 1px solid var(--rim-strong);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.2rem;
+    --live-r: 44px;
+    --live-cs: squircle;
+  }
+  .sq-lab:has(#rad-24:checked) .sq-stage { --live-r: 24px; }
+  .sq-lab:has(#rad-44:checked) .sq-stage { --live-r: 44px; }
+  .sq-lab:has(#rad-50:checked) .sq-stage { --live-r: 50%; }
+  .sq-lab:has(#sh-squircle:checked) .sq-live { corner-shape: squircle; }
+  .sq-lab:has(#sh-round:checked) .sq-live { corner-shape: round; }
+  .sq-lab:has(#sh-scoop:checked) .sq-live { corner-shape: scoop; }
+  .sq-lab:has(#sh-bevel:checked) .sq-live { corner-shape: bevel; }
+  .sq-lab:has(#sh-notch:checked) .sq-live { corner-shape: notch; }
+  .sq-lab:has(#sh-super:checked) .sq-live { corner-shape: superellipse(1.5); }
+
+  .sq-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  .sq-slot {
+    display: grid;
+    justify-items: center;
+    gap: 0.7rem;
+    text-align: center;
+  }
+  .sq-slot p {
+    margin: 0;
+    color: var(--k-cream);
+  }
+  .sq-tile {
+    width: min(100%, 8.5rem);
+    aspect-ratio: 1;
+    border-radius: var(--live-r);
+    border: 3px solid var(--k-cream);
+  }
+  .sq-live {
+    background: var(--k-mint);
+    corner-shape: squircle;
+  }
+  .sq-plain {
+    background: var(--k-violet);
+    corner-shape: round;
+  }
+  .sq-cap {
+    margin: 0;
+    color: #d2cae2;
+  }
+
+  .sq-card-body {
+    display: grid;
+    gap: 0.85rem;
+  }
+  .sq-card-body p {
+    margin: 0;
+  }
+  .sq-mini-pair {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    background: var(--code-bg);
+  }
+  .sq-mini {
+    width: 4rem;
+    height: 4rem;
+    background: var(--k-mint);
+    border: 2px solid var(--k-cream);
+    border-radius: 20px;
+    flex: none;
+  }
+  .m-round { corner-shape: round; }
+  .m-squircle { corner-shape: squircle; }
+  .m-scoop { corner-shape: scoop; }
+  .m-bevel { corner-shape: bevel; }
+  .m-notch { corner-shape: notch; }
+  .m-super { corner-shape: superellipse(1.5); }
+
+  .sq-ref {
+    width: 4rem;
+    height: 4rem;
+    flex: none;
+  }
+  .sq-ref path {
+    fill: none;
+    stroke: var(--k-gold);
+    stroke-width: 5;
+    stroke-linejoin: round;
+  }
+</style>

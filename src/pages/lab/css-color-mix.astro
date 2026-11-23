@@ -1,0 +1,367 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PageHero from '../../components/PageHero.astro';
+import WhyFree from '../../components/WhyFree.astro';
+import DevNote from '../../components/lab/DevNote.astro';
+
+const recipesCss = `:root {
+  --brand: #86e3be;
+}
+
+/* Lighter tint (mix with white) and deeper shade (mix with dark ink) */
+.btn-soft  { background: color-mix(in oklch, var(--brand) 25%, #ffffff); }
+.btn-hover { background: color-mix(in oklch, var(--brand) 82%, #140a22); }
+
+/* Soft see-through ring without splitting hex into RGB numbers */
+.card-ring { border-color: color-mix(in oklch, var(--brand) 35%, transparent); }`;
+
+const spacesCss = `/* Safe fallback first, then color-mix() in your chosen space */
+.swatch {
+  background: #809cc7;
+  background: color-mix(in oklch, #86e3be 50%, #7a55b0);
+}
+
+/* Try different spaces for different blends:
+   in oklch — stays bright and lively through the middle
+   in oklab — smooth perceptual blend without hue swings
+   in srgb  — classic RGB channel average (can look grey in the middle)
+   in hsl   — travels around the color wheel */`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'CSS color-mix() playground',
+  datePublished: '2026-11-22',
+  url: 'https://patchbandit.com/lab/css-color-mix/',
+};
+---
+<Base
+  title="CSS color-mix() playground: mix two colors across color spaces"
+  description="Test CSS color-mix() live with two color pickers and a ratio slider. Compare oklch, oklab, srgb, and hsl side by side, inspect the CSS line, and copy it."
+  schema={schema}
+  ogType="article"
+>
+  <PageHero art="/art/raccoon-celebrate.svg" alt="Snick the raccoon celebrating a fresh color blend" tone="coral">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Gummy bear · 2026-11-22</p>
+    <h1>CSS color-mix() playground</h1>
+    <p class="lead">CSS color-mix() blends two colors right inside your stylesheet, so you can build hover states, soft tints, and dark shades from one brand color without hand-picking hex codes. Pick two colors and slide the mix ratio below to compare four color spaces at once.</p>
+    <p class="story">One base color in, a whole palette out, straight from the browser.</p>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="mix-h">
+      <div class="wrap cols2 wide-left top mix-lab" id="mix-lab" style="--c1:#86e3be; --c2:#7a55b0; --p1:50%;">
+        <div class="card">
+          <h2 id="mix-h">Pick two colors and a ratio</h2>
+          <p>Change either swatch or drag the slider. The browser computes every live blend on the right using native CSS <code>color-mix()</code>.</p>
+
+          <div class="picker-row">
+            <label class="pick-field" for="col-a">
+              <span class="mono small">Color A</span>
+              <span class="pick-ctrl">
+                <input type="color" id="col-a" value="#86e3be" />
+                <span class="mono" id="hex-a">#86e3be</span>
+              </span>
+            </label>
+
+            <label class="pick-field" for="col-b">
+              <span class="mono small">Color B</span>
+              <span class="pick-ctrl">
+                <input type="color" id="col-b" value="#7a55b0" />
+                <span class="mono" id="hex-b">#7a55b0</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="ratio-box">
+            <label class="mono small" for="mix-pct">
+              Mix ratio: <output id="pct-out" for="mix-pct">50% Color A · 50% Color B</output>
+            </label>
+            <input type="range" id="mix-pct" min="0" max="100" step="5" value="50" />
+          </div>
+
+          <div class="preset-row" role="group" aria-label="Color pair presets">
+            <button type="button" class="chip-btn" data-pair="#86e3be,#7a55b0,50">Mint + Violet</button>
+            <button type="button" class="chip-btn" data-pair="#ff7b67,#ffc857,50">Coral + Gold</button>
+            <button type="button" class="chip-btn" data-pair="#00c2ff,#ff4d6d,50">Cyan + Rose</button>
+          </div>
+
+          <p class="live-css mono" id="live-css" aria-live="polite">color-mix(in oklch, #86e3be 50%, #7a55b0)</p>
+        </div>
+
+        <div class="mix-stage" role="group" aria-label="Live color-mix results across four color spaces">
+          <div class="swatch-grid">
+            <div class="swatch-item">
+              <div class="swatch-bar sp-oklch" aria-hidden="true"></div>
+              <p class="mono small"><strong>in oklch</strong> · bright middle</p>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch-bar sp-oklab" aria-hidden="true"></div>
+              <p class="mono small"><strong>in oklab</strong> · smooth blend</p>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch-bar sp-srgb" aria-hidden="true"></div>
+              <p class="mono small"><strong>in srgb</strong> · classic RGB</p>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch-bar sp-hsl" aria-hidden="true"></div>
+              <p class="mono small"><strong>in hsl</strong> · wheel sweep</p>
+            </div>
+          </div>
+
+          <div class="ramps">
+            <p class="mono small ramp-label">5-step blend in <code>oklch</code> (90% to 10% Color A)</p>
+            <div class="ramp-row" aria-hidden="true">
+              <span class="r-ok-90"></span>
+              <span class="r-ok-70"></span>
+              <span class="r-ok-50"></span>
+              <span class="r-ok-30"></span>
+              <span class="r-ok-10"></span>
+            </div>
+
+            <p class="mono small ramp-label">Same 5 steps in <code>srgb</code> (watch the middle)</p>
+            <div class="ramp-row" aria-hidden="true">
+              <span class="r-sr-90"></span>
+              <span class="r-sr-70"></span>
+              <span class="r-sr-50"></span>
+              <span class="r-sr-30"></span>
+              <span class="r-sr-10"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="spaces-h">
+      <div class="wrap">
+        <div class="split-head">
+          <h2 id="spaces-h">Why color spaces give different mixes</h2>
+          <p class="muted">The same two colors at 50% can look crisp in one space and muddy in another. Pick the space that matches the job.</p>
+        </div>
+
+        <ul class="grid g2 sub sub3">
+          <li class="card">
+            <p class="tag">in oklch</p>
+            <h3>Bright, even hover states</h3>
+            <p>Keeps lightness steady as hue shifts, so mixing opposite colors stays vivid instead of sinking into grey. Great default for buttons and accents.</p>
+          </li>
+          <li class="card">
+            <p class="tag">in oklab</p>
+            <h3>Clean tints and shades</h3>
+            <p>Blends straight across perceptual lightness without swinging around the color wheel. Ideal when mixing a brand color with white or dark ink.</p>
+          </li>
+          <li class="card">
+            <p class="tag">in srgb</p>
+            <h3>Classic channel average</h3>
+            <p>Averages red, green, and blue values directly. Familiar from older tools, though opposite hues often dip dark and muted near 50%.</p>
+          </li>
+          <li class="card">
+            <p class="tag">in hsl</p>
+            <h3>Rainbow transitions</h3>
+            <p>Walks around the hue wheel between Color A and Color B, which can jump through extra hues on the way from mint to violet.</p>
+          </li>
+        </ul>
+
+        <DevNote>
+          <p>In cylindrical spaces like <code>oklch</code> and <code>hsl</code>, you can control which way the mix travels around the wheel with <code>in oklch shorter hue</code> (default) or <code>in oklch longer hue</code>. Mixing a CSS custom property with <code>transparent</code> — such as <code>color-mix(in oklch, var(--accent) 20%, transparent)</code> — creates soft tinted surfaces without maintaining separate RGB channel variables.</p>
+        </DevNote>
+      </div>
+    </section>
+
+    <section class="band" data-node aria-labelledby="code-h">
+      <div class="wrap">
+        <h2 id="code-h">Copy the CSS color-mix() recipes</h2>
+        <div class="cols2 top">
+          <CodeBlock label="Tints, shades, and alpha rings (CSS)" code={recipesCss} />
+          <div>
+            <CodeBlock label="Color spaces with a fallback (CSS)" code={spacesCss} />
+            <p class="note"><strong>Browser support:</strong> CSS <code>color-mix()</code> is Baseline Widely Available across current Chrome, Edge, Safari, and Firefox (supported across major browsers since 2023). List a plain hex color one line above it if you need a fallback for much older browsers. Tested in Chromium only.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <WhyFree
+      nextHref="/lab/css-star-rating/"
+      nextTitle="CSS star rating with no JavaScript"
+      nextBlurb="Five radio buttons wearing a costume: keyboard and screen readers work on their own."
+    />
+  </div>
+</Base>
+
+<style>
+  .picker-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+    margin: 1rem 0;
+  }
+  .pick-field {
+    display: grid;
+    gap: 0.45rem;
+    padding: 0.75rem 0.85rem;
+    border-radius: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--rim-strong);
+    cursor: pointer;
+  }
+  .pick-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .pick-ctrl input[type="color"] {
+    width: 2.6rem;
+    height: 2.6rem;
+    padding: 0;
+    border: 2px solid var(--rim-strong);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+  }
+  .ratio-box {
+    display: grid;
+    gap: 0.45rem;
+    margin: 1rem 0;
+  }
+  #mix-pct {
+    width: 100%;
+    accent-color: var(--k-mint);
+    min-height: 2.5rem;
+  }
+  .preset-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .chip-btn {
+    font: 600 0.82rem/1 var(--mono);
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 1px solid var(--rim-strong);
+    border-radius: 999px;
+    padding: 0.55rem 0.85rem;
+    min-height: 2.4rem;
+    cursor: pointer;
+  }
+  .chip-btn:hover {
+    border-color: var(--k-mint);
+    color: var(--k-mint);
+  }
+  .live-css {
+    margin: 0;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    background: var(--code-bg);
+    color: var(--k-mint-glow);
+    border: 1px solid var(--rim-strong);
+    font-size: 0.84rem;
+    overflow-wrap: anywhere;
+  }
+
+  .mix-stage {
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 1px solid var(--rim-strong);
+    border-radius: var(--radius);
+    padding: 1.35rem;
+    align-self: stretch;
+    display: grid;
+    align-content: space-between;
+    gap: 1.35rem;
+  }
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .swatch-item {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .swatch-item p {
+    margin: 0;
+    color: var(--k-cream);
+  }
+  .swatch-bar {
+    height: 4.75rem;
+    border-radius: 12px;
+    border: 2px solid rgb(255 242 222 / 0.35);
+  }
+  .sp-oklch { background: color-mix(in oklch, var(--c1) var(--p1), var(--c2)); }
+  .sp-oklab { background: color-mix(in oklab, var(--c1) var(--p1), var(--c2)); }
+  .sp-srgb  { background: color-mix(in srgb,  var(--c1) var(--p1), var(--c2)); }
+  .sp-hsl   { background: color-mix(in hsl,   var(--c1) var(--p1), var(--c2)); }
+
+  .ramps {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .ramp-label {
+    margin: 0.35rem 0 0;
+    color: #e6dff2;
+  }
+  .ramp-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    height: 2.3rem;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgb(255 242 222 / 0.25);
+  }
+  .r-ok-90 { background: color-mix(in oklch, var(--c1) 90%, var(--c2)); }
+  .r-ok-70 { background: color-mix(in oklch, var(--c1) 70%, var(--c2)); }
+  .r-ok-50 { background: color-mix(in oklch, var(--c1) 50%, var(--c2)); }
+  .r-ok-30 { background: color-mix(in oklch, var(--c1) 30%, var(--c2)); }
+  .r-ok-10 { background: color-mix(in oklch, var(--c1) 10%, var(--c2)); }
+
+  .r-sr-90 { background: color-mix(in srgb, var(--c1) 90%, var(--c2)); }
+  .r-sr-70 { background: color-mix(in srgb, var(--c1) 70%, var(--c2)); }
+  .r-sr-50 { background: color-mix(in srgb, var(--c1) 50%, var(--c2)); }
+  .r-sr-30 { background: color-mix(in srgb, var(--c1) 30%, var(--c2)); }
+  .r-sr-10 { background: color-mix(in srgb, var(--c1) 10%, var(--c2)); }
+</style>
+
+<script>
+  const lab = document.getElementById('mix-lab');
+  const colA = document.getElementById('col-a') as HTMLInputElement | null;
+  const colB = document.getElementById('col-b') as HTMLInputElement | null;
+  const pct = document.getElementById('mix-pct') as HTMLInputElement | null;
+  const hexA = document.getElementById('hex-a');
+  const hexB = document.getElementById('hex-b');
+  const pctOut = document.getElementById('pct-out');
+  const liveCss = document.getElementById('live-css');
+
+  const sync = () => {
+    if (!lab || !colA || !colB || !pct) return;
+    const a = colA.value.toLowerCase();
+    const b = colB.value.toLowerCase();
+    const p = Number(pct.value);
+    lab.style.setProperty('--c1', a);
+    lab.style.setProperty('--c2', b);
+    lab.style.setProperty('--p1', `${p}%`);
+    if (hexA) hexA.textContent = a;
+    if (hexB) hexB.textContent = b;
+    if (pctOut) pctOut.textContent = `${p}% Color A · ${100 - p}% Color B`;
+    if (liveCss) liveCss.textContent = `color-mix(in oklch, ${a} ${p}%, ${b})`;
+  };
+
+  colA?.addEventListener('input', sync);
+  colB?.addEventListener('input', sync);
+  pct?.addEventListener('input', sync);
+  document.querySelectorAll<HTMLButtonElement>('[data-pair]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const [a, b, p] = (btn.dataset.pair ?? '').split(',');
+      if (colA && a) colA.value = a;
+      if (colB && b) colB.value = b;
+      if (pct && p) pct.value = p;
+      sync();
+    });
+  });
+</script>

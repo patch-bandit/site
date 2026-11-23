@@ -1,0 +1,86 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Raccoon from '../../components/Raccoon.astro';
+import { LAB_EXPERIMENTS, STATIC_PAGES } from '../../data/site';
+
+const drops = (await getCollection('drops')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const day = (d: Date) => d.toISOString().slice(0, 10);
+const allDrops = [
+  ...LAB_EXPERIMENTS.map((d) => ({ id: d.id, snack: d.snack, date: d.date, h1: d.h1, summary: d.summary })),
+  ...drops.map((d) => ({ id: d.id, snack: d.data.snack, date: day(d.data.date), h1: d.data.h1, summary: d.data.summary })),
+];
+const page = STATIC_PAGES.find((p) => p.path === '/lab/')!;
+const schema = { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'CSS experiments from the raccoon lab', url: 'https://patchbandit.com/lab/' };
+---
+<Base title={page.title} description="CSS experiments from a raccoon lab: small techniques taken apart and rebuilt, each with a live demo, a plain explanation, and free code you can copy under MIT." schema={schema}>
+  <PageHero tone="mint">
+    <p class="crumbs"><a href="/">The story</a> / The lab</p>
+    <p class="eyebrow">The lab</p>
+    <h1>CSS experiments, taken apart and rebuilt</h1>
+    <p class="lead">These CSS experiments are small techniques we took apart and put back better: each one has a live demo, a plain explanation, and code you can copy. They're the first real things to come out of the stash.</p>
+    <p class="story">Every snippet is MIT licensed. Take any of them and make it better.</p>
+    <Fragment slot="art">
+      <div class="hero-rc">
+        <Raccoon
+          pose="lab"
+          size="min(74vw, 340px)"
+          label="A CSS-drawn raccoon wearing safety goggles and holding a fizzing mint flask with rising bubbles"
+        />
+      </div>
+    </Fragment>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="log-h">
+      <div class="wrap">
+        <div class="split-head rv">
+          <h2 id="log-h">The drop log</h2>
+          <p class="muted">Each experiment is a "snack drop": one technique, one working demo, code you can paste. Newest first, on the shelf.</p>
+        </div>
+        <ol class="grid g3 sub sub3 shelf" aria-label="Snack drops, newest first">
+          {allDrops.map((d, i) => (
+            <li class="card jar glint rv" style={`--i:${i % 3}`}>
+              <p class="jar-label mono"><span>{d.snack}</span><span>{d.date}</span></p>
+              <h3><a href={`/lab/${d.id}/`}>{d.h1}</a></h3>
+              <p>{d.summary}</p>
+            </li>
+          ))}
+        </ol>
+        <div class="board" aria-hidden="true"></div>
+        <p class="muted small under">Only the experiments above exist. More arrive one snack at a time. Want to know why we give them away? <a href="/">Read the story</a>.</p>
+      </div>
+    </section>
+
+    <section class="band night flash" data-node="end" aria-labelledby="art-h">
+      <div class="wrap cols2 wide-right">
+        <div class="art-mini rv">
+          <Raccoon size="min(70vw, 300px)" label="The CSS raccoon, drawn with no image" />
+        </div>
+        <div class="rv" style="--i:1">
+          <p class="eyebrow">Also in the lab</p>
+          <h2 id="art-h">The CSS art raccoon</h2>
+          <p class="lead">The raccoon on the left is not a picture. It is plain boxes, cut with <code>clip-path</code> and outlined with shadows. The page takes it apart, piece by piece, and gives you three tricks to draw your own animal.</p>
+          <p><a class="btn alt" href="/lab/css-art-raccoon/">Take the raccoon apart</a></p>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hero-rc { display: grid; place-items: center; }
+  .shelf { position: relative; z-index: 1; }
+  .jar { border-radius: 30px 30px 18px 18px; padding-top: 2.2rem; }
+  .jar::before { content: ""; position: absolute; left: 22%; right: 22%; top: -0.9rem; height: 1.3rem; border-radius: 8px; background: var(--k-coral); border: 3px solid var(--k-ink); }
+  .jar-label { display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase; background: var(--k-cream); color: var(--k-ink); border: 2px solid var(--k-ink); border-radius: 6px; padding: 0.3rem 0.6rem; margin-bottom: 0.9rem !important; }
+  .board { height: 1.1rem; margin-top: -0.3rem; border-radius: 6px; background: linear-gradient(var(--k-dusk), var(--k-night)); border: 3px solid var(--k-ink); box-shadow: 0 12px 24px -12px rgb(0 0 0 / 0.6); }
+  .under { margin-top: 1.4rem; }
+  .art-mini { display: grid; place-items: center; padding-block: 1rem; }
+  @media (prefers-reduced-motion: no-preference) {
+    .jar:hover { transform: translateY(-6px) rotate(-1.5deg); }
+  }
+</style>

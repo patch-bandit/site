@@ -1,0 +1,289 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PageHero from '../../components/PageHero.astro';
+import WhyFree from '../../components/WhyFree.astro';
+import DevNote from '../../components/lab/DevNote.astro';
+
+const htmlSnippet = `<!-- Auto-dismiss: outside click or Escape closes it -->
+<button type="button" popovertarget="note-auto">Open auto popover</button>
+
+<div id="note-auto" popover="auto" class="pop">
+  <h3>Quick stash note</h3>
+  <p>Click outside or press Escape to close this panel.</p>
+  <button type="button" popovertarget="note-auto" popovertargetaction="hide">Close</button>
+</div>
+
+<!-- Manual: stays open until its own button closes it -->
+<button type="button" popovertarget="note-manual">Open manual popover</button>
+
+<div id="note-manual" popover="manual" class="pop">
+  <h3>Pinned notice</h3>
+  <p>Outside clicks leave this one open until you dismiss it.</p>
+  <button type="button" popovertarget="note-manual" popovertargetaction="hide">Dismiss</button>
+</div>`;
+
+const cssBase = `.pop {
+  margin: auto;
+  max-width: min(26rem, calc(100vw - 2rem));
+  padding: 1.4rem 1.5rem;
+  border: 2px solid #86e3be;
+  border-radius: 16px;
+  background: #1e1033;
+  color: #fff2de;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.65);
+}
+
+/* Dim the page behind the open popover */
+.pop::backdrop {
+  background: rgb(14 6 25 / 0.72);
+  backdrop-filter: blur(4px);
+}`;
+
+const cssTransition = `/* Smooth entry and exit with @starting-style (no JavaScript) */
+@media (prefers-reduced-motion: no-preference) {
+  .pop {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+    transition:
+      opacity 0.22s ease,
+      transform 0.22s ease,
+      overlay 0.22s allow-discrete,
+      display 0.22s allow-discrete;
+  }
+
+  .pop:popover-open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  @starting-style {
+    .pop:popover-open {
+      opacity: 0;
+      transform: translateY(10px) scale(0.97);
+    }
+  }
+
+  .pop::backdrop {
+    opacity: 0;
+    transition: opacity 0.22s ease, overlay 0.22s allow-discrete, display 0.22s allow-discrete;
+  }
+
+  .pop:popover-open::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .pop:popover-open::backdrop {
+      opacity: 0;
+    }
+  }
+}`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'CSS popover with no JavaScript',
+  datePublished: '2026-11-22',
+  url: 'https://patchbandit.com/lab/css-popover/',
+};
+---
+<Base
+  title="CSS popover with no JavaScript: auto, manual, backdrop, and transitions"
+  description="Build a CSS popover with the HTML popover attribute and zero JavaScript: auto vs manual dismiss, ::backdrop styling, and @starting-style entry transitions. Live demo and code."
+  schema={schema}
+  ogType="article"
+>
+  <PageHero art="/art/raccoon-celebrate.svg" alt="Snick the raccoon celebrating with paws up" tone="mint">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Pretzel · 2026-11-22</p>
+    <h1>CSS popover with no JavaScript</h1>
+    <p class="lead">A CSS popover lets you open a floating panel, tooltip, or confirmation card on top of the page using plain HTML and CSS, with no JavaScript and no z-index math. The browser handles the stacking layer, the Escape key, and clicking outside for you.</p>
+    <p class="story">Why load a modal library just to pop open a polite little box?</p>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="play-h">
+      <div class="wrap">
+        <div class="split-head">
+          <h2 id="play-h">Try the HTML popover live</h2>
+          <p class="muted">Both buttons below run on plain HTML attributes and CSS alone. Open one, test clicking the dimmed backdrop or pressing <kbd>Esc</kbd>, then compare how each mode behaves.</p>
+        </div>
+
+        <ul class="grid g2 sub sub4 pop-grid">
+          <li class="card">
+            <p class="tag">popover="auto"</p>
+            <h3>Auto-dismiss popover</h3>
+            <p>Best for menus, quick tips, and short confirmations. Clicking anywhere outside the box or pressing <kbd>Esc</kbd> closes it right away, and opening a second auto popover closes the first.</p>
+            <div class="pop-actions">
+              <button type="button" class="btn" popovertarget="demo-pop-auto">Open auto popover</button>
+              <span class="mono small muted">Light-dismiss + ::backdrop</span>
+            </div>
+          </li>
+
+          <li class="card">
+            <p class="tag">popover="manual"</p>
+            <h3>Manual popover</h3>
+            <p>Best for pinned notices or status cards the visitor should acknowledge on purpose. Outside clicks and <kbd>Esc</kbd> leave it alone until you press its close button or click the trigger again.</p>
+            <div class="pop-actions">
+              <button type="button" class="btn alt" popovertarget="demo-pop-manual">Open manual popover</button>
+              <span class="mono small muted">Explicit close only</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div id="demo-pop-auto" popover="auto" class="demo-pop demo-pop-auto">
+        <p class="tag">popover="auto"</p>
+        <h3>Zero-script auto popover</h3>
+        <p>This panel sits in the browser's top layer above sticky headers and cards, with a dimmed <code>::backdrop</code> behind it. Click outside, press <kbd>Esc</kbd>, or use the button below.</p>
+        <div class="btn-row">
+          <button type="button" class="btn alt" popovertarget="demo-pop-auto" popovertargetaction="hide">Close popover</button>
+        </div>
+      </div>
+
+      <div id="demo-pop-manual" popover="manual" class="demo-pop demo-pop-manual">
+        <p class="tag">popover="manual"</p>
+        <h3>Zero-script manual popover</h3>
+        <p>Clicking the page behind this card will not close it, and pressing <kbd>Esc</kbd> will not dismiss it either. Use the button below to put it away.</p>
+        <div class="btn-row">
+          <button type="button" class="btn" popovertarget="demo-pop-manual" popovertargetaction="hide">Dismiss notice</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="api-h">
+      <div class="wrap">
+        <div class="split-head">
+          <h2 id="api-h">What the Popover API handles for you</h2>
+          <p class="muted">Before native popovers, every floating box needed click-outside listeners, keyboard traps, and ever-higher z-index guesses. Three built-in pieces replace all of that.</p>
+        </div>
+
+        <ul class="grid g3 sub sub3">
+          <li class="card">
+            <p class="num">01</p>
+            <h3>Top-layer placement</h3>
+            <p>An open popover jumps straight to the browser's top layer. Overflow clipping on a parent card or a sticky header can never slice it in half.</p>
+          </li>
+          <li class="card">
+            <p class="num">02</p>
+            <h3>Built-in ::backdrop</h3>
+            <p>Style <code>::backdrop</code> right in CSS to dim or softly blur the page behind the open panel, with no extra wrapper div in your HTML.</p>
+          </li>
+          <li class="card">
+            <p class="num">03</p>
+            <h3>@starting-style entry</h3>
+            <p>Because closed popovers switch from <code>display: none</code>, <code>@starting-style</code> tells the browser where to begin the fade and gentle glide.</p>
+          </li>
+        </ul>
+
+        <DevNote>
+          <p>To animate both opening and closing without JavaScript, include <code>overlay</code> and <code>display</code> with <code>allow-discrete</code> in your <code>transition</code> list, wrapped inside <code>@media (prefers-reduced-motion: no-preference)</code>. Browsers that do not yet animate discrete properties simply snap the popover open and closed with no layout glitch. Use <code>popovertargetaction="hide"</code> on dedicated close buttons so they only close rather than toggle.</p>
+        </DevNote>
+      </div>
+    </section>
+
+    <section class="band" data-node aria-labelledby="code-h">
+      <div class="wrap">
+        <h2 id="code-h">Copy the HTML popover and CSS</h2>
+        <div class="cols2 top">
+          <div>
+            <CodeBlock label="Popover markup (HTML)" code={htmlSnippet} />
+            <CodeBlock label="Base panel and ::backdrop (CSS)" code={cssBase} />
+          </div>
+          <div>
+            <CodeBlock label="Entry transition with @starting-style (CSS)" code={cssTransition} />
+            <p class="note"><strong>Browser support:</strong> The HTML <code>popover</code> attribute and <code>::backdrop</code> work across current Chrome, Edge, Safari, and Firefox. Smooth entry transitions with <code>@starting-style</code> and <code>allow-discrete</code> work in current Chrome, Edge, and Safari (and recent Firefox), while older versions still open and close the box cleanly without the fade. Tested in Chromium only.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <WhyFree
+      nextHref="/lab/css-text-wrap/"
+      nextTitle="CSS text-wrap: balance vs pretty, live"
+      nextBlurb="Drag one width slider and watch headlines and paragraphs clean up their own line breaks."
+    />
+  </div>
+</Base>
+
+<style>
+  .pop-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    padding-top: 0.4rem;
+  }
+
+  .demo-pop {
+    margin: auto;
+    width: min(28rem, calc(100vw - 2rem));
+    padding: 1.5rem 1.6rem;
+    border: 2px solid var(--k-mint);
+    border-radius: 18px;
+    background: var(--k-deep);
+    color: var(--k-cream);
+    --muted: #d2cae2;
+    --accent: var(--k-mint);
+    box-shadow: 0 28px 70px rgb(0 0 0 / 0.75);
+  }
+  .demo-pop-manual {
+    border-color: var(--k-gold);
+    --accent: var(--k-gold);
+  }
+  .demo-pop h3 {
+    margin-bottom: 0.5rem;
+    color: var(--k-cream);
+  }
+  .demo-pop p {
+    color: var(--k-cream);
+  }
+  .demo-pop .tag {
+    color: var(--accent);
+  }
+  .demo-pop-auto::backdrop {
+    background: rgb(14 6 25 / 0.74);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .demo-pop-manual::backdrop {
+    background: rgb(14 6 25 / 0.45);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .demo-pop {
+      opacity: 0;
+      transform: translateY(12px) scale(0.97);
+      transition:
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        overlay 0.22s allow-discrete,
+        display 0.22s allow-discrete;
+    }
+    .demo-pop:popover-open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    @starting-style {
+      .demo-pop:popover-open {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+      }
+    }
+    .demo-pop::backdrop {
+      opacity: 0;
+      transition: opacity 0.22s ease, overlay 0.22s allow-discrete, display 0.22s allow-discrete;
+    }
+    .demo-pop:popover-open::backdrop {
+      opacity: 1;
+    }
+    @starting-style {
+      .demo-pop:popover-open::backdrop {
+        opacity: 0;
+      }
+    }
+  }
+</style>

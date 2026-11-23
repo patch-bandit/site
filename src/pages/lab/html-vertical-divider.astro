@@ -1,0 +1,197 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PageHero from '../../components/PageHero.astro';
+import WhyFree from '../../components/WhyFree.astro';
+
+const demos = [
+  {
+    id: 'border',
+    name: '1. A border on one side',
+    why: 'The simplest way. Put a border on the right of the left box. Good when the divider is just a line.',
+    code: `<style>
+  .row { display: flex; }
+  .left { flex: 1; border-inline-end: 3px solid #86e3be; padding-inline-end: 1rem; }
+  .right { flex: 1; padding-inline-start: 1rem; }
+</style>
+
+<div class="row">
+  <div class="left"><p>Left side</p></div>
+  <div class="right"><p>Right side</p></div>
+</div>`,
+  },
+  {
+    id: 'flex',
+    name: '2. A flex child line',
+    why: 'Make the divider its own element and let flex stretch it to the full height. Good when you want to style it as a thing.',
+    code: `<style>
+  .row { display: flex; gap: 1rem; }
+  .pane { flex: 1; }
+  .line { width: 3px; background: #86e3be; align-self: stretch; }
+</style>
+
+<div class="row">
+  <div class="pane"><p>Left side</p></div>
+  <div class="line" aria-hidden="true"></div>
+  <div class="pane"><p>Right side</p></div>
+</div>`,
+  },
+  {
+    id: 'grid',
+    name: '3. A grid column line',
+    why: 'A thin middle column holds the line. Good when your layout is already a grid.',
+    code: `<style>
+  .row { display: grid; grid-template-columns: 1fr 3px 1fr; gap: 1rem; }
+  .line { background: #86e3be; }
+</style>
+
+<div class="row">
+  <div class="pane"><p>Left side</p></div>
+  <div class="line" aria-hidden="true"></div>
+  <div class="pane"><p>Right side</p></div>
+</div>`,
+  },
+  {
+    id: 'pseudo',
+    name: '4. A pseudo-element line',
+    why: 'Draw the line with ::after so the markup stays clean, with no extra element. Good when you cannot or will not add one.',
+    code: `<style>
+  .row { display: flex; }
+  .left { flex: 1; position: relative; padding-inline-end: 1rem; }
+  .left::after {
+    content: ""; position: absolute; inset-block: 0; inset-inline-end: 0;
+    width: 3px; background: #86e3be;
+  }
+  .right { flex: 1; padding-inline-start: 1rem; }
+</style>
+
+<div class="row">
+  <div class="left"><p>Left side</p></div>
+  <div class="right"><p>Right side</p></div>
+</div>`,
+  },
+  {
+    id: 'hr',
+    name: '5. An hr turned sideways',
+    why: 'An hr is a real separator that screen readers know. Stretch it in a flex row and tell assistive tech it is vertical.',
+    code: `<style>
+  .row { display: flex; gap: 1rem; }
+  .pane { flex: 1; }
+  .row hr { align-self: stretch; width: 0; margin: 0; border: 0; border-inline-start: 3px solid #86e3be; }
+</style>
+
+<div class="row">
+  <div class="pane"><p>Left side</p></div>
+  <hr aria-orientation="vertical" />
+  <div class="pane"><p>Right side</p></div>
+</div>`,
+  },
+  {
+    id: 'gradient',
+    name: '6. A fading gradient',
+    why: 'A line that fades at the ends looks softer. A background gradient on a thin element does it.',
+    code: `<style>
+  .row { display: flex; gap: 1rem; }
+  .pane { flex: 1; }
+  .line {
+    width: 3px; align-self: stretch;
+    background: linear-gradient(to bottom, transparent, #86e3be 20%, #86e3be 80%, transparent);
+  }
+</style>
+
+<div class="row">
+  <div class="pane"><p>Left side</p></div>
+  <div class="line" aria-hidden="true"></div>
+  <div class="pane"><p>Right side</p></div>
+</div>`,
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'HTML vertical divider: six ways to draw one',
+  datePublished: '2026-11-22',
+  url: 'https://patchbandit.com/lab/html-vertical-divider/',
+};
+---
+<Base
+  title="HTML vertical divider: 6 ways to draw one (copy the code)"
+  description="Six working ways to make an HTML vertical divider with plain CSS: border, flex, grid, pseudo-element, hr and gradient. Live demos and code to copy."
+  schema={schema}
+  ogType="article"
+>
+  <PageHero art="/art/raccoon-focused.svg" alt="The raccoon, focused on the screen">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Cracker · 2026-11-22</p>
+    <h1>HTML vertical divider: six ways to draw one</h1>
+    <p class="lead">An HTML vertical divider is a line between two things that sit side by side. HTML has no tag for it, so you draw one with CSS, and there are at least six good ways. Each demo below is live, and each snippet is whole (markup and styles), so it works when you paste it into a blank page.</p>
+    <p class="story">A simple line should never cost anything. Here are six for free.</p>
+  </PageHero>
+
+  <div class="route-host">
+  <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+  <section class="band" data-node>
+    <div class="wrap">
+      <div class="split-head">
+        <h2 class="h-which">Which one should you use?</h2>
+        <p>Use the border (1) when a line is all you need. Use a flex or grid line (2, 3) when the divider is part of the layout. Use the hr (5) when you want it to count as a real separator for people using screen readers.</p>
+      </div>
+      <ul class="grid g2 sub sub4">
+        {demos.map((d) => (
+          <li class="card">
+            <h2>{d.name}</h2>
+            <p>{d.why}</p>
+            <div class={`stage ${d.id}`} aria-label={`Demo: ${d.name}`} role="group">
+              {d.id === 'border' && (<><div class="left"><p>Left side</p></div><div class="right"><p>Right side</p></div></>)}
+              {d.id === 'flex' && (<><div class="pane"><p>Left side</p></div><div class="line" aria-hidden="true"></div><div class="pane"><p>Right side</p></div></>)}
+              {d.id === 'grid' && (<><div class="pane"><p>Left side</p></div><div class="line" aria-hidden="true"></div><div class="pane"><p>Right side</p></div></>)}
+              {d.id === 'pseudo' && (<><div class="left"><p>Left side</p></div><div class="right"><p>Right side</p></div></>)}
+              {d.id === 'hr' && (<><div class="pane"><p>Left side</p></div><hr aria-orientation="vertical" /><div class="pane"><p>Right side</p></div></>)}
+              {d.id === 'gradient' && (<><div class="pane"><p>Left side</p></div><div class="line" aria-hidden="true"></div><div class="pane"><p>Right side</p></div></>)}
+            </div>
+            <CodeBlock label={`${d.name} (HTML and CSS)`} code={d.code} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="band alt" data-node>
+    <div class="wrap cols2 top">
+      <div>
+        <h2>On a phone, it can turn sideways</h2>
+        <p>On a narrow screen, two things side by side are cramped. A common fix is to stack them and turn the vertical line into a horizontal one. In the flex version, add <code>flex-direction: column</code> in a media query, and swap the line's <code>width</code> for a <code>height</code>.</p>
+        <p>The same idea works for the grid version: change the three columns to one column, and give the middle line a height instead of a width.</p>
+      </div>
+      <div class="card gold">
+        <h3>The snack take</h3>
+        <p>A divider is just a gap with opinions. Pick the simplest way that works, then move on to the cheese puffs.</p>
+        <p>Tested in Chromium only. All six use long-supported CSS, so they should work in other current browsers, but we have not checked them there.</p>
+      </div>
+    </div>
+  </section>
+  <WhyFree nextHref="/lab/css-container-queries/" nextTitle="CSS container query and style queries" nextBlurb="A card that reshapes itself to its box, not the screen — no media queries, no script." />
+  </div>
+</Base>
+
+<style>
+  .h-which { font-size: clamp(1.5rem, 3vw, 2.2rem); }
+  .stage { --mint: var(--k-mint); display: flex; gap: 1rem; background: var(--code-bg); color: var(--k-cream); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; min-height: 6rem; }
+  .stage p { margin: 0; }
+  .stage > * { min-width: 0; }
+  .pane, .left, .right { flex: 1; }
+  .line { width: 3px; background: var(--mint); align-self: stretch; flex: none; }
+  .stage.border { gap: 0; }
+  .border .left { border-inline-end: 3px solid var(--mint); padding-inline-end: 1rem; }
+  .border .right { padding-inline-start: 1rem; }
+  .stage.grid { display: grid; grid-template-columns: 1fr 3px 1fr; }
+  .stage.pseudo { gap: 0; }
+  .pseudo .left { position: relative; padding-inline-end: 1rem; }
+  .pseudo .left::after { content: ""; position: absolute; inset-block: 0; inset-inline-end: 0; width: 3px; background: var(--mint); }
+  .pseudo .right { padding-inline-start: 1rem; }
+  .stage hr { align-self: stretch; width: 0; margin: 0; border: 0; border-inline-start: 3px solid var(--mint); flex: none; }
+  .stage.gradient .line { background: linear-gradient(to bottom, transparent, var(--mint) 20%, var(--mint) 80%, transparent); }
+  li.card { min-width: 0; }
+  li.card .stage { align-self: start; }
+</style>

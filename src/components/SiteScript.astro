@@ -1,0 +1,96 @@
+---
+// One small script for every page. It sends nothing anywhere and stores only the theme pick.
+---
+<script>
+  const root = document.documentElement;
+  const motion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  const finePointer = window.matchMedia('(pointer: fine)').matches;
+
+  /* theme switch: dark night alley or dawn */
+  const btn = document.querySelector<HTMLButtonElement>('[data-theme-btn]');
+  const label = document.querySelector<HTMLElement>('[data-theme-label]');
+  const current = () => {
+    const set = root.getAttribute('data-theme');
+    if (set === 'light' || set === 'dark') return set;
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  };
+  const paint = () => {
+    const now = current();
+    const next = now === 'dark' ? 'dawn' : 'night';
+    if (label) label.textContent = next;
+    btn?.setAttribute('aria-label', `Switch to the ${next} theme`);
+  };
+  paint();
+  btn?.addEventListener('click', () => {
+    const next = current() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('pb-theme', next); } catch { /* private mode: the pick lasts this page only */ }
+    paint();
+  });
+
+  /* reveal on scroll, the route rail, and lit nodes */
+  const rv = document.querySelectorAll<HTMLElement>('.rv');
+  if (motion && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    rv.forEach((el) => io.observe(el));
+  } else {
+    rv.forEach((el) => el.classList.add('in'));
+  }
+  const nodes = document.querySelectorAll<HTMLElement>('[data-node]');
+  if ('IntersectionObserver' in window) {
+    const lit = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('lit'); });
+    }, { rootMargin: '0px 0px -45% 0px' });
+    nodes.forEach((n) => lit.observe(n));
+  }
+  const rail = document.querySelector<HTMLElement>('[data-route]');
+  if (rail) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const box = rail.parentElement!.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (window.innerHeight * 0.55 - box.top) / box.height));
+      rail.style.setProperty('--route', p.toFixed(3));
+    };
+    update();
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  }
+
+  /* flashlight: the wiring shows under the pointer on night bands (fine pointer and motion only) */
+  if (motion && finePointer) {
+    document.querySelectorAll<HTMLElement>('.flash').forEach((band) => {
+      let raf = 0;
+      band.addEventListener('pointermove', (ev) => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          const r = band.getBoundingClientRect();
+          band.style.setProperty('--mx', `${ev.clientX - r.left}px`);
+          band.style.setProperty('--my', `${ev.clientY - r.top}px`);
+        });
+      });
+      band.addEventListener('pointerenter', () => band.classList.add('on'));
+      band.addEventListener('pointerleave', () => band.classList.remove('on'));
+    });
+  }
+
+  /* hidden key: type o-p-e-n outside a form field */
+  const egg = document.querySelector<HTMLElement>('[data-egg]');
+  const close = egg?.querySelector<HTMLButtonElement>('[data-egg-close]');
+  let typed = '';
+  document.addEventListener('keydown', (ev) => {
+    const t = ev.target as HTMLElement;
+    if (ev.key === 'Escape' && egg && !egg.hidden) { egg.hidden = true; return; }
+    if (ev.ctrlKey || ev.metaKey || ev.altKey || ev.key.length !== 1) return;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    typed = (typed + ev.key.toLowerCase()).slice(-4);
+    if (typed === 'open' && egg) {
+      egg.hidden = false;
+      close?.focus();
+      typed = '';
+      document.dispatchEvent(new CustomEvent('pb:open'));
+    }
+  });
+  close?.addEventListener('click', () => { if (egg) egg.hidden = true; });
+</script>

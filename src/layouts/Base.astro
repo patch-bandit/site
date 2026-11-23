@@ -1,0 +1,133 @@
+---
+import '../styles/global.css';
+import { getCollection } from 'astro:content';
+import { NAV, GITHUB_URL, SITE_NAME, HEADLINE, CREED, SIGNOFF, FOOTER_TOOLS_STATUS, LAB_EXPERIMENTS, inWords } from '../data/site';
+import SiteScript from '../components/SiteScript.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  schema?: Record<string, unknown>;
+  ogType?: string;
+  noindex?: boolean; // for pages that must not be indexed, such as the 404 page: no canonical, no og:url
+}
+const { title, description, schema, ogType = 'website', noindex = false } = Astro.props;
+const rawPath = Astro.url.pathname;
+// Keep trailing slashes on canonical directory URLs even with trailingSlash: 'ignore'.
+const path = rawPath === '/' || /\.[a-z0-9]+$/i.test(rawPath) || rawPath.endsWith('/') ? rawPath : `${rawPath}/`;
+const canonical = new URL(path, Astro.site).href;
+const ogImage = new URL('/og-hero.png', Astro.site).href;
+const ogAlt = `A raccoon behind a glowing laptop under the moon, beside the words: ${HEADLINE}`;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const built = (await getCollection('drops')).length + LAB_EXPERIMENTS.length;
+// The footer privacy line ships only while the build check proves it (no cookie, no third-party request).
+const PRIVACY_LINE = true;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/platypi.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#0e0619" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {!noindex && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="675" />
+    <meta property="og:image:alt" content={ogAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+    <script is:inline>
+      // Theme before first paint: a saved pick (this browser only), else the device setting.
+      (function () {
+        var d = document.documentElement, t = null;
+        try { t = localStorage.getItem('pb-theme'); } catch (e) {}
+        if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
+        if (window.matchMedia && matchMedia('(prefers-reduced-motion: no-preference)').matches) d.classList.add('motion');
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site-head">
+      <div class="wrap">
+        <a class="brand" href="/"><img src="/favicon.svg" alt="" width="40" height="40" />{SITE_NAME}</a>
+        <div class="head-right">
+          <nav aria-label="Main">
+            <ul class="nav">
+              {NAV.map((n) => (
+                <li><a href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>{n.label}</a></li>
+              ))}
+            </ul>
+          </nav>
+          <button class="theme-btn" type="button" data-theme-btn aria-label="Switch to the dawn theme">
+            <span aria-hidden="true" data-theme-label>dawn</span>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-foot">
+      <div class="wrap">
+        <div class="cols">
+          <div>
+            <h2>The creed, short</h2>
+            <p>Quiet paws. Open code. {CREED}</p>
+          </div>
+          <div>
+            <h2>The honest inventory</h2>
+            <p>Built: {inWords(built)} lab experiments. {FOOTER_TOOLS_STATUS} Users, partners, donations: none.</p>
+          </div>
+          <div>
+            <h2>The doors</h2>
+            <ul class="doors">
+              {NAV.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+              <li><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">Code account</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="signoff">{SIGNOFF}</p>
+        <p class="fine">Lab code is free to copy, change, and share under the MIT License. Fonts are served from this site under the SIL Open Font License.</p>
+        {PRIVACY_LINE && <p class="fine" data-privacy-line>No cookies, no tracking, no ads. The theme switch remembers your pick in this browser only.</p>}
+        <p class="fine mono">psst: on any page, type <kbd>o</kbd><kbd>p</kbd><kbd>e</kbd><kbd>n</kbd>.</p>
+      </div>
+    </footer>
+    <div class="egg" data-egg hidden>
+      <div class="term" role="status" aria-live="polite">
+        <div class="term-bar"><i></i><i></i><i></i><span>~/stash</span></div>
+        <div class="term-body">
+          <p><span class="p">$</span> open ./stash</p>
+          <p class="g">The stash is open. Take what you need.</p>
+          <p class="d">Every snippet in the lab is yours under MIT. No account. No catch.</p>
+          <p class="egg-links"><a href="/lab/">Open the lab</a> · <a href="/den/">See the stash</a> · <button type="button" data-egg-close>Close (Esc)</button></p>
+        </div>
+      </div>
+    </div>
+    <SiteScript />
+  </body>
+</html>
+
+<style>
+  .egg { position: fixed; right: 1rem; bottom: 1rem; z-index: 60; width: min(28rem, calc(100% - 2rem)); }
+  .egg .term-body p { margin-bottom: 0.35rem; }
+  .egg-links { margin-top: 0.6rem !important; }
+  .egg-links a { color: var(--k-mint); }
+  .egg-links button { font: inherit; color: var(--k-cream); background: none; border: 1px solid rgb(194 255 230 / 0.4); border-radius: 6px; padding: 0.2rem 0.5rem; cursor: pointer; min-height: 2.2rem; }
+  @media (prefers-reduced-motion: no-preference) {
+    .egg:not([hidden]) { animation: egg-in 0.45s cubic-bezier(.2,.9,.2,1.2); }
+    @keyframes egg-in { from { opacity: 0; transform: translateY(16px) scale(0.97); } }
+  }
+</style>

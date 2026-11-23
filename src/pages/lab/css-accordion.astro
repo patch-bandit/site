@@ -1,0 +1,394 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PageHero from '../../components/PageHero.astro';
+import WhyFree from '../../components/WhyFree.astro';
+import DevNote from '../../components/lab/DevNote.astro';
+
+const faqs = [
+  {
+    q: 'How does opening one drawer close the others?',
+    a: 'Every <details> panel in this stack shares name="lab-faq". The browser treats them like a radio group: opening one panel closes whichever sibling was open before, with zero JavaScript.',
+    open: true,
+  },
+  {
+    q: 'Why style ::details-content instead of adding wrapper divs?',
+    a: 'The ::details-content pseudo-element targets the expandable body directly. You can control padding, borders, and height animation in CSS while keeping your HTML clean and semantic.',
+    open: false,
+  },
+  {
+    q: 'What happens in browsers without interpolate-size?',
+    a: 'The smooth height slide is wrapped inside @supports (interpolate-size: allow-keywords). Firefox and Safari skip only the slide and give you an instant, crisp native accordion with zero clipping.',
+    open: false,
+  },
+  {
+    q: 'Does this pure CSS accordion work with keyboards?',
+    a: 'Yes. Tab moves between <summary> headings, and Enter or Space toggles each drawer. Screen readers also receive the built-in expanded and collapsed state without custom ARIA code.',
+    open: false,
+  },
+];
+
+const htmlSnippet = `<!-- Shared name makes the accordion exclusive (zero JS) -->
+<div class="accordion">
+  <details name="faq" open>
+    <summary>How does an exclusive accordion work?</summary>
+    <p>Panels with the same name close when a sibling opens.</p>
+  </details>
+  <details name="faq">
+    <summary>Do I need ARIA or click scripts?</summary>
+    <p>No. Native details and summary handle keys and state.</p>
+  </details>
+  <details name="faq">
+    <summary>What if a browser skips the smooth slide?</summary>
+    <p>It still opens cleanly — animation is an enhancement.</p>
+  </details>
+</div>`;
+
+const baseCss = `.accordion details {
+  border: 2px solid #86e3be;
+  border-radius: 14px;
+  background: #1e1033;
+  color: #fff2de;
+  overflow: hidden;
+}
+
+.accordion summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 1rem 1.2rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.accordion summary::-webkit-details-marker { display: none; }
+.accordion summary::after { content: "+"; font-family: monospace; }
+.accordion details[open] summary::after { content: "−"; }
+
+/* Style the expandable content directly with ::details-content */
+.accordion details::details-content {
+  padding-inline: 1.2rem;
+}
+.accordion details[open]::details-content {
+  padding-bottom: 1.1rem;
+}`;
+
+const animateCss = `/* Smooth height: auto slide (instant fallback elsewhere) */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (interpolate-size: allow-keywords) {
+    .accordion {
+      interpolate-size: allow-keywords;
+    }
+    .accordion details::details-content {
+      block-size: 0;
+      overflow-y: clip;
+      transition:
+        block-size 0.3s ease,
+        content-visibility 0.3s allow-discrete;
+    }
+    .accordion details[open]::details-content {
+      block-size: auto;
+    }
+  }
+}`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'CSS accordion with native <details name>',
+  datePublished: '2026-11-22',
+  url: 'https://patchbandit.com/lab/css-accordion/',
+};
+---
+<Base
+  title="CSS accordion with <details name>, ::details-content, and smooth height"
+  description="Build a pure CSS accordion with linked <details name> panels, ::details-content styling, and interpolate-size: allow-keywords for smooth height animation — zero JavaScript."
+  schema={schema}
+  ogType="article"
+>
+  <PageHero art="/art/raccoon-celebrate.svg" alt="Snick the raccoon stacking neat accordion drawers" tone="gold">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Cinnamon roll · 2026-11-22</p>
+    <h1>CSS accordion with native &lt;details name&gt;</h1>
+    <p class="lead">A CSS accordion no longer needs hidden checkboxes, ARIA toggle scripts, or brittle <code>max-height</code> guesses. Link native HTML <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> panels with a shared <code>name</code> attribute so opening one closes its siblings automatically, style the body with <code>::details-content</code>, and layer <code>interpolate-size</code> for smooth height animation.</p>
+    <p class="story">No checkbox hacks, no max-height guesswork, no accordion script.</p>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="acc-play-h">
+      <div class="wrap">
+        <div class="split-head">
+          <h2 id="acc-play-h">Click any drawer in the pure CSS accordion</h2>
+          <p class="muted">Every panel below shares <code>name="lab-faq"</code>, so opening one drawer automatically closes the others with zero JavaScript. Flip the enhancement toggle to compare smooth <code>interpolate-size</code> sliding against instant snapping.</p>
+        </div>
+
+        <div class="cols2 wide-left top acc-stage">
+          <div class="acc-list" role="group" aria-label="Exclusive native details accordion demo">
+            {faqs.map((item) => (
+              <details class="acc-item" name="lab-faq" open={item.open}>
+                <summary class="acc-sum">
+                  <span>{item.q}</span>
+                  <span class="acc-icon mono" aria-hidden="true"></span>
+                </summary>
+                <div class="acc-body">
+                  <p>{item.a}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+
+          <div class="card acc-panel">
+            <h3>Smooth height enhancement</h3>
+            <p>Toggle <code>interpolate-size: allow-keywords</code> right here using pure CSS radio buttons — no script touches the page.</p>
+
+            <fieldset class="acc-toggle">
+              <legend class="mono small">Transition mode</legend>
+              <div class="acc-pills">
+                <input type="radio" name="acc-mode" id="acc-smooth" checked />
+                <label for="acc-smooth">interpolate-size: allow-keywords</label>
+                <input type="radio" name="acc-mode" id="acc-snap" />
+                <label for="acc-snap">Instant native snap</label>
+              </div>
+            </fieldset>
+
+            <div class="acc-sup" role="status">
+              <p class="mono small sup-ok">This browser supports <code>interpolate-size: allow-keywords</code> — panels slide smoothly to <code>height: auto</code>.</p>
+              <p class="mono small sup-fb">This browser does not support <code>interpolate-size</code> yet — panels use the crisp native snap fallback.</p>
+            </div>
+
+            <p class="muted small acc-foot">Try pressing <kbd>Tab</kbd> and <kbd>Enter</kbd> on any summary row: keyboard support and expanded state are built straight into HTML.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="acc-parts-h">
+      <div class="wrap">
+        <div class="split-head">
+          <h2 id="acc-parts-h">Three layers of a modern accordion CSS setup</h2>
+          <p class="muted">The core exclusive behavior and styling work across all four major browsers today, while native height animation layers cleanly on top.</p>
+        </div>
+
+        <ul class="grid g3 sub sub3">
+          <li class="card">
+            <p class="num">01</p>
+            <h3>Exclusive &lt;details name&gt;</h3>
+            <p>Give sibling <code>&lt;details&gt;</code> tags the same <code>name</code> attribute and the browser keeps at most one panel open at a time, with no state script.</p>
+          </li>
+          <li class="card">
+            <p class="num">02</p>
+            <h3>Direct ::details-content</h3>
+            <p>Target the collapsible content slot directly in CSS for spacing, transitions, and borders without wrapping every answer in extra markup.</p>
+          </li>
+          <li class="card">
+            <p class="num">03</p>
+            <h3>Native interpolate-size</h3>
+            <p>Opt into <code>interpolate-size: allow-keywords</code> so CSS can transition cleanly between <code>block-size: 0</code> and <code>block-size: auto</code> without magic pixel caps.</p>
+          </li>
+        </ul>
+
+        <DevNote>
+          <p>Always gate the <code>block-size: 0</code> transition inside both <code>@supports (interpolate-size: allow-keywords)</code> and <code>@media (prefers-reduced-motion: no-preference)</code>. That way browsers that support <code>::details-content</code> without <code>interpolate-size</code> (and visitors with Reduced Motion turned on) get instant, reliable expansion with zero layout glitch. Also include <code>summary::-webkit-details-marker &#123; display: none; &#125;</code> alongside <code>list-style: none</code> so Safari hides the default disclosure triangle cleanly.</p>
+        </DevNote>
+      </div>
+    </section>
+
+    <section class="band" data-node aria-labelledby="code-acc-h">
+      <div class="wrap">
+        <h2 id="code-acc-h">Copy the HTML details and CSS accordion code</h2>
+        <div class="cols2 top">
+          <div>
+            <CodeBlock label="Exclusive details accordion markup (HTML)" code={htmlSnippet} />
+            <CodeBlock label="Base summary and ::details-content styles (CSS)" code={baseCss} />
+          </div>
+          <div>
+            <CodeBlock label="Progressive interpolate-size height animation (CSS)" code={animateCss} />
+            <p class="note">
+              <strong>Browser support (checked 2026-11-22):</strong> Exclusive <code>&lt;details name&gt;</code> is Baseline Newly Available since September 2024 across Chrome 120+, Edge 120+, Safari 17.2+, and Firefox 130+ (<a href="https://webstatus.dev/features/details-name" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: details-name</a>). The <code>::details-content</code> pseudo-element is Baseline Newly Available since September 2025 across Chrome 131+, Edge 131+, Safari 18.4+, and Firefox 143+ (<a href="https://webstatus.dev/features/details-content" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: details-content</a>). Smooth <code>interpolate-size: allow-keywords</code> animation is an enhancement supported in Chrome 129+ and Edge 129+ (Safari Technology Preview; not yet in Firefox — <a href="https://webstatus.dev/features/interpolate-size" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: interpolate-size</a>). Tested in Chromium only.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <WhyFree
+      nextHref="/lab/css-popover/"
+      nextTitle="CSS popover with no JavaScript"
+      nextBlurb="Auto vs manual popovers, blurred ::backdrop, and smooth @starting-style transitions."
+    />
+  </div>
+</Base>
+
+<style>
+  .acc-list {
+    display: grid;
+    gap: 0.85rem;
+    align-content: start;
+  }
+  .acc-item {
+    border: 2px solid var(--rim-strong);
+    border-radius: 16px;
+    background: var(--code-bg);
+    color: var(--k-cream);
+    overflow: hidden;
+  }
+  .acc-item[open] {
+    border-color: var(--k-mint);
+  }
+  .acc-sum {
+    list-style: none;
+    cursor: pointer;
+    padding: 1.05rem 1.25rem;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.12rem;
+    line-height: 1.25;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    color: var(--k-cream);
+  }
+  .acc-sum::-webkit-details-marker {
+    display: none;
+  }
+  .acc-sum:focus-visible {
+    outline: 3px solid var(--k-gold);
+    outline-offset: -3px;
+  }
+  .acc-icon {
+    flex: none;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 999px;
+    border: 2px solid var(--k-mint);
+    color: var(--k-mint);
+    display: grid;
+    place-items: center;
+    font-size: 1.05rem;
+    line-height: 1;
+  }
+  .acc-icon::before {
+    content: "+";
+  }
+  .acc-item[open] .acc-icon {
+    background: var(--k-mint);
+    color: var(--k-ink);
+  }
+  .acc-item[open] .acc-icon::before {
+    content: "−";
+  }
+
+  .acc-body {
+    padding: 0 1.25rem 1.15rem;
+    border-top: 1px solid rgb(194 255 230 / 0.16);
+  }
+  .acc-body p {
+    margin: 0.85rem 0 0;
+    color: #e6dff2;
+    font-size: 0.96rem;
+    line-height: 1.55;
+  }
+
+  /* Progressive smooth height: auto animation */
+  @media (prefers-reduced-motion: no-preference) {
+    .acc-icon {
+      transition: transform 0.24s ease, background-color 0.24s ease, color 0.24s ease;
+    }
+    .acc-item[open] .acc-icon {
+      transform: rotate(180deg);
+    }
+    @supports (interpolate-size: allow-keywords) {
+      .acc-stage:has(#acc-smooth:checked) .acc-list {
+        interpolate-size: allow-keywords;
+      }
+      .acc-stage:has(#acc-smooth:checked) .acc-item::details-content {
+        block-size: 0;
+        overflow-y: clip;
+        transition: block-size 0.3s ease, content-visibility 0.3s allow-discrete;
+      }
+      .acc-stage:has(#acc-smooth:checked) .acc-item[open]::details-content {
+        block-size: auto;
+      }
+    }
+  }
+
+  .acc-panel {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+  }
+  .acc-panel h3,
+  .acc-panel p {
+    margin-bottom: 0;
+  }
+  .acc-toggle {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .acc-toggle legend {
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+  .acc-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .acc-pills input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .acc-pills label {
+    font: 600 0.83rem/1.2 var(--mono);
+    padding: 0.6rem 0.9rem;
+    min-height: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 2px solid var(--rim-strong);
+    cursor: pointer;
+  }
+  .acc-pills input:checked + label {
+    background: var(--k-mint);
+    color: var(--k-ink);
+    border-color: var(--k-ink);
+  }
+  .acc-pills input:focus-visible + label {
+    outline: 3px solid var(--k-gold);
+    outline-offset: 2px;
+  }
+
+  .acc-sup {
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 2px solid var(--k-gold);
+  }
+  .acc-sup p {
+    margin: 0;
+    color: var(--k-cream);
+  }
+  .sup-ok { display: none; }
+  @supports (interpolate-size: allow-keywords) {
+    .acc-sup { border-color: var(--k-mint); }
+    .sup-ok { display: block; }
+    .sup-fb { display: none; }
+  }
+  .acc-foot {
+    margin-top: auto !important;
+  }
+</style>

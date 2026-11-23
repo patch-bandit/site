@@ -1,0 +1,458 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import PoolToy from '../components/PoolToy.astro';
+import CodeBlock from '../components/CodeBlock.astro';
+import { bugJar } from '../data/pools';
+import {
+  GITHUB_URL,
+  IDEA_REPO_OWNER,
+  IDEA_REPO_REPO,
+  IDEA_REPO_LIVE,
+  LAB_EXPERIMENTS,
+  SNACK_JAR,
+  STATIC_PAGES,
+  inWords,
+} from '../data/site';
+
+const labCount = (await getCollection('drops')).length + LAB_EXPERIMENTS.length;
+const page = STATIC_PAGES.find((p) => p.path === '/den/')!;
+const repoReady = Boolean(IDEA_REPO_LIVE && IDEA_REPO_OWNER && IDEA_REPO_REPO);
+const discussionBase = repoReady
+  ? `https://github.com/${encodeURIComponent(IDEA_REPO_OWNER)}/${encodeURIComponent(IDEA_REPO_REPO)}/discussions/new?category=ideas`
+  : '';
+
+const rules = [
+  'Pick a permissive open license and state it in the first screen of the README.',
+  'Open the README with what the tool does in one plain sentence, then one working example.',
+  'Start small: one job, done well, with no account and no sign-up.',
+  'No tracking, no phoning home, no ads. If a tool must touch the network, the README says exactly how.',
+  'Say what isn\'t built yet. A "Not yet" section is required.',
+  'Credit every library and idea we borrowed, by name.',
+  "Give every release patch notes: one joke at the raccoon's expense and the facts in plain words.",
+  "Be kind in issues. Thank every bug report. We've made worse ones.",
+  "Never claim users, ratings, or backing that don't exist.",
+  "Ship it small, say what isn't done, then fix it in public.",
+];
+
+const ideas: { name: string; what: string; status: 'idea' | 'bench' | 'free'; label: string; href?: string }[] = [
+  {
+    name: 'Bandit Codes — a free QR code generator',
+    what: 'Paste a link, Wi-Fi login, contact card, or event, get a crisp PNG or SVG QR code checked in your browser. No account, no watermark, and no expiring redirect.',
+    status: 'free',
+    label: 'Set free',
+    href: '/tools/qr-code-generator/',
+  },
+  { name: 'A CSS grid generator', what: 'Pick columns and gaps, see the grid, copy the CSS. One page, no sign-up.', status: 'idea', label: 'In the stash' },
+  { name: 'A contrast checker', what: 'Two colors in, a pass or a fail out, with a plain-words reason.', status: 'idea', label: 'In the stash' },
+  { name: 'A README starter', what: 'A template with the honest sections already in it, including the required "Not yet" section.', status: 'idea', label: 'In the stash' },
+  { name: 'A unique ID maker', what: 'Click once, get a fresh random ID to copy. It runs in your browser and sends nothing anywhere.', status: 'idea', label: 'In the stash' },
+  { name: 'A markdown to HTML converter', what: 'Paste plain text with simple marks, get clean HTML back, right in the page.', status: 'idea', label: 'In the stash' },
+  { name: 'A px to rem converter', what: 'Type a pixel size, get the rem value, and see the math.', status: 'idea', label: 'In the stash' },
+  { name: 'A commit message cheer-up', what: 'Turns "stuff" into a message a human could read at 3 AM.', status: 'idea', label: 'In the stash' },
+  { name: 'An HTML snack starter', what: 'A single page with good defaults for headings, focus, and motion.', status: 'idea', label: 'In the stash' },
+];
+
+const typingHtmlCss = `<!-- Render the full text in HTML so no-script and reduced-motion see it right away. -->
+<div class="term" data-type>
+  <span class="line" data-t="whoami">$ <span class="tx">whoami</span></span>
+  <span class="line" data-t="a raccoon.">$ <span class="tx">a raccoon.</span></span>
+</div>
+
+<style>
+  /* visibility: hidden keeps the box height fixed, so nothing jumps as lines type in. */
+  .typing .line { visibility: hidden; }
+  .typing .line.on { visibility: visible; }
+</style>`;
+
+const typingJs = `const motion = matchMedia('(prefers-reduced-motion: no-preference)').matches;
+const box = document.querySelector('[data-type]');
+if (box && motion && 'IntersectionObserver' in window) {
+  const lines = [...box.querySelectorAll('.line[data-t]')];
+  box.classList.add('typing');
+  const type = async () => {
+    for (const line of lines) {
+      const tx = line.querySelector('.tx');
+      const full = line.dataset.t || '';
+      tx.textContent = '';
+      line.classList.add('on');
+      for (let i = 1; i <= full.length; i++) {
+        tx.textContent = full.slice(0, i);
+        await new Promise((r) => setTimeout(r, 20));
+      }
+    }
+  };
+  const io = new IntersectionObserver((es) => {
+    if (es.some((e) => e.isIntersecting)) { io.disconnect(); type(); }
+  }, { threshold: 0.3 });
+  io.observe(box);
+}`;
+
+const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Open source project ideas: the stash', url: 'https://patchbandit.com/den/' };
+---
+<Base title={page.title} description="Open source project ideas a crew of raccoons wants to build: free tools to replace needless fees, each with an honest status tag." schema={schema}>
+  <PageHero tone="gold">
+    <p class="crumbs"><a href="/">The story</a> / The stash</p>
+    <p class="eyebrow">The stash</p>
+    <h1>Open source project ideas: the stash</h1>
+    <p class="lead">These are the open source project ideas we'd like to build, kept in the stash where everyone can see them. Each one is a free tool that could replace a fee, a lock, or a tracker, and every card carries an honest status tag.</p>
+    <p class="story">Want real code today? The <a href="/lab/">lab</a> has {inWords(labCount)} working experiments you can copy, and <a href="/tools/qr-code-generator/">Bandit Codes</a> is live in <a href="/tools/">the loot</a>.</p>
+    <Fragment slot="art">
+      <svg class="heap" viewBox="0 0 400 360" role="img" aria-label="A stash of found things: a key, a gear, a chip, a disk, and a magnifier, each one an idea">
+        <ellipse cx="200" cy="330" rx="170" ry="22" fill="#140a22" opacity="0.6" />
+        <g class="obj o1"><g stroke="#140a22" stroke-width="7" stroke-linejoin="round">
+          <rect x="40" y="200" width="130" height="120" rx="12" fill="#7a55b0" />
+          <rect x="66" y="200" width="78" height="44" fill="#c4bbd6" />
+          <rect x="112" y="208" width="18" height="28" fill="#2b1a42" stroke-width="0" />
+          <rect x="60" y="262" width="90" height="46" rx="6" fill="#fff2de" />
+        </g></g>
+        <g class="obj o2"><g stroke="#140a22" stroke-width="7" stroke-linejoin="round">
+          <path d="M282 182 l12 -26 22 8 2 28 24 16 26 -12 12 22 -22 18 2 28 26 12 -8 24 -28 -2 -18 22 10 26 -22 12 -18 -22 -28 2 -8 -26 22 -18 -2 -28 -24 -14 6 -24 28 2 16 -20z" fill="#ffc857" />
+          <circle cx="318" cy="246" r="22" fill="#e89a2c" />
+        </g></g>
+        <g class="obj o3"><g stroke="#140a22" stroke-width="7" stroke-linejoin="round">
+          <rect x="150" y="226" width="110" height="96" rx="10" fill="#2b1a42" />
+          <path d="M150 248 h-18 M150 274 h-18 M150 300 h-18 M260 248 h18 M260 274 h18 M260 300 h18" />
+          <rect x="176" y="250" width="58" height="48" rx="6" fill="#86e3be" />
+        </g></g>
+        <g class="obj o4"><g stroke="#140a22" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="150" cy="140" r="34" fill="#ffc857" />
+          <circle cx="150" cy="140" r="12" fill="#2b1a42" />
+          <path d="M182 150 L270 176 M232 165 l-6 22 M252 171 l-6 22" fill="none" stroke-width="12" />
+          <path d="M182 150 L270 176" stroke="#ffc857" stroke-width="5" />
+        </g></g>
+        <g class="obj o5"><g stroke="#140a22" stroke-width="7" stroke-linecap="round">
+          <circle cx="300" cy="90" r="38" fill="#c2ffe6" fill-opacity="0.35" />
+          <path d="M327 117 L360 150" stroke-width="14" />
+          <path d="M327 117 L360 150" stroke="#ff7b67" stroke-width="7" />
+        </g></g>
+      </svg>
+    </Fragment>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="tags-h">
+      <div class="wrap">
+        <div class="split-head rv">
+          <h2 id="tags-h">Every piece has an honest tag.</h2>
+          <p class="lead">Most of the stash is still ideas. When one moves to the bench or ships, its tag changes, and the inventory on the home page changes with it.</p>
+        </div>
+        <ul class="grid g3 sub sub3">
+          <li class="card rv"><p class="status idea">In the stash</p><h3>An idea</h3><p>Nothing built and no date. Eight cards below wear this tag today.</p></li>
+          <li class="card rv" style="--i:1"><p class="status bench">On the bench</p><h3>Being built</h3><p>Someone is building it in the open. The bench is open for the next pick now that Bandit Codes shipped.</p></li>
+          <li class="card rv" style="--i:2"><p class="status free">Set free</p><h3>Built and free</h3><p>Released, open, and free, with source you can read. <a href="/tools/qr-code-generator/">Bandit Codes</a> wears this tag now.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="ideas-h">
+      <div class="wrap">
+        <div class="split-head rv">
+          <h2 id="ideas-h">Ideas in the stash</h2>
+          <p class="muted">Each idea is a candidate, not a promise, and none has a date. Every one follows the house rules below: free, open, no account, no tracking.</p>
+        </div>
+        <ul class="grid g2 sub sub3 ideas">
+          {ideas.map((i, n) => (
+            <li class="card glint rv" style={`--i:${n % 2}`}>
+              <p class={`status ${i.status}`}>{i.label}</p>
+              <h3>{i.href ? <a href={i.href}>{i.name}</a> : i.name}</h3>
+              <p>{i.what}</p>
+            </li>
+          ))}
+          <li class="card mint rv" style="--i:1">
+            <p class="tag">Your turn</p>
+            <h3>Got a better idea?</h3>
+            <div class="pitch-body">
+              <p>Tell us which simple tool still hides behind a fee or a login. Type it in the stash terminal and push it as a public GitHub discussion.</p>
+              <button type="button" class="btn" data-idea-open>Pitch an idea</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="band night flash" data-node aria-labelledby="crew-h">
+      <div class="wrap">
+        <div class="split-head rv">
+          <h2 id="crew-h">Build it together. Profit together.</h2>
+          <p class="lead">The crew is one raccoon so far, and there are seats open. Here, "profit" means a tool you never pay for again, code nobody can lock away from you, and the know-how to fix it yourself.</p>
+        </div>
+        <ul class="grid g3 sub sub3">
+          <li class="card rv"><p class="num">01</p><h3>Copy a snippet</h3><p>Everything in the lab is MIT licensed: copy it, change it, and share it in your own page today.</p></li>
+          <li class="card rv" style="--i:1"><p class="num">02</p><h3>Pick an idea</h3><p>Choose a card from the stash and think about how you'd build it. When its repository opens, bring that plan.</p></li>
+          <li class="card rv" style="--i:2"><p class="num">03</p><h3>Bring a better way</h3><p>A fix, a cleaner approach, or an idea we missed. Once there's a repository, the code account is the door.</p></li>
+        </ul>
+        <div class="cta-row rv">
+          <p class="muted">No sign-up and no newsletter. Ideas go straight to a public GitHub discussion.</p>
+          <a class="btn alt" href={GITHUB_URL} target="_blank" rel="noopener noreferrer">Visit the code account</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="how-typing-works" data-node aria-labelledby="typing-h">
+      <div class="wrap cols2 top">
+        <div class="rv">
+          <p class="eyebrow">Under the hood</p>
+          <h2 id="typing-h">How the typing works</h2>
+          <p>The manifesto terminal on the home page and the tool status terminal type themselves out when you scroll to them, without hiding anything from people who turn off motion or script.</p>
+          <p>All eleven lines are rendered in plain HTML first, so the terminal already has its full height. If your device allows motion, a short script adds a class that uses <code>visibility: hidden</code> (not <code>display: none</code>, so the layout never jumps), waits until an <code>IntersectionObserver</code> sees the box, and types each line out one character at a time.</p>
+          <p>With reduced motion or without script, the class is never added and every line is readable at once. <a href="/#mf-h">See the manifesto on the home page</a>.</p>
+          <CodeBlock label="Terminal typing markup (HTML and CSS)" code={typingHtmlCss} />
+        </div>
+        <div class="rv" style="--i:1">
+          <CodeBlock label="Terminal typing script (JavaScript)" code={typingJs} />
+        </div>
+      </div>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="rules-h">
+      <div class="wrap">
+        <div class="split-head rv">
+          <h2 id="rules-h">House rules for anything we make</h2>
+          <p class="muted">These are promises about how a tool will be built. They are not a list of tools that exist. Tick them off as you read; the ticks reset on reload and are stored nowhere.</p>
+        </div>
+        <ol class="grid g2 rules">
+          {rules.map((r, i) => (
+            <li class="card rv" style={`--i:${i % 2}`}>
+              <label class="rule">
+                <input type="checkbox" />
+                <span class="paw" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="15.5" rx="5" ry="4.2" /><circle cx="6" cy="9.5" r="2.2" /><circle cx="10" cy="6" r="2.2" /><circle cx="14" cy="6" r="2.2" /><circle cx="18" cy="9.5" r="2.2" /></svg></span>
+                <span class="rn">{String(i + 1).padStart(2, '0')}</span>
+                <span class="rt">{r}</span>
+              </label>
+            </li>
+          ))}
+        </ol>
+        <div class="cta-row">
+          <p class="muted" data-rules-status role="status">Copy all ten as plain text for your own project's README.</p>
+          <button type="button" class="btn" data-copy-rules>Copy the rules</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" data-node>
+      <div class="wrap">
+        <PoolToy
+          id="bug-jar"
+          kind="jar"
+          title="The Bug Jar"
+          intro="We keep a jar of bugs we caused, labeled by shame level. Shake out one. Every line is made up, and none of them is a real release or a real project."
+          button="Shake the jar"
+          again="Shake again"
+          idle="The jar is sealed. Something in there is our fault."
+          pool={bugJar}
+          noun="bugs"
+        />
+      </div>
+    </section>
+
+    {SNACK_JAR.enabled && (
+      <section class="band alt tight" data-node data-snack-jar data-provider={SNACK_JAR.provider || undefined} aria-labelledby="snack-jar-h">
+        <div class="wrap">
+          <div class="card snack-jar rv">
+            <div class="snack-icon" aria-hidden="true">
+              <svg viewBox="0 0 96 108">
+                <g stroke="#140a22" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+                  <rect x="24" y="8" width="48" height="16" rx="6" fill="#ff7b67" />
+                  <rect x="16" y="24" width="64" height="74" rx="18" fill="#c2ffe6" fill-opacity="0.28" />
+                  <circle cx="38" cy="70" r="11" fill="#ffc857" />
+                  <circle cx="58" cy="74" r="10" fill="#e89a2c" />
+                  <circle cx="48" cy="54" r="9" fill="#ffe6a6" />
+                </g>
+              </svg>
+            </div>
+            <div class="snack-copy">
+              <p class="eyebrow">Optional</p>
+              <h2 id="snack-jar-h" class="h-snack">The snack jar</h2>
+              <p>Everything here stays free, with or without support. If a tool saved you a monthly fee and you want to toss a bagel in the jar, this is the only place we'll mention it.</p>
+            </div>
+            <div class="snack-act">
+              {SNACK_JAR.url ? (
+                <a class="btn alt" href={SNACK_JAR.url} target="_blank" rel="noopener noreferrer">Toss in a snack</a>
+              ) : (
+                <p class="mono small muted">The jar isn't wired up yet.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <section class="band night flash" data-node="end" aria-labelledby="origin-h">
+      <div class="wrap cols2 wide-left">
+        <div class="rv">
+          <p class="eyebrow">A joke, and it says so</p>
+          <h2 id="origin-h">How the raccoon got here</h2>
+          <p>One night a raccoon named Snick found an old laptop in a box on a porch step. The box said "FREE, TAKE ONE." A sticky note on the screen said "TODO: fix everything." The raccoon read half of it, got confused, and committed anyway. The commit message was "stuff." That was 3 AM. By 3:05 it was regretted. By 3:10 there was a patch for the regret, and the patching hasn't stopped.</p>
+          <p class="muted">This isn't a true story, and raccoons can't type. We call that a paw issue and won't take questions on it.</p>
+        </div>
+        <div class="origin-art rv" style="--i:1">
+          <img src="/art/raccoon-smirk.svg" alt="The raccoon, mask on, looking pleased with itself" width="1000" height="1000" />
+          <p class="note-chip mono">commit -m "stuff"</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <dialog class="idea-dlg" data-idea-dlg data-owner={IDEA_REPO_OWNER} data-repo={IDEA_REPO_REPO} data-live={String(IDEA_REPO_LIVE)} aria-labelledby="idea-dlg-h">
+    <div class="term idea-term">
+      <div class="term-bar">
+        <i></i><i></i><i></i>
+        <span>~/stash/pitch</span>
+        <button type="button" class="dlg-close" data-idea-close>Close (Esc)</button>
+      </div>
+      <div class="term-body">
+        <h2 id="idea-dlg-h" class="dlg-h">$ pitch --new-idea</h2>
+        <p class="d dlg-intro">Type a tool idea below. It builds a commit preview and opens a prefilled GitHub discussion in a new tab.</p>
+
+        <div class="prompt-field">
+          <label for="idea-title"><span class="p">$</span> idea-title</label>
+          <input id="idea-title" type="text" maxlength="100" autocomplete="off" placeholder="e.g. Plain-text invoice maker" data-idea-title />
+        </div>
+
+        <div class="prompt-field">
+          <label for="idea-body"><span class="p">$</span> what-it-replaces</label>
+          <textarea id="idea-body" rows="3" maxlength="1500" placeholder="What fee, login, or tracker should it replace? What is the one job it does?" data-idea-body></textarea>
+        </div>
+
+        <div class="commit-box" aria-live="polite">
+          <p class="commit-cmd"><span class="p">$</span> git commit -m "<span class="g" data-commit-title>idea: your tool idea</span>"</p>
+          <p class="d commit-msg" data-commit-body>[stash] Describe what fee or lock-in it replaces.</p>
+        </div>
+
+        <p class="dlg-notice" data-idea-notice>Your text goes to a public GitHub discussion in a new tab. Nothing is stored or collected on this site.</p>
+
+        <div class="dlg-actions">
+          {repoReady ? (
+            <a class="btn alt" href={discussionBase} target="_blank" rel="noopener noreferrer" data-idea-push>$ git push origin idea</a>
+          ) : (
+            <button type="button" class="btn alt" disabled aria-disabled="true" data-idea-push>$ git push origin idea</button>
+          )}
+          {!repoReady && <span class="repo-note mono" data-repo-note>The repo opens soon.</span>}
+        </div>
+      </div>
+    </div>
+  </dialog>
+</Base>
+
+<style>
+  .heap { overflow: visible; }
+  .obj { transform-box: fill-box; transform-origin: 50% 100%; }
+  .pitch-body p { margin-bottom: 1rem; }
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; margin-top: 2rem; }
+  .cta-row p { margin: 0; flex: 1 1 22rem; }
+  .rules { counter-reset: none; }
+  .rules li { padding: 0; }
+  .rule { display: grid; grid-template-columns: auto auto 1fr; gap: 0.8rem; align-items: start; padding: 1.2rem 1.3rem; cursor: pointer; height: 100%; border-radius: inherit; }
+  .rule input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .paw { width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 2px solid var(--rim-strong); display: grid; place-items: center; flex: none; }
+  .paw svg { width: 1.3rem; height: 1.3rem; fill: transparent; stroke: var(--muted); stroke-width: 1.4; }
+  .rule input:checked + .paw { background: var(--k-mint); border-color: var(--k-ink); }
+  .rule input:checked + .paw svg { fill: var(--k-ink); stroke: var(--k-ink); }
+  .rule input:focus-visible + .paw { outline: 3px solid var(--k-gold); outline-offset: 3px; }
+  .rn { font: 600 0.95rem/2.2rem var(--mono); color: var(--accent); }
+  .rt { padding-top: 0.35rem; }
+  .origin-art { position: relative; justify-self: center; width: min(100%, 24rem); }
+  .origin-art img { display: block; width: 100%; height: auto; filter: drop-shadow(0 20px 36px rgb(0 0 0 / 0.55)); }
+  .note-chip { position: absolute; right: -0.5rem; bottom: 12%; margin: 0; background: var(--k-gold-pale); color: var(--k-ink); border: 2px solid var(--k-ink); padding: 0.4rem 0.7rem; border-radius: 6px; transform: rotate(-5deg); font-size: 0.9rem; box-shadow: 4px 4px 0 var(--k-ink); }
+
+  /* optional snack jar */
+  .snack-jar { display: grid; gap: 1.2rem 1.8rem; grid-template-columns: 1fr; align-items: center; }
+  .snack-icon { width: 4.5rem; }
+  .snack-icon svg { display: block; width: 100%; height: auto; }
+  .snack-copy p:last-child, .snack-act p { margin-bottom: 0; }
+  .h-snack { font-size: clamp(1.35rem, 2.4vw, 1.75rem); margin-bottom: 0.35em; }
+  @media (min-width: 48rem) {
+    .snack-jar { grid-template-columns: auto 1fr auto; }
+  }
+
+  /* stash terminal idea popup */
+  .idea-dlg { padding: 0; border: 0; background: transparent; color: var(--k-cream); max-width: min(38rem, calc(100vw - 1.5rem)); width: 100%; overflow: visible; }
+  .idea-dlg::backdrop { background: rgb(14 6 25 / 0.78); backdrop-filter: blur(4px); }
+  .idea-term { width: 100%; }
+  .idea-term .term-bar { justify-content: flex-start; }
+  .dlg-close { margin-left: auto; font: 500 0.8rem/1 var(--mono); color: var(--k-cream); background: transparent; border: 1px solid rgb(194 255 230 / 0.35); border-radius: 6px; padding: 0.35rem 0.65rem; min-height: 2.2rem; cursor: pointer; }
+  .dlg-close:hover { border-color: var(--k-mint); color: var(--k-mint); }
+  .dlg-h { font: 700 1.15rem/1.3 var(--mono); color: var(--k-mint); margin: 0 0 0.4rem; }
+  .dlg-intro { margin-bottom: 1rem !important; font-size: 0.88rem; }
+  .prompt-field { margin-bottom: 0.9rem; }
+  .prompt-field label { display: block; font-size: 0.84rem; color: var(--k-cream); margin-bottom: 0.3rem; }
+  .prompt-field input, .prompt-field textarea {
+    width: 100%; font: 400 0.92rem/1.5 var(--mono); color: var(--k-cream);
+    background: #160b26; border: 1px solid rgb(134 227 190 / 0.35); border-radius: 8px; padding: 0.6rem 0.75rem;
+  }
+  .prompt-field input::placeholder, .prompt-field textarea::placeholder { color: #b9b0c8; opacity: 1; }
+  .prompt-field input:focus-visible, .prompt-field textarea:focus-visible { outline: 3px solid var(--k-gold); outline-offset: 2px; border-color: var(--k-mint); }
+  .commit-box { background: #130822; border: 1px dashed rgb(134 227 190 / 0.3); border-radius: 10px; padding: 0.75rem 0.9rem; margin: 1rem 0 0.9rem; font-size: 0.86rem; }
+  .commit-cmd { word-break: break-word; }
+  .commit-msg { margin-top: 0.35rem !important; white-space: pre-wrap; word-break: break-word; }
+  .dlg-notice { font: 400 0.84rem/1.5 var(--sans); color: #d2cae2; margin-bottom: 1rem !important; }
+  .dlg-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; }
+  .repo-note { font-size: 0.86rem; color: var(--k-gold); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .obj { transition: transform 0.3s cubic-bezier(.2,.9,.2,1.3); animation: settle 0.9s cubic-bezier(.2,.9,.3,1.4) both; }
+    .o2 { animation-delay: 0.1s; } .o3 { animation-delay: 0.2s; } .o4 { animation-delay: 0.3s; } .o5 { animation-delay: 0.4s; }
+    .obj:hover { transform: translateY(-14px) rotate(-3deg); }
+    .paw { transition: background-color 0.2s, transform 0.2s; }
+    .rule input:checked + .paw { transform: scale(1.12) rotate(-8deg); }
+    @keyframes settle { from { transform: translateY(-60px); opacity: 0; } 70% { transform: translateY(6px); opacity: 1; } }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-copy-rules]');
+  const status = document.querySelector<HTMLElement>('[data-rules-status]');
+  btn?.addEventListener('click', async () => {
+    const text = [...document.querySelectorAll<HTMLElement>('.rules .rt')].map((r, i) => `${i + 1}. ${r.textContent?.trim()}`).join('\n');
+    try {
+      await navigator.clipboard.writeText('House rules\n\n' + text + '\n');
+      if (status) status.textContent = 'Copied all ten. Paste them into your README.';
+    } catch {
+      if (status) status.textContent = 'Copying was blocked by the browser. Select the rules above and copy them by hand.';
+    }
+  });
+
+  // Stash terminal idea popup: builds a live commit preview and prefilled GitHub Discussions URL.
+  // Stores nothing and sends nothing on its own.
+  const openBtn = document.querySelector<HTMLButtonElement>('[data-idea-open]');
+  const dlg = document.querySelector<HTMLDialogElement>('[data-idea-dlg]');
+  const closeBtn = dlg?.querySelector<HTMLButtonElement>('[data-idea-close]');
+  const titleIn = dlg?.querySelector<HTMLInputElement>('[data-idea-title]');
+  const bodyIn = dlg?.querySelector<HTMLTextAreaElement>('[data-idea-body]');
+  const commitTitle = dlg?.querySelector<HTMLElement>('[data-commit-title]');
+  const commitBody = dlg?.querySelector<HTMLElement>('[data-commit-body]');
+  const pushEl = dlg?.querySelector<HTMLElement>('[data-idea-push]');
+
+  const syncPreview = () => {
+    const rawTitle = (titleIn?.value || '').trim();
+    const rawBody = (bodyIn?.value || '').trim();
+    if (commitTitle) commitTitle.textContent = rawTitle ? `idea: ${rawTitle}` : 'idea: your tool idea';
+    if (commitBody) {
+      const snippet = rawBody.length > 140 ? rawBody.slice(0, 140) + '...' : rawBody;
+      commitBody.textContent = snippet ? `[stash] ${snippet}` : '[stash] Describe what fee or lock-in it replaces.';
+    }
+    const owner = dlg?.dataset.owner || '';
+    const repo = dlg?.dataset.repo || '';
+    const live = dlg?.dataset.live === 'true';
+    if (live && owner && repo && pushEl instanceof HTMLAnchorElement) {
+      const discTitle = rawTitle ? `Idea: ${rawTitle}` : 'Tool idea';
+      const discBody = rawBody || 'What fee or lock-in should this replace?\n';
+      const url = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/discussions/new?category=ideas&title=${encodeURIComponent(discTitle)}&body=${encodeURIComponent(discBody)}`;
+      pushEl.href = url;
+    }
+  };
+
+  openBtn?.addEventListener('click', () => {
+    syncPreview();
+    dlg?.showModal();
+    titleIn?.focus();
+  });
+  closeBtn?.addEventListener('click', () => dlg?.close());
+  dlg?.addEventListener('click', (ev) => { if (ev.target === dlg) dlg.close(); });
+  titleIn?.addEventListener('input', syncPreview);
+  bodyIn?.addEventListener('input', syncPreview);
+</script>

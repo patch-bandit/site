@@ -1,0 +1,243 @@
+---
+// Home hero: the masked raccoon on a rooftop at night, lit by a laptop screen, with code and
+// circuit light around it. Built from the kit's raccoon figures, circuit, scanlines and glint,
+// plus a night city drawn here. It is one component with a slot for the words, so a later
+// art round can swap the scene without touching the page.
+import focused from '../art/raccoon-focused.svg?raw';
+import celebrate from '../art/raccoon-celebrate.svg?raw';
+import glintRaw from '../art/motif-glint.svg?raw';
+// Each inline copy gets its own gradient id, so ids stay unique on the page.
+const glint = (n: string) => glintRaw.replaceAll('gl-g', `gl-hero-${n}`);
+
+// Seeded random so every build draws the same city.
+let seed = 7;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+const stars = Array.from({ length: 110 }, () => ({ x: rnd() * 1600, y: rnd() * 560, r: 0.6 + rnd() * 1.6, o: 0.35 + rnd() * 0.6, tw: rnd() < 0.18 }));
+const far: { x: number; w: number; h: number }[] = [];
+for (let x = -20; x < 1620; ) { const w = 50 + rnd() * 90; far.push({ x, w, h: 160 + rnd() * 230 }); x += w + 4; }
+const near: { x: number; w: number; h: number; ant: boolean }[] = [];
+for (let x = -40; x < 1640; ) { const w = 90 + rnd() * 150; near.push({ x, w, h: 90 + rnd() * 210, ant: rnd() < 0.3 }); x += w + 10; }
+const windows: { x: number; y: number; c: string; o: number }[] = [];
+far.forEach((b) => {
+  for (let i = 0; i < 4; i++) if (rnd() < 0.55) windows.push({ x: b.x + 10 + rnd() * (b.w - 24), y: 900 - b.h + 20 + rnd() * (b.h - 60), c: rnd() < 0.7 ? '#ffc857' : '#86e3be', o: 0.25 + rnd() * 0.45 });
+});
+const glyphs = ['</>', '{ }', '01', '>_', '//', '[ ]', ';', '&&', '#!', '=>', '0x', '()'];
+const glyphPos = glyphs.map((g, i) => ({ g, x: 8 + ((i * 37) % 84), d: (i * 0.55) % 6, s: 0.85 + (i % 4) * 0.18, gold: i % 3 === 0 }));
+---
+<section class="hero" aria-labelledby="hero-h">
+  <div class="layer sky" aria-hidden="true" style="--depth:0.08">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+      <defs>
+        <radialGradient id="hs-moon" cx="50%" cy="50%" r="50%">
+          <stop offset="0" stop-color="#fff2de" stop-opacity="0.55" />
+          <stop offset="1" stop-color="#fff2de" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      {stars.map((s) => <circle class={s.tw ? 'tw' : undefined} cx={s.x.toFixed(1)} cy={s.y.toFixed(1)} r={s.r.toFixed(2)} fill="#fff2de" opacity={s.o.toFixed(2)} style={s.tw ? `--d:${(s.x % 5).toFixed(2)}s` : undefined} />)}
+      <circle cx="1310" cy="170" r="170" fill="url(#hs-moon)" />
+      <circle cx="1310" cy="170" r="64" fill="#fff2de" />
+      <circle cx="1290" cy="155" r="12" fill="#e9dcc8" />
+      <circle cx="1332" cy="190" r="8" fill="#e9dcc8" />
+    </svg>
+  </div>
+  <div class="layer city-far" aria-hidden="true" style="--depth:0.2">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+      {far.map((b) => <rect x={b.x.toFixed(1)} y={(900 - b.h).toFixed(1)} width={b.w.toFixed(1)} height={b.h.toFixed(1)} fill="#1e1033" />)}
+      {windows.map((w) => <rect x={w.x.toFixed(1)} y={w.y.toFixed(1)} width="7" height="10" rx="1" fill={w.c} opacity={w.o.toFixed(2)} />)}
+    </svg>
+  </div>
+  <div class="layer circuit" aria-hidden="true" style="--depth:0.32"></div>
+  <div class="layer city-near" aria-hidden="true" style="--depth:0.4">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+      {near.map((b) => (
+        <g>
+          <rect x={b.x.toFixed(1)} y={(900 - b.h).toFixed(1)} width={b.w.toFixed(1)} height={b.h.toFixed(1)} fill="#140a22" />
+          {b.ant && <rect x={(b.x + b.w / 2).toFixed(1)} y={(900 - b.h - 46).toFixed(1)} width="4" height="46" fill="#140a22" />}
+          {b.ant && <circle class="beacon" cx={(b.x + b.w / 2 + 2).toFixed(1)} cy={(900 - b.h - 48).toFixed(1)} r="4" fill="#ff7b67" />}
+        </g>
+      ))}
+    </svg>
+  </div>
+  <div class="ledge" aria-hidden="true"></div>
+
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <slot />
+    </div>
+    <div class="rig" role="img" aria-label="Snick, a masked raccoon behind a glowing laptop on a rooftop at night, with code floating from the screen" data-rig>
+      <div class="glyphs" aria-hidden="true">
+        {glyphPos.map((p) => <span class={p.gold ? 'gl gold' : 'gl'} style={`--x:${p.x}%;--d:${p.d}s;--s:${p.s}`}>{p.g}</span>)}
+      </div>
+      <div class="halo" aria-hidden="true"></div>
+      <div class="coon" data-coon aria-hidden="true">
+        <div class="face focused" set:html={focused} />
+        <div class="face celebrate" set:html={celebrate} />
+        <div class="screenlight"></div>
+      </div>
+      <svg class="laptop" viewBox="0 0 600 250" aria-hidden="true">
+        <defs>
+          <linearGradient id="hs-shell" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#4b2d6e" />
+            <stop offset="1" stop-color="#2b1a42" />
+          </linearGradient>
+        </defs>
+        <path d="M70 12 Q70 4 80 4 H520 Q530 4 530 12 L548 214 H52 Z" fill="url(#hs-shell)" stroke="#140a22" stroke-width="8" stroke-linejoin="round" />
+        <path class="rim" d="M84 10 H516" stroke="#c2ffe6" stroke-width="5" stroke-linecap="round" />
+        <rect x="24" y="210" width="552" height="30" rx="12" fill="#5b5075" stroke="#140a22" stroke-width="8" />
+        <g transform="translate(390 120) rotate(-6)">
+          <rect x="-46" y="-30" width="92" height="60" rx="12" fill="#ff7b67" stroke="#140a22" stroke-width="6" />
+          <path d="M-26 -10 L-10 2 L-26 14" fill="none" stroke="#fff2de" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M-2 14 H24" stroke="#fff2de" stroke-width="7" stroke-linecap="round" />
+        </g>
+        <g transform="translate(205 118) rotate(5)">
+          <rect x="-58" y="-26" width="116" height="52" rx="26" fill="#86e3be" stroke="#140a22" stroke-width="6" />
+          <text x="0" y="8" text-anchor="middle" font-family="Fira Code, monospace" font-size="22" font-weight="600" fill="#140a22">MIT</text>
+        </g>
+      </svg>
+      <div class="glints" aria-hidden="true">
+        <span class="gx g1" set:html={glint('1')} />
+        <span class="gx g2" set:html={glint('2')} />
+        <span class="gx g3" set:html={glint('3')} />
+      </div>
+    </div>
+  </div>
+  <div class="scan" aria-hidden="true"></div>
+  <div class="glitch" aria-hidden="true"></div>
+</section>
+
+<style>
+  .hero {
+    position: relative; overflow: hidden; isolation: isolate;
+    background: #0e0619;
+    background-image: radial-gradient(70rem 40rem at 75% 15%, rgb(122 85 176 / 0.45), transparent 60%), linear-gradient(#0e0619, #1e1033 70%, #2b1a42);
+    color: #fff2de;
+    --text: #fff2de; --muted: #d2cae2; --link: #86e3be; --link-hover: #ffc857; --accent: #86e3be;
+    min-height: min(56rem, calc(100svh - 3.5rem));
+    display: flex; align-items: stretch;
+  }
+  .layer { position: absolute; inset: 0; z-index: -3; pointer-events: none; }
+  .layer svg { width: 100%; height: 100%; display: block; }
+  .city-far { opacity: 0.95; }
+  .circuit {
+    z-index: -3;
+    background: url('/art/motif-circuit.svg') 0 0 / 220px 220px;
+    opacity: 0.16;
+    -webkit-mask-image: radial-gradient(36rem 30rem at 72% 70%, #000, transparent 70%);
+    mask-image: radial-gradient(36rem 30rem at 72% 70%, #000, transparent 70%);
+  }
+  .ledge {
+    position: absolute; left: 0; right: 0; bottom: 0; height: clamp(56px, 11%, 110px); z-index: -1;
+    background: linear-gradient(#2b1a42, #1e1033);
+    border-top: 6px solid #140a22;
+    box-shadow: inset 0 3px 0 rgb(194 255 230 / 0.18);
+  }
+  .hero-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; position: relative; z-index: 1; padding-top: clamp(2.5rem, 6vw, 4rem); }
+  .hero-copy { align-self: center; max-width: 36rem; padding-bottom: 1rem; }
+  .hero-copy :global(h1) { font-size: clamp(2.6rem, 6.4vw, 5rem); line-height: 1.02; margin-bottom: 0.4em; text-shadow: 0 2px 30px rgb(14 6 25 / 0.7); }
+  .hero-copy :global(.lead) { color: #fff2de; }
+
+  .rig { position: relative; width: min(100%, 34rem); justify-self: center; align-self: end; aspect-ratio: 1 / 1.02; }
+  .coon { position: absolute; left: 12%; right: 12%; top: 6%; aspect-ratio: 1; }
+  .face { position: absolute; inset: 0; }
+  .face :global(svg) { width: 100%; height: 100%; display: block; }
+  .face.celebrate { opacity: 0; }
+  .rig.party .face.celebrate { opacity: 1; }
+  .rig.party .face.focused { opacity: 0; }
+  .screenlight {
+    position: absolute; left: 10%; right: 10%; top: 38%; bottom: 0; border-radius: 50%;
+    background: radial-gradient(ellipse at 50% 85%, rgb(134 227 190 / 0.55), rgb(134 227 190 / 0.12) 45%, transparent 70%);
+    mix-blend-mode: screen; pointer-events: none;
+  }
+  .halo { position: absolute; left: 0; right: 0; top: 18%; bottom: 8%; border-radius: 50%; background: radial-gradient(circle at 50% 70%, rgb(134 227 190 / 0.28), transparent 62%); filter: blur(6px); }
+  .laptop { position: absolute; left: 4%; width: 92%; bottom: 0; height: auto; filter: drop-shadow(0 -10px 30px rgb(134 227 190 / 0.45)); }
+  .glyphs { position: absolute; inset: 0 0 30% 0; pointer-events: none; }
+  .gl { position: absolute; left: var(--x); bottom: 20%; font: 600 calc(1rem * var(--s)) / 1 var(--mono); color: #86e3be; opacity: 0.55; text-shadow: 0 0 12px rgb(134 227 190 / 0.8); }
+  .gl.gold { color: #ffc857; text-shadow: 0 0 12px rgb(255 200 87 / 0.8); }
+  .gl:nth-child(odd) { bottom: 48%; }
+  .gl:nth-child(3n) { bottom: 70%; }
+  .glints .gx { position: absolute; width: 9%; aspect-ratio: 1; display: block; }
+  .glints .gx :global(svg) { width: 100%; height: 100%; display: block; }
+  .g1 { left: 6%; top: 18%; }
+  .g2 { right: 4%; top: 6%; width: 12% !important; }
+  .g3 { right: 14%; top: 44%; width: 6% !important; }
+  .scan { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: url('/art/motif-glitch-scanlines.svg') 0 0 / 480px 240px; opacity: 0.06; mix-blend-mode: screen; }
+  .glitch { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background:
+      linear-gradient(transparent 22%, rgb(255 123 103 / 0.35) 22% 24%, transparent 24% 51%, rgb(134 227 190 / 0.35) 51% 52.5%, transparent 52.5% 73%, rgb(122 85 176 / 0.5) 73% 76%, transparent 76%); }
+
+  @media (min-width: 60rem) {
+    .hero-grid { grid-template-columns: 1fr 1fr; gap: 2rem; padding-top: 0; }
+    .hero-copy { padding-block: 4rem 7rem; }
+    .rig { width: min(100%, 38rem); margin-bottom: 0; }
+  }
+
+  /* motion: screen-on reveal, then quiet loops. Nothing here runs when less motion is asked for. */
+  @media (prefers-reduced-motion: no-preference) {
+    .layer, .rig { transform: translate3d(0, calc(var(--sy, 0) * var(--depth, 0) * 1px), 0); will-change: transform; }
+    .rig { --depth: -0.06; }
+    .coon { transform: rotate(var(--tilt, 0deg)); transition: transform 0.4s ease-out; transform-origin: 50% 80%; }
+    .face { transition: opacity 0.35s; }
+    .scan { animation: scan-in 1.1s ease-out both, scan-drift 6s linear 1.1s infinite; }
+    .glitch { animation: glitch 0.9s steps(1) 0.35s both; }
+    .coon { animation: screen-on 1.4s ease-out 0.5s both; }
+    .screenlight { animation: flick 1.4s steps(1) 0.5s both, breathe 5s ease-in-out 2s infinite; }
+    .laptop .rim { animation: flick 1.4s steps(1) 0.5s both; }
+    .gl { animation: rise 6.5s linear calc(1s + var(--d)) infinite both; }
+    .gx { animation: twinkle 3.4s ease-in-out 1.8s infinite both; }
+    .g2 { animation-delay: 2.4s; }
+    .g3 { animation-delay: 3.1s; }
+    .sky :global(.tw) { animation: twinkle 4s ease-in-out var(--d) infinite; transform-box: fill-box; transform-origin: center; }
+    .city-near :global(.beacon) { animation: beacon 2.4s steps(1) infinite; }
+    .circuit { animation: flow 24s linear infinite; }
+    .hero-copy :global(h1) { animation: h1-glitch 0.8s steps(1) 0.35s both; }
+    .hero-copy { animation: copy-in 0.9s cubic-bezier(.2,.8,.2,1) 0.15s both; }
+    .face.focused :global(.eye-scan) { animation: eye-scan 9.5s ease-in-out 2.2s infinite; }
+  }
+  @keyframes eye-scan {
+    0%, 54%, 100% { transform: translate(0, 0); }
+    62% { transform: translate(-7px, 2px); }
+    72% { transform: translate(8px, 2px); }
+    80% { transform: translate(-3px, 3px); }
+    88% { transform: translate(0, 0); }
+  }
+  @keyframes scan-in { from { background-position: 0 -900px; opacity: 0.35; } to { background-position: 0 0; opacity: 0.06; } }
+  @keyframes scan-drift { to { background-position: 0 240px; } }
+  @keyframes glitch { 0% { opacity: 0; } 10% { opacity: 1; transform: translateX(-8px); } 20% { opacity: 0; } 35% { opacity: 0.8; transform: translateX(6px) scaleY(1.2); } 45%, 100% { opacity: 0; transform: none; } }
+  @keyframes screen-on { 0% { filter: brightness(0.2) saturate(0.4); } 30% { filter: brightness(0.75) saturate(0.8); } 38% { filter: brightness(0.35); } 55%, 100% { filter: none; } }
+  @keyframes flick { 0% { opacity: 0; } 20% { opacity: 1; } 28% { opacity: 0.2; } 40%, 100% { opacity: 1; } }
+  @keyframes breathe { 50% { opacity: 0.7; } }
+  @keyframes rise { 0% { transform: translateY(30px); opacity: 0; } 15% { opacity: 0.7; } 80% { opacity: 0.45; } 100% { transform: translateY(-140px); opacity: 0; } }
+  @keyframes twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
+  @keyframes beacon { 50% { opacity: 0.15; } }
+  @keyframes flow { to { background-position: 220px 440px; } }
+  @keyframes h1-glitch { 0% { text-shadow: 3px 0 #ff7b67, -3px 0 #86e3be; transform: translateX(2px); } 15% { text-shadow: -4px 0 #ff7b67, 4px 0 #86e3be; transform: translateX(-3px); } 30%, 100% { text-shadow: 0 2px 30px rgb(14 6 25 / 0.7); transform: none; } }
+  @keyframes copy-in { from { opacity: 0; transform: translateY(14px); } }
+</style>
+
+<script>
+  // Parallax, a slight head turn toward the pointer, and a celebration when the hidden key is typed.
+  const hero = document.querySelector<HTMLElement>('.hero');
+  const rig = document.querySelector<HTMLElement>('[data-rig]');
+  const coon = document.querySelector<HTMLElement>('[data-coon]');
+  const motion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  if (hero && rig && motion) {
+    let ticking = false;
+    const onScroll = () => {
+      ticking = false;
+      const y = window.scrollY;
+      if (y < hero.offsetHeight * 1.2) hero.style.setProperty('--sy', String(y));
+    };
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+    if (window.matchMedia('(pointer: fine)').matches && coon) {
+      hero.addEventListener('pointermove', (ev) => {
+        const r = coon.getBoundingClientRect();
+        const dx = (ev.clientX - (r.left + r.width / 2)) / window.innerWidth;
+        coon.style.setProperty('--tilt', `${Math.max(-2.5, Math.min(2.5, dx * 6)).toFixed(2)}deg`);
+      });
+      hero.addEventListener('pointerleave', () => coon.style.setProperty('--tilt', '0deg'));
+    }
+  }
+  document.addEventListener('pb:open', () => {
+    rig?.classList.add('party');
+    setTimeout(() => rig?.classList.remove('party'), 4000);
+  });
+</script>

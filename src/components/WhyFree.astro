@@ -1,0 +1,38 @@
+---
+// The closing band on every lab page: why the code is free, and the next snack.
+import { getCollection } from 'astro:content';
+import { LAB_EXPERIMENTS, inWords } from '../data/site';
+
+interface Props {
+  nextHref: string;
+  nextTitle: string;
+  nextBlurb: string;
+}
+const { nextHref, nextTitle, nextBlurb } = Astro.props;
+const built = (await getCollection('drops')).length + LAB_EXPERIMENTS.length;
+---
+<section class="band night flash" data-node="end" aria-labelledby="free-h">
+  <div class="wrap cols2 why">
+    <div class="card rv">
+      <p class="tag">The fine print, in plain words</p>
+      <h2 id="free-h">Why this is free</h2>
+      <p>We're raccoons who think simple things shouldn't cost a monthly fee. We take techniques apart, explain them in plain words, and give them away. The code on this page is MIT licensed: copy it, change it, and share it.</p>
+      <p>This is one of {inWords(built)} experiments so far. Our first browser tool (<a href="/tools/qr-code-generator/">Bandit Codes</a>) is live now, and the rest sit as ideas in the stash.</p>
+      <p class="links"><a href="/#a3-h">Read the story</a> · <a href="/tools/">See the tools</a> · <a href="/den/">See the stash</a></p>
+    </div>
+    <div class="card mint next rv" style="--i:1">
+      <p class="tag">Next snack</p>
+      <h2 class="h-next"><a href={nextHref}>{nextTitle}</a></h2>
+      <p>{nextBlurb}</p>
+      <p><a class="btn" href={nextHref}>Go to the next snack</a></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why { align-items: stretch; }
+  .why > .card { display: flex; flex-direction: column; }
+  .h-next { font-size: clamp(1.4rem, 2.4vw, 1.9rem); }
+  .links { margin-top: auto !important; padding-top: 0.6rem; }
+  .next .btn { margin-top: 0.4rem; }
+</style>

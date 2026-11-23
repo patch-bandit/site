@@ -1,0 +1,109 @@
+---
+// A tiny toy: press the button, get one made-up line. No repeats until the pool is spent.
+// Runs in the browser, keeps nothing, sends nothing. Two looks: a night log screen or a bug jar.
+interface Props {
+  id: string;
+  title: string;
+  intro: string;
+  button: string;
+  again: string;
+  pool: string[];
+  idle: string;
+  kind?: 'log' | 'jar';
+  noun?: string; // what one line is called in the counter
+}
+const { id, title, intro, button, again, pool, idle, kind = 'log', noun = 'entries' } = Astro.props;
+---
+<section class:list={['toy card', kind]} data-toy data-pool={JSON.stringify(pool)} data-again={again} data-noun={noun} aria-labelledby={`${id}-h`}>
+  <div class="pic" aria-hidden="true">
+    {kind === 'log' ? (
+      <div class="mini-screen"><i class="row r1"></i><i class="row r2"></i><i class="row r3"></i><i class="row r4"></i><b>&gt;_</b></div>
+    ) : (
+      <div class="jar"><i class="cap"></i><i class="glass"></i><i class="bug b1"></i><i class="bug b2"></i><i class="bug b3"></i><i class="label">BUGS</i></div>
+    )}
+  </div>
+  <div class="body">
+    <h2 id={`${id}-h`}>{title}</h2>
+    <p class="muted">{intro}</p>
+    <p><button type="button" class="btn" data-go>{button}</button></p>
+    <p class="out" role="status" aria-live="polite" data-out>{idle}</p>
+    <p class="meta muted" data-meta>0 of {pool.length} {noun} read so far.</p>
+    <noscript><p class="note">This toy needs JavaScript. Nothing else on the page does.</p></noscript>
+  </div>
+</section>
+
+<style>
+  .toy { display: grid; gap: 1.5rem; grid-template-columns: 1fr; align-items: center; }
+  .body { min-width: 0; }
+  .out { font: 500 1.12rem/1.55 var(--mono); min-height: 5.5em; background: var(--code-bg); color: var(--k-cream); border: 1px solid var(--rim-strong); border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 0.6rem; }
+  .out::before { content: "> "; color: var(--k-mint); }
+  .meta { margin: 0; font-size: 0.95rem; }
+  .pic { width: 9rem; height: 9rem; margin-inline: auto; position: relative; }
+  .pic i, .pic b { position: absolute; display: block; }
+  /* night log: a small glowing screen */
+  .mini-screen { position: absolute; inset: 1rem 0.3rem; background: #0b0414; border: 4px solid var(--k-ink); outline: 3px solid var(--k-fur-dark); border-radius: 12px; box-shadow: 0 0 30px rgb(134 227 190 / 0.35); overflow: hidden; }
+  .mini-screen .row { left: 0.7rem; height: 0.45rem; border-radius: 4px; background: var(--k-mint); opacity: 0.85; }
+  .r1 { top: 0.8rem; width: 60%; }
+  .r2 { top: 1.6rem; width: 42%; background: var(--k-gold) !important; }
+  .r3 { top: 2.4rem; width: 70%; }
+  .r4 { top: 3.2rem; width: 30%; background: var(--k-coral) !important; }
+  .mini-screen b { left: 0.7rem; bottom: 0.5rem; font: 700 1.2rem/1 var(--mono); color: var(--k-mint-glow); }
+  /* bug jar */
+  .cap { left: 2.1rem; right: 2.1rem; top: 0.6rem; height: 1.1rem; background: var(--k-coral); border: 4px solid var(--k-ink); border-radius: 6px; z-index: 2; transform-origin: 0 100%; }
+  .glass { left: 1.5rem; right: 1.5rem; top: 1.5rem; bottom: 0.2rem; background: rgb(194 255 230 / 0.14); border: 4px solid var(--k-ink); border-radius: 22px 22px 26px 26px; box-shadow: inset 6px 0 0 rgb(255 242 222 / 0.25); }
+  .bug { width: 0.9rem; height: 0.7rem; background: var(--k-gold); border: 3px solid var(--k-ink); border-radius: 50%; }
+  .b1 { left: 3rem; top: 4rem; }
+  .b2 { left: 5rem; top: 5.4rem; }
+  .b3 { left: 3.6rem; top: 6.6rem; }
+  .label { left: 2.6rem; right: 2.6rem; top: 3rem; text-align: center; font: 700 0.7rem/1.5 var(--mono); background: var(--k-cream); color: var(--k-ink); border: 2px solid var(--k-ink); border-radius: 4px; }
+  .toy.open .cap { transform: rotate(-24deg) translate(-0.2rem, -0.3rem); }
+  @media (prefers-reduced-motion: no-preference) {
+    .cap { transition: transform 0.25s ease-out; }
+    .toy.jar.pulse .bug { animation: buzz 0.5s; }
+    .toy.log.pulse .row { animation: scroll-up 0.45s ease-out; }
+  }
+  @keyframes buzz { 25% { transform: translate(3px, -2px); } 75% { transform: translate(-3px, 2px); } }
+  @keyframes scroll-up { from { transform: translateY(0.8rem); opacity: 0; } }
+  @media (min-width: 52rem) {
+    .toy { grid-template-columns: 11rem 1fr; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-toy]').forEach((toy) => {
+    const pool: string[] = JSON.parse(toy.dataset.pool ?? '[]');
+    const go = toy.querySelector<HTMLButtonElement>('[data-go]');
+    const out = toy.querySelector<HTMLElement>('[data-out]');
+    const meta = toy.querySelector<HTMLElement>('[data-meta]');
+    const noun = toy.dataset.noun ?? 'entries';
+    if (!go || !out || !meta || pool.length === 0) return;
+    const total = pool.length;
+    let bag: number[] = [];
+    let last = -1;
+    let pulled = 0;
+    const refill = () => {
+      bag = pool.map((_, i) => i);
+      for (let i = bag.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [bag[i], bag[j]] = [bag[j], bag[i]];
+      }
+      if (bag[bag.length - 1] === last && bag.length > 1) bag.unshift(bag.pop() as number);
+    };
+    refill();
+    go.addEventListener('click', () => {
+      let refilled = false;
+      if (bag.length === 0) { refill(); pulled = 0; refilled = true; }
+      last = bag.pop() as number;
+      pulled += 1;
+      out.textContent = pool[last];
+      meta.textContent = refilled
+        ? `You read them all, so the pile is shuffled again. 1 of ${total} ${noun} read.`
+        : `${pulled} of ${total} ${noun} read so far.`;
+      toy.classList.add('open');
+      toy.classList.remove('pulse');
+      void toy.offsetWidth;
+      toy.classList.add('pulse');
+      go.textContent = toy.dataset.again ?? 'Again';
+    });
+  });
+</script>

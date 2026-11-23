@@ -1,0 +1,43 @@
+---
+interface Props {
+  code: string;
+  label: string;
+}
+const { code, label } = Astro.props;
+---
+<figure class="code" data-code style="margin-inline:0">
+  <header>
+    <span>{label}</span>
+    <button type="button" data-copy>Copy<span class="sr"> {label}</span></button>
+  </header>
+  <pre tabindex="0"><code>{code}</code></pre>
+  <p class="sr" role="status" aria-live="polite" data-status></p>
+</figure>
+
+<script>
+  // Copy buttons. Runs only on pages that include a code block. Sends nothing anywhere.
+  document.querySelectorAll<HTMLElement>('[data-code]').forEach((box) => {
+    const btn = box.querySelector<HTMLButtonElement>('[data-copy]');
+    const pre = box.querySelector('pre');
+    const status = box.querySelector('[data-status]');
+    if (!btn || !pre || !status) return;
+    btn.addEventListener('click', async () => {
+      const text = pre.textContent ?? '';
+      let ok = false;
+      try {
+        await navigator.clipboard.writeText(text);
+        ok = true;
+      } catch {
+        const range = document.createRange();
+        range.selectNodeContents(pre);
+        const sel = window.getSelection();
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }
+      status.textContent = ok ? 'Copied.' : 'Selected. Press Ctrl+C to copy.';
+      const label = btn.firstChild;
+      if (label) label.textContent = ok ? 'Copied' : 'Selected';
+      setTimeout(() => { if (label) label.textContent = 'Copy'; }, 1800);
+    });
+  });
+</script>

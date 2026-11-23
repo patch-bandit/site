@@ -1,0 +1,487 @@
+---
+// The raccoon, drawn in pure CSS (no image), redrawn from the round 4 master: torn notch in the
+// left ear, one sweeping mask band, cream brow tufts, mint eyes, hood down, drawstrings and a
+// chest patch. No tooth, no bandage. 1em is 1 percent of the width, so --size scales it all.
+// Set --apart from 0 to 1 to pull it into labeled pieces (a parts diagram at 1).
+// As --apart rises, the face gets progressively more uncomfortable (brows up, eyes wide,
+// nervous wobbly mouth, sweat drop) and relaxes when it goes back together.
+// Optional `pose`:
+//   - "default": standard pose (and taken-apart diagram when labels/apart are used)
+//   - "tools":   at the workbench tightening a hex bolt with a wrench (idle crank motion)
+//   - "lab":     wearing safety goggles and holding a fizzing flask (idle bubble motion)
+interface Props {
+  label?: string;
+  apart?: number;
+  labels?: boolean;
+  size?: string;
+  pose?: 'default' | 'tools' | 'lab';
+}
+const {
+  label = 'A raccoon in a mint hoodie, drawn with CSS only',
+  apart = 0,
+  labels = false,
+  size,
+  pose = 'default',
+} = Astro.props;
+const style = `--apart:${apart};${size ? `--size:${size};` : ''}`;
+---
+<div
+  class:list={['rc', { labeled: labels }, pose !== 'default' && ['rc-pose', `pose-${pose}`]]}
+  role="img"
+  aria-label={label}
+  style={style}
+  data-rc
+  data-pose={pose}
+>
+  <div class="pc tail-g" style="--dx:16;--dy:6"><div class="tail ol"></div></div>
+  <div class="pc hood-g" style="--dx:0;--dy:16">
+    <div class="hoodie ol"><i class="collar"></i><i class="str s1"></i><i class="str s2"></i><b class="patch">&gt;_</b></div>
+  </div>
+  <div class="pc ears-g" style="--dx:0;--dy:-16">
+    <div class="ears ol"><i class="ear el"></i><i class="ear er"></i></div>
+    <i class="inner il"></i><i class="inner ir"></i>
+  </div>
+  <div class="pc head-g" style="--dx:0;--dy:0">
+    <div class="headol ol"><i class="head"></i><i class="tuft"></i></div>
+    <i class="stripe"></i>
+    <i class="sweat" aria-hidden="true"></i>
+  </div>
+  <div class="pc muz-g" style="--dx:-20;--dy:10">
+    <i class="muzzle"></i><i class="nose"></i><i class="phil"></i>
+    <i class="mouth"></i>
+    <i class="mouth-wob" aria-hidden="true"><b class="w1"></b><b class="w2"></b><b class="w3"></b></i>
+  </div>
+  <div class="pc mask-g" style="--dx:-22;--dy:-6">
+    <i class="mask"></i>
+    <i class="brow bl"></i><i class="brow br"></i>
+    <i class="eye el2"><b></b></i><i class="eye er2"><b></b></i>
+  </div>
+
+  {pose === 'tools' && (
+    <div class="pose-layer bench-g" aria-hidden="true">
+      <i class="bench-leg"></i>
+      <i class="bench-top"></i>
+      <div class="sack-ol ol">
+        <i class="sack-top"></i>
+        <i class="sack-body"></i>
+      </div>
+      <i class="sack-tie"></i>
+      <i class="paw-l"></i>
+      <i class="bolt-washer"></i>
+      <i class="bolt-head"></i>
+      <i class="bolt-glint"></i>
+      <div class="wrench-rig">
+        <div class="wrench-ol ol">
+          <i class="w-jaw"></i>
+          <i class="w-bar"></i>
+        </div>
+        <i class="paw-r"></i>
+      </div>
+    </div>
+  )}
+
+  {pose === 'lab' && (
+    <Fragment>
+      <div class="pose-layer goggles-g" aria-hidden="true">
+        <i class="gog-strap gog-strap-l"></i>
+        <i class="gog-strap gog-strap-r"></i>
+        <i class="gog-bridge"></i>
+        <i class="gog-lens gog-l"></i>
+        <i class="gog-lens gog-r"></i>
+      </div>
+      <div class="pose-layer flask-g" aria-hidden="true">
+        <div class="flask-ol ol">
+          <i class="fl-body"></i>
+          <i class="fl-neck"></i>
+          <i class="fl-rim"></i>
+        </div>
+        <i class="fl-liquid"></i>
+        <i class="fl-glint"></i>
+        <i class="fl-ticks"></i>
+        <i class="bub b1"></i>
+        <i class="bub b2"></i>
+        <i class="bub b3"></i>
+        <i class="bub b4"></i>
+        <i class="bub b5"></i>
+        <i class="lab-paw"></i>
+      </div>
+    </Fragment>
+  )}
+
+  {labels && (
+    <div class="lbls">
+      <span class="lbl l-tail" style="--dx:16;--dy:6">rings: one repeating gradient</span>
+      <span class="lbl l-hood" style="--dx:0;--dy:16">outline: four hard shadows</span>
+      <span class="lbl l-ears" style="--dx:0;--dy:-16">ears: clip-path, one torn notch</span>
+      <span class="lbl l-head" style="--dx:0;--dy:0">one size variable scales it all</span>
+      <span class="lbl l-muz" style="--dx:-20;--dy:10">muzzle: border-radius ovals</span>
+      <span class="lbl l-mask" style="--dx:-22;--dy:-6">mask: one band, cut with clip-path</span>
+    </div>
+  )}
+</div>
+
+<style>
+  .rc {
+    --size: min(80vw, 420px);
+    --ink: #140a22; --fur-a: #d2cae2; --fur-b: #a69cbe; --fur-dark: #5b5075; --cream: #fff2de;
+    --mint: #86e3be; --mint-glow: #c2ffe6; --mint-deep: #3fb58f; --coral: #ff7b67;
+    --gold: #ffc857; --gold-pale: #ffe6a6; --gold-deep: #e89a2c;
+    position: relative; width: var(--size); aspect-ratio: 1; font-size: calc(var(--size) / 100);
+    isolation: isolate;
+  }
+  .rc * { position: absolute; box-sizing: border-box; display: block; }
+  .pc { inset: 0; transform: translate(calc(var(--dx) * var(--apart) * 1em), calc(var(--dy) * var(--apart) * 1em)); }
+  .ears, .headol, .pose-layer { inset: 0; }
+  .ol { filter: drop-shadow(1.1em 0 0 var(--ink)) drop-shadow(-1.1em 0 0 var(--ink)) drop-shadow(0 1.1em 0 var(--ink)) drop-shadow(0 -1.1em 0 var(--ink)); }
+
+  /* tail */
+  .tail {
+    left: 78%; top: 56%; width: 13%; height: 48%; border-radius: 7em 7em 3em 3em;
+    background: repeating-linear-gradient(to bottom, var(--fur-a) 0 4.2em, var(--ink) 4.2em 7em);
+    transform: rotate(-12deg); transform-origin: 50% 100%;
+  }
+  /* hoodie */
+  .hoodie {
+    left: 15%; top: 75%; width: 70%; height: 32%;
+    background: linear-gradient(var(--mint-glow) 0%, var(--mint) 35%, #74d4ae);
+    border-radius: 50% 50% 0 0 / 55% 55% 0 0;
+  }
+  .collar { left: 24%; right: 24%; top: 6%; height: 10%; border-radius: 50%; background: rgb(63 181 143 / 0.55); }
+  .str { width: 1.3em; height: 34%; top: 14%; background: var(--cream); border-radius: 1em; outline: 0.5em solid var(--ink); }
+  .str::after { content: ""; position: absolute; left: -0.6em; right: -0.6em; bottom: -2.2em; height: 3em; border-radius: 0.6em; background: var(--coral); outline: 0.5em solid var(--ink); }
+  .s1 { left: 42%; transform: rotate(4deg); }
+  .s2 { left: 56%; transform: rotate(-6deg); }
+  .patch {
+    left: 66%; top: 34%; width: 16%; height: 22%; border-radius: 1.6em; background: var(--coral);
+    outline: 0.7em solid var(--ink); color: var(--ink); font: 700 4em/1 "Fira Code", ui-monospace, monospace;
+    display: grid; place-items: center; transform: rotate(-6deg);
+  }
+  /* ears */
+  .ear { background: linear-gradient(var(--fur-a), var(--fur-b)); }
+  .el { left: 25%; top: 9%; width: 19%; height: 25%; clip-path: polygon(22% 0, 100% 56%, 62% 100%, 0 100%, 4% 60%, 24% 50%, 8% 42%); }
+  .er { left: 56%; top: 9%; width: 19%; height: 25%; clip-path: polygon(78% 0, 100% 100%, 38% 100%, 0 56%); }
+  .inner { background: var(--coral); }
+  .il { left: 30%; top: 15%; width: 8%; height: 11%; clip-path: polygon(20% 0, 100% 62%, 0 100%); }
+  .ir { left: 62%; top: 15%; width: 8%; height: 11%; clip-path: polygon(80% 0, 100% 100%, 0 62%); }
+  /* head with cheek ruffs */
+  .head {
+    left: 13%; top: 19%; width: 74%; height: 58%;
+    background: linear-gradient(var(--fur-a), var(--fur-b));
+    clip-path: polygon(50% 0, 63% 1.5%, 75% 7%, 84% 17%, 90% 29%, 94% 38%, 100% 45%, 92% 52%, 99% 62%, 89% 65%, 94% 76%, 80% 81%, 68% 93%, 50% 100%, 32% 93%, 20% 81%, 6% 76%, 11% 65%, 1% 62%, 8% 52%, 0 45%, 6% 38%, 10% 29%, 16% 17%, 25% 7%, 37% 1.5%);
+  }
+  .tuft { left: 43%; top: 15%; width: 14%; height: 6%; background: var(--fur-a); clip-path: polygon(0 100%, 22% 0, 42% 60%, 62% 8%, 82% 70%, 100% 100%); }
+  .stripe { left: 47.2%; top: 20.5%; width: 5.6%; height: 17%; background: var(--fur-dark); clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%); }
+  /* sweat drop: fades in and slides down the temple as --apart rises */
+  .sweat {
+    left: 73%; top: calc(19% + var(--apart) * 4.5%); width: 5.4%; height: 5.4%;
+    background: #9cecff; border: 0.65em solid var(--ink);
+    border-radius: 0 55% 55% 55%;
+    transform: rotate(45deg) scale(calc(0.55 + var(--apart) * 0.55));
+    opacity: clamp(0, calc(var(--apart) * 2.2 - 0.35), 1);
+  }
+  .sweat::after {
+    content: ""; position: absolute; left: 26%; top: 44%; width: 24%; height: 24%;
+    border-radius: 50%; background: var(--cream);
+  }
+  /* muzzle */
+  .muzzle { left: 33%; top: 50%; width: 34%; height: 25%; background: var(--cream); border-radius: 50% / 45% 45% 55% 55%; }
+  .nose { left: 45.5%; top: 56%; width: 9%; height: 5.5%; background: var(--ink); border-radius: 50% 50% 55% 55% / 40% 40% 60% 60%; }
+  .nose::after { content: ""; position: absolute; left: 32%; top: 18%; width: 30%; height: 22%; border-radius: 50%; background: #b9b0c8; }
+  .phil { left: 49.4%; top: 61%; width: 1.2%; height: 4%; background: var(--ink); border-radius: 1em; }
+  .mouth {
+    left: 44%; top: 61.5%; width: 12%; height: 5%;
+    border-bottom: 1.1em solid var(--ink); border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    opacity: clamp(0, calc(1 - var(--apart) * 2.6), 1);
+  }
+  /* nervous wobbly mouth when taken apart */
+  .mouth-wob {
+    left: 41.5%; top: 63.2%; width: 17%; height: 4.8%;
+    opacity: clamp(0, calc(var(--apart) * 2.4 - 0.2), 1);
+    transform: scaleY(calc(0.55 + var(--apart) * 0.55));
+  }
+  .mouth-wob b { width: 38%; height: 68%; border-radius: 50%; }
+  .mouth-wob .w1 { left: 0; top: 18%; border-top: 1.05em solid var(--ink); }
+  .mouth-wob .w2 { left: 31%; top: 4%; border-bottom: 1.05em solid var(--ink); }
+  .mouth-wob .w3 { left: 62%; top: 18%; border-top: 1.05em solid var(--ink); }
+  /* mask, brows, eyes */
+  .mask {
+    left: 17%; top: 36.5%; width: 66%; height: 20%; background: var(--ink);
+    clip-path: polygon(0 42%, 12% 18%, 30% 5%, 44% 9%, 50% 20%, 56% 9%, 70% 5%, 88% 18%, 100% 42%, 92% 72%, 74% 100%, 58% 92%, 50% 82%, 42% 92%, 26% 100%, 8% 72%);
+  }
+  .brow { top: 34.2%; width: 14%; height: 4.4%; background: var(--cream); border-radius: 50% 50% 10% 10% / 100% 100% 10% 10%; }
+  .bl { left: 30.5%; transform: translateY(calc(var(--apart) * -3.6em)) rotate(calc(-3deg - var(--apart) * 16deg)); }
+  .br { left: 55.5%; transform: translateY(calc(var(--apart) * -3.6em)) rotate(calc(3deg + var(--apart) * 16deg)); }
+  .eye {
+    top: calc(43% - var(--apart) * 1.6%);
+    width: calc(10% + var(--apart) * 1.4%);
+    height: calc(6.4% + var(--apart) * 3.4%);
+    background: var(--mint); border-radius: 50%; overflow: hidden;
+    outline: 0.5em solid var(--mint-deep); outline-offset: -0.5em;
+  }
+  .eye::before {
+    content: ""; position: absolute; left: -10%; right: -10%; top: -10%; height: 34%;
+    background: var(--ink); z-index: 2;
+    transform: translateY(calc(var(--apart) * -120%));
+  }
+  .eye b {
+    left: 30%; top: 22%; width: 44%; height: 66%; border-radius: 50%; background: var(--ink);
+    transform: scale(calc(1 - var(--apart) * 0.34));
+  }
+  .eye b::after { content: ""; position: absolute; left: 52%; top: 8%; width: 36%; height: 30%; border-radius: 50%; background: var(--cream); }
+  .el2 { left: calc(33.5% - var(--apart) * 0.7%); }
+  .er2 { left: calc(56.5% - var(--apart) * 0.7%); }
+
+  /* ---------- pose: tools (at the workbench tightening a bolt) ---------- */
+  .pose-tools .pc { transform: translateY(-6em); }
+  .pose-tools .hoodie { height: 24%; }
+  .pose-tools .tail { height: 38%; }
+  .pose-tools .bl { transform: translateY(0.8em) rotate(8deg); }
+  .pose-tools .br { transform: translateY(-0.5em) rotate(-6deg); }
+  .pose-tools .eye b { left: 36%; top: 32%; }
+  .pose-tools .patch { left: 66%; top: 26%; }
+
+  .bench-g { z-index: 4; }
+  .bench-top {
+    left: 2%; top: 82%; width: 96%; height: 11.5%;
+    background: linear-gradient(180deg, #6d5b8e, #48326a);
+    border: 1.1em solid var(--ink); border-radius: 2.5em;
+    box-shadow: inset 0 1.2em 0 rgb(194 255 230 / 0.22);
+  }
+  .bench-leg {
+    left: 9%; top: 92%; width: 82%; height: 7.5%;
+    background: #2b1a42; border: 1.1em solid var(--ink); border-top: 0;
+    border-radius: 0 0 2.2em 2.2em;
+  }
+  .sack-ol { inset: 0; }
+  .sack-body {
+    left: 6%; top: 70.5%; width: 17%; height: 13.5%;
+    background: linear-gradient(145deg, var(--gold-pale), var(--gold) 55%, var(--gold-deep));
+    border-radius: 46% 46% 44% 44% / 56% 56% 36% 36%;
+  }
+  .sack-top {
+    left: 10.2%; top: 65%; width: 8.6%; height: 7.5%;
+    background: var(--gold);
+    clip-path: polygon(8% 0, 48% 36%, 92% 0, 100% 100%, 0 100%);
+  }
+  .sack-tie {
+    left: 10%; top: 70.5%; width: 9%; height: 2.6%;
+    background: var(--coral); border: 0.75em solid var(--ink); border-radius: 1.2em;
+  }
+  .paw-l {
+    left: 26.5%; top: 77.5%; width: 13.5%; height: 8.5%;
+    background: linear-gradient(var(--fur-dark), #3d3354);
+    border: 1.1em solid var(--ink); border-radius: 4.5em 4.5em 2.2em 2.2em;
+  }
+  .paw-l::before, .paw-l::after {
+    content: ""; position: absolute; bottom: 0.4em; width: 0.9em; height: 48%;
+    background: var(--ink); border-radius: 1em;
+  }
+  .paw-l::before { left: 32%; }
+  .paw-l::after { left: 62%; }
+
+  .bolt-washer {
+    left: 53.5%; top: 79.5%; width: 16%; height: 3.6%;
+    background: #d2cae2; border: 0.95em solid var(--ink); border-radius: 1.4em;
+  }
+  .bolt-head {
+    left: 55.5%; top: 72%; width: 12%; height: 8.5%;
+    background: linear-gradient(135deg, var(--gold-pale), var(--gold) 58%, var(--gold-deep));
+    border: 1em solid var(--ink); border-radius: 1.8em;
+  }
+  .bolt-head::before, .bolt-head::after {
+    content: ""; position: absolute; top: 0; bottom: 0; width: 0.8em; background: rgb(20 10 34 / 0.45);
+  }
+  .bolt-head::before { left: 28%; }
+  .bolt-head::after { right: 28%; }
+
+  .bolt-glint {
+    left: 64.5%; top: 60%; width: 7.5%; height: 7.5%;
+    background: var(--gold);
+    clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+    opacity: 0.9;
+  }
+  .wrench-rig {
+    left: 54%; top: 68%; width: 43%; height: 18%;
+    transform-origin: 18% 48%;
+    transform: rotate(-10deg);
+  }
+  .wrench-ol { inset: 0; }
+  .w-jaw {
+    left: 4%; top: 14%; width: 32%; height: 68%;
+    background: linear-gradient(135deg, var(--cream), var(--fur-a) 55%, var(--fur-b));
+    border-radius: 50%;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 66%, 46% 66%, 46% 34%, 0 34%);
+  }
+  .w-bar {
+    left: 28%; top: 34%; width: 64%; height: 30%;
+    background: linear-gradient(180deg, var(--cream), var(--fur-a) 55%, #8f84ab);
+    border-radius: 0 3em 3em 0;
+  }
+  .paw-r {
+    left: 56%; top: 20%; width: 30%; height: 56%;
+    background: linear-gradient(var(--fur-dark), #3d3354);
+    border: 1.1em solid var(--ink); border-radius: 4.5em;
+  }
+  .paw-r::before, .paw-r::after {
+    content: ""; position: absolute; top: 14%; bottom: 14%; width: 0.9em;
+    background: var(--ink); border-radius: 1em;
+  }
+  .paw-r::before { left: 34%; }
+  .paw-r::after { left: 62%; }
+
+  /* ---------- pose: lab (safety goggles + holding a fizzing flask) ---------- */
+  .pose-lab .pc { transform: translateX(-6em); }
+  .pose-lab .tail { left: 74%; }
+  .pose-lab .patch { left: 19%; top: 34%; transform: rotate(6deg); }
+  .pose-lab .bl { transform: translateY(-1.2em) rotate(-6deg); }
+  .pose-lab .br { transform: translateY(-1.2em) rotate(6deg); }
+
+  .goggles-g { z-index: 4; transform: translateX(-6em); }
+  .gog-strap {
+    top: 43%; width: 12%; height: 6.2%;
+    background: var(--coral); border: 1em solid var(--ink); border-radius: 2em;
+  }
+  .gog-strap-l { left: 14%; }
+  .gog-strap-r { left: 74%; }
+  .gog-bridge {
+    left: 46%; top: 44.5%; width: 8%; height: 4%;
+    background: var(--gold); border: 0.9em solid var(--ink);
+  }
+  .gog-lens {
+    top: 37%; width: 24.5%; height: 18%; border-radius: 4.8em;
+    border: 1.4em solid var(--ink);
+    box-shadow: inset 0 0 0 1.8em var(--gold), inset 0 0 0 2.5em var(--ink);
+    background: linear-gradient(
+      135deg,
+      rgb(194 255 230 / 0.24) 0%,
+      rgb(134 227 190 / 0.08) 46%,
+      rgb(255 255 255 / 0.36) 50%,
+      rgb(255 255 255 / 0.36) 57%,
+      rgb(134 227 190 / 0.1) 61%
+    );
+  }
+  .gog-l { left: 23.5%; }
+  .gog-r { left: 52%; }
+
+  .flask-g {
+    left: 67%; top: 44%; width: 32%; height: 50%;
+    z-index: 5;
+  }
+  .flask-ol { inset: 0; }
+  .fl-body {
+    left: 4%; top: 34%; width: 92%; height: 64%;
+    background: linear-gradient(180deg, rgb(194 255 230 / 0.36), rgb(194 255 230 / 0.22));
+    clip-path: polygon(33% 0, 67% 0, 100% 88%, 92% 100%, 8% 100%, 0 88%);
+  }
+  .fl-neck {
+    left: 34%; top: 10%; width: 32%; height: 28%;
+    background: rgb(194 255 230 / 0.34);
+  }
+  .fl-rim {
+    left: 26%; top: 4%; width: 48%; height: 9%;
+    background: var(--cream); border-radius: 3em;
+  }
+  .fl-liquid {
+    left: 7%; top: 56%; width: 86%; height: 39%;
+    background: linear-gradient(180deg, var(--mint-glow) 0%, var(--mint) 32%, var(--mint-deep) 100%);
+    clip-path: polygon(22% 0, 78% 0, 100% 78%, 92% 100%, 8% 100%, 0 78%);
+  }
+  .fl-glint {
+    left: 24%; top: 46%; width: 7%; height: 38%;
+    background: rgb(255 255 255 / 0.58); border-radius: 3em;
+    transform: rotate(15deg);
+  }
+  .fl-ticks {
+    left: 62%; top: 64%; width: 14%; height: 19%;
+    background: repeating-linear-gradient(to bottom, var(--ink) 0 0.7em, transparent 0.7em 2.8em);
+    opacity: 0.75;
+  }
+  .bub {
+    border-radius: 50%; background: var(--mint-glow);
+    border: 0.8em solid var(--ink);
+  }
+  .bub::after {
+    content: ""; position: absolute; left: 22%; top: 18%; width: 28%; height: 28%;
+    border-radius: 50%; background: var(--cream);
+  }
+  .b1 { left: 34%; top: 75%; width: 4.6em; height: 4.6em; }
+  .b2 { left: 50%; top: 60%; width: 3.8em; height: 3.8em; }
+  .b3 { left: 32%; top: -8%; width: 5.4em; height: 5.4em; }
+  .b4 { left: 54%; top: -24%; width: 4.4em; height: 4.4em; background: var(--gold-pale); }
+  .b5 { left: 39%; top: -37%; width: 3.4em; height: 3.4em; }
+
+  .lab-paw {
+    left: 13%; top: 20%; width: 44%; height: 17%;
+    background: linear-gradient(var(--fur-dark), #3d3354);
+    border: 1.1em solid var(--ink); border-radius: 4.5em;
+    transform: rotate(-10deg);
+  }
+  .lab-paw::before, .lab-paw::after {
+    content: ""; position: absolute; right: 0.6em; width: 42%; height: 0.85em;
+    background: var(--ink); border-radius: 1em;
+  }
+  .lab-paw::before { top: 34%; }
+  .lab-paw::after { top: 64%; }
+
+  /* labels for the parts diagram */
+  .lbl {
+    display: none; white-space: nowrap; font: 500 max(11px, 3.1em)/1.2 "Fira Code", ui-monospace, monospace;
+    color: var(--ink); background: var(--mint); border: 2px solid var(--ink); border-radius: 6px; padding: 0.15em 0.45em;
+    opacity: clamp(0, calc(var(--apart) * 2 - 0.6), 1);
+    --hx: 0%;
+    /* the drawing's unit is size/100 (1em on the pieces); a label has its own font size, so spell it out */
+    transform: translate(calc(var(--dx) * var(--apart) * var(--size) / 100 + var(--hx)), calc(var(--dy) * var(--apart) * var(--size) / 100));
+  }
+  /* one layer above every piece, so no label hides behind a later group */
+  .lbls { inset: 0; z-index: 5; pointer-events: none; }
+  .labeled .lbl { display: block; }
+  /* Each label rides with its group; positions are chosen so that, fully pulled apart, no two labels
+     touch and none passes the drawing's own box by more than its pieces do. Right-hand labels hang
+     leftward from their anchor so they never run off a narrow screen. */
+  .l-tail { left: 88%; top: 62%; --hx: -100%; }
+  .l-hood { left: 26%; top: 101%; }
+  .l-ears { left: 22%; top: 2%; }
+  .l-head { left: 100%; top: 48%; --hx: -100%; background: var(--cream); }
+  .l-muz { left: 24%; top: 77%; }
+  .l-mask { left: 22%; top: 20%; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .eye { animation: rc-blink 5.2s infinite; }
+    .tail { animation: rc-wag 3.6s ease-in-out infinite; }
+    .mouth-wob { animation: rc-wobble 0.34s ease-in-out infinite; }
+    .rc-pose .tail { animation: none; }
+    .pose-tools .wrench-rig { animation: rc-crank 2.8s ease-in-out infinite; }
+    .pose-tools .bolt-glint { animation: rc-glint 2.8s ease-in-out infinite; }
+    .pose-lab .b1 { animation: rc-fizz-in 2.1s ease-in infinite; }
+    .pose-lab .b2 { animation: rc-fizz-in 2.4s ease-in 0.8s infinite; }
+    .pose-lab .b3 { animation: rc-fizz-out 2.5s ease-out infinite; }
+    .pose-lab .b4 { animation: rc-fizz-out 2.9s ease-out 0.9s infinite; }
+    .pose-lab .b5 { animation: rc-fizz-out 2.3s ease-out 1.6s infinite; }
+  }
+  @keyframes rc-blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
+  @keyframes rc-wag { 0%, 100% { transform: rotate(-12deg); } 50% { transform: rotate(-2deg); } }
+  @keyframes rc-wobble {
+    0%, 100% { transform: scaleY(calc(0.55 + var(--apart) * 0.55)) translateX(calc(var(--apart) * -0.4em)); }
+    50% { transform: scaleY(calc(0.55 + var(--apart) * 0.55)) translateX(calc(var(--apart) * 0.4em)); }
+  }
+  @keyframes rc-crank {
+    0%, 18%, 100% { transform: rotate(-16deg); }
+    48%, 62% { transform: rotate(10deg); }
+  }
+  @keyframes rc-glint {
+    0%, 42%, 75%, 100% { opacity: 0.3; transform: scale(0.7) rotate(0deg); }
+    55% { opacity: 1; transform: scale(1.15) rotate(22deg); }
+  }
+  @keyframes rc-fizz-in {
+    0% { transform: translateY(4em) scale(0.65); opacity: 0; }
+    25% { opacity: 1; }
+    85% { opacity: 0.9; }
+    100% { transform: translateY(-14em) scale(1); opacity: 0; }
+  }
+  @keyframes rc-fizz-out {
+    0% { transform: translateY(8em) scale(0.6); opacity: 0; }
+    22% { opacity: 1; }
+    80% { opacity: 0.95; }
+    100% { transform: translateY(-10em) scale(1.12); opacity: 0; }
+  }
+</style>

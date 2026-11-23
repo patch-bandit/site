@@ -1,0 +1,42 @@
+---
+// A clearly labeled technical note for developers, kept separate from plain customer copy.
+interface Props {
+  heading?: string;
+}
+const { heading = 'Note for your developer' } = Astro.props;
+---
+<aside class="dev-note" aria-label={heading}>
+  <p class="dev-note-tag mono">{heading}</p>
+  <div class="dev-note-body">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .dev-note {
+    margin-top: 1.4rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--rim-strong);
+    border-left: 4px solid var(--accent);
+  }
+  .dev-note-tag {
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.55rem;
+  }
+  .dev-note-body :global(p:last-child),
+  .dev-note-body :global(ul:last-child) {
+    margin-bottom: 0;
+  }
+  .dev-note-body :global(ul) {
+    padding-inline-start: 1.2rem;
+    margin: 0.4rem 0 0;
+  }
+  .dev-note-body :global(li + li) {
+    margin-top: 0.4rem;
+  }
+</style>

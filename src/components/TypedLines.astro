@@ -1,0 +1,33 @@
+---
+// Renders HTML-first terminal lines that type themselves in when scrolled into view
+// (motion allowed only). Used by both the home manifesto and /tools/ status terminal.
+export interface TypedLine {
+  k: 'cmd' | 'out' | 'gold' | 'dim';
+  t: string;
+}
+
+interface Props {
+  lines: TypedLine[];
+  srLabel: string;
+  showCursor?: boolean;
+  class?: string;
+}
+
+const { lines, srLabel, showCursor = true, class: className } = Astro.props;
+---
+<div class={className}>
+  <p class="sr">{srLabel}: {lines.map((l) => l.t).join(' ')}</p>
+  <div aria-hidden="true">
+    {lines.map((l) => (
+      <span class:list={['line', l.k === 'gold' && 'g', l.k === 'dim' && 'd']} data-t={l.t}>
+        {l.k === 'cmd' && <span class="p">$ </span>}<span class="tx">{l.t}</span>
+      </span>
+    ))}
+    {showCursor && <span class="line on"><span class="p">$ </span><span class="cursor"></span></span>}
+  </div>
+</div>
+
+<script>
+  import { initTypedTerminals } from '../scripts/typeTerminal';
+  initTypedTerminals();
+</script>

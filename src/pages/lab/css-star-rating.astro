@@ -1,0 +1,175 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PageHero from '../../components/PageHero.astro';
+import WhyFree from '../../components/WhyFree.astro';
+
+const html = `<fieldset class="stars">
+  <legend class="sr">Rate this snack</legend>
+  <input type="radio" name="rate" id="s1" value="1"><label for="s1"><span class="sr">1 star</span></label>
+  <input type="radio" name="rate" id="s2" value="2"><label for="s2"><span class="sr">2 stars</span></label>
+  <input type="radio" name="rate" id="s3" value="3"><label for="s3"><span class="sr">3 stars</span></label>
+  <input type="radio" name="rate" id="s4" value="4"><label for="s4"><span class="sr">4 stars</span></label>
+  <input type="radio" name="rate" id="s5" value="5"><label for="s5"><span class="sr">5 stars</span></label>
+</fieldset>`;
+
+const css = `/* hides text from the eye, keeps it for screen readers */
+.sr { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.stars { display: flex; gap: 4px; border: 0; padding: 0; }
+.stars:focus-within { outline: 3px solid #ff7b67; outline-offset: 6px; }   /* the stars are clipped, so ring the group */
+.stars input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.stars label {
+  width: 44px; height: 44px; cursor: pointer; background: #b9b0c8;
+  clip-path: polygon(50% 0, 62% 35%, 98% 35%, 69% 57%, 80% 91%, 50% 70%, 20% 91%, 31% 57%, 2% 35%, 38% 35%);
+}
+/* the checked star */
+.stars input:checked + label { background: #ff7b67; }
+/* every star before it (a label that has a checked input after it).
+   Kept as its own rule: a browser without :has() drops only this one. */
+.stars label:has(~ input:checked) { background: #ff7b67; }
+/* while the pointer is over a star, show that star and the ones before it instead */
+.stars:has(label:hover) label { background: #b9b0c8; }
+.stars:has(label:hover) label:hover,
+.stars:has(label:hover) label:has(~ label:hover) { background: #ff7b67; }`;
+
+const readout = `<!-- put this right after the </fieldset> -->
+<p class="out" aria-hidden="true">
+  <span class="r0">Pick a star. Nothing is saved or sent.</span>
+  <span class="r1">1 of 5. Stale cracker.</span>
+  <span class="r2">2 of 5. Edible, in a crisis.</span>
+  <span class="r3">3 of 5. A fine snack.</span>
+  <span class="r4">4 of 5. Would sneak back for more.</span>
+  <span class="r5">5 of 5. Top of the stash.</span>
+</p>
+
+<style>
+  /* a readout with :has(), still no JavaScript */
+  .out span { display: none; }
+  .stars:not(:has(input:checked)) ~ .out .r0,
+  .stars:has(#s1:checked) ~ .out .r1,
+  .stars:has(#s2:checked) ~ .out .r2,
+  .stars:has(#s3:checked) ~ .out .r3,
+  .stars:has(#s4:checked) ~ .out .r4,
+  .stars:has(#s5:checked) ~ .out .r5 { display: inline; }
+</style>`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'CSS star rating with no JavaScript',
+  datePublished: '2026-11-22',
+  url: 'https://patchbandit.com/lab/css-star-rating/',
+};
+---
+<Base
+  title="CSS star rating with no JavaScript (keyboard friendly, code to copy)"
+  description="A CSS star rating built from radio buttons: click or use the arrow keys, screen readers get real labels, and it needs no script. Demo and code to copy."
+  schema={schema}
+  ogType="article"
+>
+  <PageHero art="/art/raccoon-celebrate.svg" alt="The raccoon celebrating, paws up" tone="coral">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Pickle · 2026-11-22</p>
+    <h1>CSS star rating with no JavaScript</h1>
+    <p class="lead">A CSS star rating is five radio buttons wearing a costume. Because they're real radio buttons, the keyboard and screen readers work on their own, and the CSS only has to make them look like stars. No script, no library, nothing to install.</p>
+    <p class="story">We took the stars apart to see how they work. Now you can too.</p>
+  </PageHero>
+
+  <div class="route-host">
+  <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+  <section class="band" data-node>
+    <div class="wrap cols2 top">
+      <div class="card rate">
+        <h2>Try it</h2>
+        <p>Click a star, or tab to the group and press the arrow keys.</p>
+        <div class="stars-row">
+          <fieldset class="stars">
+            <legend class="sr">Rate this snack</legend>
+            <input type="radio" name="rate" id="s1" value="1" /><label for="s1"><span class="sr">1 star</span></label>
+            <input type="radio" name="rate" id="s2" value="2" /><label for="s2"><span class="sr">2 stars</span></label>
+            <input type="radio" name="rate" id="s3" value="3" /><label for="s3"><span class="sr">3 stars</span></label>
+            <input type="radio" name="rate" id="s4" value="4" /><label for="s4"><span class="sr">4 stars</span></label>
+            <input type="radio" name="rate" id="s5" value="5" /><label for="s5"><span class="sr">5 stars</span></label>
+          </fieldset>
+          <span class="key-hint mono" data-key-hint aria-hidden="true"><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> pick · <kbd>Tab</kbd> leaves</span>
+        </div>
+        <p class="out" aria-hidden="true">
+          <span class="r0">Pick a star. Nothing is saved or sent.</span>
+          <span class="r1">1 of 5. Stale cracker.</span>
+          <span class="r2">2 of 5. Edible, in a crisis.</span>
+          <span class="r3">3 of 5. A fine snack.</span>
+          <span class="r4">4 of 5. Would sneak back for more.</span>
+          <span class="r5">5 of 5. Top of the stash.</span>
+        </p>
+        <h3 style="margin-top:1.4rem">Keys that work</h3>
+        <ul class="keys">
+          <li><kbd>Tab</kbd> moves into the group, and out of it again.</li>
+          <li><kbd>→</kbd> and <kbd>↓</kbd> add a star. <kbd>←</kbd> and <kbd>↑</kbd> take one away. The stars are listed 1 to 5 in the HTML, so the keys follow the picture.</li>
+          <li>Every star has a real text label, so a screen reader has something to read. We have not tested this with a screen reader, so treat that as likely, not proven.</li>
+          <li>No script runs on this page apart from the copy buttons.</li>
+        </ul>
+      </div>
+      <div>
+        <h2>How it works</h2>
+        <ol>
+          <li><strong>Real radio buttons.</strong> One per star, all with the same name. The browser gives you the arrow keys and the labels for free.</li>
+          <li><strong>Stars in order.</strong> The HTML lists 1 to 5, left to right, so the browser's arrow keys move the way the picture does. A star is filled when it is checked or when a checked one comes after it, which is what <code>label:has(~ input:checked)</code> says.</li>
+          <li><strong>Star shape.</strong> A plain square is cut into a star with <code>clip-path</code>.</li>
+          <li><strong>Focus ring on the group.</strong> The clip also cuts off a normal focus outline, so the ring goes around the whole group with <code>:focus-within</code>.</li>
+        </ol>
+        <p class="note">Tested in Chromium only. The earlier stars and the readout use <code>:has()</code>, which current browsers support. Where it is missing, the radio buttons still work and the chosen star still lights up, but the stars before it stay grey and the text line is missing. That is why the checked star has a rule of its own.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" data-node>
+    <div class="wrap cols2 top">
+      <div>
+        <h2>The HTML, and a readout</h2>
+        <CodeBlock label="Star rating markup (HTML)" code={html} />
+        <CodeBlock label="Optional readout (HTML and CSS)" code={readout} />
+      </div>
+      <div>
+        <h2>The CSS</h2>
+        <CodeBlock label="Star rating styles (CSS)" code={css} />
+      </div>
+    </div>
+  </section>
+
+  <WhyFree nextHref="/lab/css-resize-handle/" nextTitle="CSS resize handle: the property and a custom one" nextBlurb="The little corner you drag to make a box bigger. One property, or one you build by hand." />
+  </div>
+</Base>
+
+<style>
+  /* the demo sits on a dark stage in both themes, so the star colors keep their contrast */
+  .stars-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 0.9rem; margin: 1rem 0; }
+  .stars { --fur: var(--k-fur); --coral: var(--k-coral); display: flex; gap: 6px; border: 0; padding: 0.6rem 0.8rem; margin: 0; width: fit-content; background: var(--code-bg); border-radius: 12px; }
+  .key-hint { display: none; font-size: 0.82rem; line-height: 1.4; background: var(--code-bg); color: var(--k-cream); border: 1px solid var(--rim-strong); border-radius: 10px; padding: 0.45rem 0.7rem; }
+  .key-hint kbd { margin-inline: 0.08rem; }
+  .stars-row:has(.stars:focus-within, .stars input:checked) .key-hint { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0.25rem; }
+  .stars:focus-within { outline: 3px solid var(--k-gold); outline-offset: 3px; }
+  .stars input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .stars label {
+    width: 3.1rem; height: 3.1rem; cursor: pointer; background: var(--fur); display: block;
+    clip-path: polygon(50% 0, 62% 35%, 98% 35%, 69% 57%, 80% 91%, 50% 70%, 20% 91%, 31% 57%, 2% 35%, 38% 35%);
+  }
+  .stars input:checked + label { background: var(--coral); }
+  /* background-color here and background above: the two rules must differ, or the minifier merges them into one list and a browser without :has() drops both */
+  .stars label:has(~ input:checked) { background-color: var(--coral); }
+  .stars:has(label:hover) label { background: var(--fur); }
+  .stars:has(label:hover) label:hover,
+  .stars:has(label:hover) label:has(~ label:hover) { background: var(--coral); }
+  .rate .out { min-height: 3.2em; margin: 0; background: var(--code-bg); color: var(--k-cream); font-family: var(--mono); border-radius: 10px; padding: 0.8rem 1rem; }
+  .out span { display: none; }
+  .stars-row:not(:has(input:checked)) ~ .out .r0,
+  .stars-row:has(#s1:checked) ~ .out .r1,
+  .stars-row:has(#s2:checked) ~ .out .r2,
+  .stars-row:has(#s3:checked) ~ .out .r3,
+  .stars-row:has(#s4:checked) ~ .out .r4,
+  .stars-row:has(#s5:checked) ~ .out .r5 { display: inline; }
+  .keys { padding-inline-start: 1.2rem; margin: 0; }
+  .keys li { margin-bottom: 0.5rem; }
+  ol { padding-inline-start: 1.3rem; }
+  ol li { margin-bottom: 0.7rem; }
+</style>

@@ -1,0 +1,10 @@
+Fonts in this folder, all under the SIL Open Font License 1.1 (full text in OFL.txt).
+
+- platypi.woff2, platypi-italic.woff2: Platypi, https://github.com/d-sargent/platypi
+  Copyright: no data (no copyright line was found in the files this copy came from).
+- instrument-sans.woff2: Instrument Sans
+  Copyright 2022 The Instrument Sans Project Authors (https://github.com/Instrument/instrument-sans)
+- fira-code.woff2: Fira Code
+  Copyright (c) 2014, The Fira Code Project Authors (https://github.com/tonsky/FiraCode)
+
+The files are served from this site. No page asks another server for a font.

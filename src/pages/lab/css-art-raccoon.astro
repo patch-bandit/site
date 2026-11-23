@@ -1,0 +1,116 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Raccoon from '../../components/Raccoon.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import WhyFree from '../../components/WhyFree.astro';
+import { STATIC_PAGES } from '../../data/site';
+
+const page = STATIC_PAGES.find((p) => p.path === '/lab/css-art-raccoon/')!;
+
+const tricks = `/* 1. Outline a whole group of shapes with four hard shadows. */
+.outline {
+  filter: drop-shadow(1.1em 0 0 #140a22) drop-shadow(-1.1em 0 0 #140a22)
+          drop-shadow(0 1.1em 0 #140a22) drop-shadow(0 -1.1em 0 #140a22);
+}
+
+/* 2. Cut a shape out of a plain box with clip-path.
+   This ear has a torn notch: three extra points on its left edge. */
+.ear {
+  width: 19%; height: 25%; background: #d2cae2;
+  clip-path: polygon(22% 0, 100% 56%, 62% 100%, 0 100%, 4% 60%, 24% 50%, 8% 42%);
+}
+
+/* 3. One size variable scales every part, because 1em is 1% of the width. */
+.raccoon { --size: min(80vw, 420px); width: var(--size); font-size: calc(var(--size) / 100); }`;
+
+const apart = `/* Each piece group moves by its own offset, times one shared amount from 0 to 1. */
+.piece {
+  transform: translate(calc(var(--dx) * var(--apart) * 1em),
+                       calc(var(--dy) * var(--apart) * 1em));
+}
+/* <div class="piece" style="--dx: -22; --dy: -6"> ... the mask ... </div> */`;
+
+const schema = { '@context': 'https://schema.org', '@type': 'TechArticle', headline: 'CSS art: the raccoon, taken apart', url: 'https://patchbandit.com/lab/css-art-raccoon/' };
+---
+<Base title={page.title} description="CSS art explained: a raccoon drawn with plain boxes, clip-path and shadows, no image. Pull it apart with a slider and copy three tricks to draw your own animal." schema={schema} ogType="article">
+  <PageHero>
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Also in the lab</p>
+    <h1>CSS art: the raccoon, taken apart</h1>
+    <p class="lead">This raccoon is CSS art: no image, just plain boxes cut into shapes and outlined with shadows. Here's how every piece is made, and three tricks you can take to draw your own animal.</p>
+    <p class="story">It's the mascot, so naturally we took it apart first.</p>
+    <Fragment slot="art">
+      <div class="hero-rc"><Raccoon size="min(70vw, 320px)" label="The raccoon, drawn in CSS with no image file" /></div>
+    </Fragment>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="pull-h">
+      <div class="wrap cols2 wide-right pull">
+        <div class="rv">
+          <h2 id="pull-h">Pull it apart</h2>
+          <p>Slide to separate the pieces. Each group of boxes is labeled with the trick that draws it. Slide back and it snaps together again.</p>
+          <label class="slider-label" for="apart">Pieces apart: <output id="apart-out" for="apart">0%</output></label>
+          <input id="apart" type="range" min="0" max="1" step="0.05" value="0" />
+          <ul class="parts">
+            <li><strong>Ears:</strong> two boxes cut with <code>clip-path</code>. The left one has a torn notch.</li>
+            <li><strong>Head:</strong> one box with a 26-point outline for the cheek ruffs.</li>
+            <li><strong>Mask:</strong> a single dark band, cut to sweep around both eyes.</li>
+            <li><strong>Muzzle and nose:</strong> ovals made with <code>border-radius</code>.</li>
+            <li><strong>Hoodie and tail:</strong> a rounded box, and one repeating gradient for the rings.</li>
+          </ul>
+        </div>
+        <div class="stage-rc rv" style="--i:1">
+          <Raccoon labels apart={0} size="min(80vw, 440px)" label="The CSS raccoon, with its pieces labeled" />
+        </div>
+      </div>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="how-h">
+      <div class="wrap cols2 top">
+        <div>
+          <h2 id="how-h">How it is drawn</h2>
+          <p>Every part of the raccoon is a plain box. The ears, the head, and the mask are cut out with <code>clip-path</code>. The outline is four hard shadows on a group, so a whole cluster of shapes gets one clean ink line. One variable sets the size, and the whole animal scales with it, so it stays sharp on a phone and on a big monitor.</p>
+          <p>The eyes blink and the tail swings only if your device has not asked for less motion. With less motion, you get the finished drawing, standing still.</p>
+          <p>The pulling-apart trick is one more variable: every group has its own direction, and one shared amount from 0 to 1 moves them all at once.</p>
+          <CodeBlock label="Pull the pieces apart (CSS excerpt)" code={apart} />
+        </div>
+        <CodeBlock label="Three tricks the raccoon uses (CSS excerpts)" code={tricks} />
+      </div>
+    </section>
+
+    <WhyFree nextHref="/lab/css-star-rating/" nextTitle="CSS star rating with no JavaScript" nextBlurb="More clip-path, put to work: five radio buttons cut into stars." />
+  </div>
+</Base>
+
+<style>
+  .hero-rc { display: grid; place-items: center; }
+  .stage-rc { display: grid; place-items: center; padding-block: 2.5rem 3.5rem; }
+  .slider-label { display: block; font: 600 1rem/1.4 var(--mono); margin: 1.2rem 0 0.4rem; }
+  #apart { width: 100%; accent-color: var(--k-mint); min-height: 2.75rem; }
+  .parts { padding-left: 1.2rem; margin: 1rem 0 0; }
+  .parts li + li { margin-top: 0.45rem; }
+  :global(.motion) .stage-rc :global(.pc), :global(.motion) .stage-rc :global(.lbl) { transition: transform 0.25s ease-out; }
+  :global(.motion) .stage-rc :global(.brow),
+  :global(.motion) .stage-rc :global(.eye),
+  :global(.motion) .stage-rc :global(.eye::before),
+  :global(.motion) .stage-rc :global(.eye b),
+  :global(.motion) .stage-rc :global(.mouth),
+  :global(.motion) .stage-rc :global(.mouth-wob),
+  :global(.motion) .stage-rc :global(.sweat) {
+    transition: transform 0.25s ease-out, opacity 0.2s ease-out, top 0.25s ease-out, left 0.25s ease-out, width 0.25s ease-out, height 0.25s ease-out;
+  }
+</style>
+
+<script>
+  const range = document.getElementById('apart') as HTMLInputElement | null;
+  const out = document.getElementById('apart-out');
+  const rc = document.querySelector<HTMLElement>('.stage-rc [data-rc]');
+  range?.addEventListener('input', () => {
+    rc?.style.setProperty('--apart', range.value);
+    if (out) out.textContent = `${Math.round(Number(range.value) * 100)}%`;
+  });
+</script>

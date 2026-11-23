@@ -1,0 +1,24 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+// Entries with custom: true have a hand-built page next to this file. Every other
+// entry is rendered here from its markdown body, so a new experiment is one new file.
+export async function getStaticPaths() {
+  const drops = (await getCollection('drops')).filter((d) => !d.data.custom);
+  return drops.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { data } = entry;
+---
+<Base title={data.title} description={data.description}>
+  <section class="band">
+    <div class="wrap">
+      <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+      <p class="eyebrow">{data.snack} · {data.date.toISOString().slice(0, 10)}</p>
+      <h1>{data.h1}</h1>
+      <div><Content /></div>
+    </div>
+  </section>
+</Base>

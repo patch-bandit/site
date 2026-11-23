@@ -1,0 +1,262 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PageHero from '../../components/PageHero.astro';
+import WhyFree from '../../components/WhyFree.astro';
+import DevNote from '../../components/lab/DevNote.astro';
+
+const cssMain = `/* Even out multi-line headings so no lone word hangs on the last line */
+h1, h2, h3, blockquote {
+  text-wrap: balance;
+}
+
+/* Smooth out body copy and avoid awkward single-word last lines */
+p, li, figcaption {
+  text-wrap: pretty;
+}`;
+
+const cssSafe = `/* Progressive setup: unsupported browsers ignore text-wrap and keep normal wrapping */
+.hero-title {
+  max-width: 24ch;
+  text-wrap: balance;
+}
+
+.card-summary {
+  max-width: 58ch;
+  text-wrap: pretty;
+}`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'CSS text-wrap: balance vs pretty, live',
+  datePublished: '2026-11-22',
+  url: 'https://patchbandit.com/lab/css-text-wrap/',
+};
+---
+<Base
+  title="CSS text-wrap: balance vs pretty side by side (live width slider)"
+  description="See how CSS text-wrap changes headlines and paragraphs in real time. Drag the width slider to compare wrap, text-wrap balance, and text-wrap pretty, then copy the CSS."
+  schema={schema}
+  ogType="article"
+>
+  <PageHero art="/art/raccoon-focused.svg" alt="Snick the raccoon focused on the screen" tone="gold">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Popcorn · 2026-11-22</p>
+    <h1>CSS text-wrap: balance vs pretty, live</h1>
+    <p class="lead">CSS text-wrap tells the browser how to break lines so headlines stop leaving one lonely word on the last line and paragraphs read more evenly. Drag the width slider below and watch the same text reflow three ways at once.</p>
+    <p class="story">No more sticking manual line breaks into every title.</p>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="slider-h">
+      <div class="wrap">
+        <div class="card wrap-stage" id="wrap-stage" style="--demo-w: 340px;">
+          <div class="stage-bar">
+            <div class="stage-title">
+              <h2 id="slider-h">Drag to reflow the boxes</h2>
+              <p class="muted small">Every box below uses the exact same text and font size. Only <code>text-wrap</code> changes.</p>
+            </div>
+            <div class="stage-controls">
+              <label class="mono small" for="wrap-width">
+                Box width: <output id="wrap-out" for="wrap-width">340px</output>
+              </label>
+              <input id="wrap-width" type="range" min="220" max="480" step="10" value="340" />
+              <div class="preset-row" role="group" aria-label="Width presets">
+                <button type="button" class="chip-btn" data-set-w="250">Phone 250px</button>
+                <button type="button" class="chip-btn" data-set-w="340">Card 340px</button>
+                <button type="button" class="chip-btn" data-set-w="450">Wide 450px</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="cols2 top stage-cols">
+            <div class="demo-col" role="group" aria-label="Headline wrapping comparison">
+              <h3 class="col-h">Headline: text-wrap balance shines</h3>
+              <div class="spec-box">
+                <span class="spec-tag mono">text-wrap: wrap (default)</span>
+                <p class="spec-head tw-wrap">Free browser tools that never ask you for an account</p>
+              </div>
+              <div class="spec-box is-mint">
+                <span class="spec-tag mono">text-wrap: balance</span>
+                <p class="spec-head tw-balance">Free browser tools that never ask you for an account</p>
+              </div>
+              <div class="spec-box">
+                <span class="spec-tag mono">text-wrap: pretty</span>
+                <p class="spec-head tw-pretty">Free browser tools that never ask you for an account</p>
+              </div>
+            </div>
+
+            <div class="demo-col" role="group" aria-label="Paragraph wrapping comparison">
+              <h3 class="col-h">Paragraph: text-wrap pretty shines</h3>
+              <div class="spec-box">
+                <span class="spec-tag mono">text-wrap: wrap (default)</span>
+                <p class="spec-body tw-wrap">Simple everyday utilities run right inside your browser with zero uploads, no tracking scripts, and no surprise renewal reminders waiting in your inbox later.</p>
+              </div>
+              <div class="spec-box is-gold">
+                <span class="spec-tag mono">text-wrap: pretty</span>
+                <p class="spec-body tw-pretty">Simple everyday utilities run right inside your browser with zero uploads, no tracking scripts, and no surprise renewal reminders waiting in your inbox later.</p>
+              </div>
+              <div class="spec-box">
+                <span class="spec-tag mono">text-wrap: balance</span>
+                <p class="spec-body tw-balance">Simple everyday utilities run right inside your browser with zero uploads, no tracking scripts, and no surprise renewal reminders waiting in your inbox later.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="guide-h">
+      <div class="wrap cols2 top">
+        <div>
+          <h2 id="guide-h">When to pick text-wrap balance vs text-wrap pretty</h2>
+          <p><strong>Use <code>text-wrap: balance</code> for short text.</strong> Page titles, card headings, pull quotes, and button captions look much cleaner when the browser keeps line lengths roughly equal instead of filling the top line to the edge and dropping one stray word below.</p>
+          <p><strong>Use <code>text-wrap: pretty</code> for body paragraphs.</strong> Instead of squeezing every line to match, <code>pretty</code> favors smooth reading rhythm and prevents a lone orphan word from sitting by itself on the final line.</p>
+
+          <DevNote>
+            <p>Browsers cap <code>text-wrap: balance</code> at roughly six wrapped lines (ten in Firefox) to protect layout speed, so putting it on long article body text will do nothing past that cap. <code>text-wrap: pretty</code> is tuned for multi-line paragraphs, though it costs slightly more layout work than default <code>wrap</code> on giant walls of text.</p>
+          </DevNote>
+
+          <p class="note" style="margin-top:1.2rem"><strong>Browser support:</strong> <code>text-wrap: balance</code> works in current Chrome, Edge, Safari, and Firefox. <code>text-wrap: pretty</code> works in Chrome, Edge, and Safari, while Firefox falls back cleanly to normal wrapping. Both are safe progressive upgrades because older browsers simply ignore the property. Tested in Chromium only.</p>
+        </div>
+
+        <div>
+          <h2 id="code-h">Copy the CSS</h2>
+          <CodeBlock label="Headlines and paragraphs (CSS)" code={cssMain} />
+          <CodeBlock label="Paired with max-width (CSS)" code={cssSafe} />
+        </div>
+      </div>
+    </section>
+
+    <WhyFree
+      nextHref="/lab/css-squircle/"
+      nextTitle="Squircle CSS with corner-shape"
+      nextBlurb="Smooth squircles, scoops, bevels, and notches from one CSS property, with a live browser check."
+    />
+  </div>
+</Base>
+
+<style>
+  .wrap-stage {
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+  .stage-bar {
+    display: grid;
+    gap: 1.2rem 2rem;
+    grid-template-columns: 1fr;
+    align-items: end;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rim-strong);
+  }
+  @media (min-width: 52rem) {
+    .stage-bar {
+      grid-template-columns: 1fr 1.15fr;
+    }
+  }
+  .stage-title h2 {
+    font-size: clamp(1.45rem, 2.8vw, 2rem);
+    margin-bottom: 0.35rem;
+  }
+  .stage-title p {
+    margin-bottom: 0;
+  }
+  .stage-controls {
+    display: grid;
+    gap: 0.5rem;
+  }
+  #wrap-width {
+    width: 100%;
+    accent-color: var(--k-mint);
+    min-height: 2.5rem;
+  }
+  .preset-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip-btn {
+    font: 600 0.82rem/1 var(--mono);
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 1px solid var(--rim-strong);
+    border-radius: 999px;
+    padding: 0.55rem 0.85rem;
+    min-height: 2.4rem;
+    cursor: pointer;
+  }
+  .chip-btn:hover {
+    border-color: var(--k-mint);
+    color: var(--k-mint);
+  }
+  .stage-cols {
+    gap: 1.75rem;
+  }
+  .col-h {
+    font-size: 1.2rem;
+    margin-bottom: 0.85rem;
+  }
+  .demo-col {
+    display: grid;
+    gap: 0.9rem;
+    min-width: 0;
+  }
+  .spec-box {
+    width: min(100%, var(--demo-w, 340px));
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 2px solid rgb(194 255 230 / 0.22);
+    border-radius: 12px;
+    padding: 0.95rem 1.05rem;
+    overflow-wrap: break-word;
+  }
+  .spec-box.is-mint {
+    border-color: var(--k-mint);
+  }
+  .spec-box.is-gold {
+    border-color: var(--k-gold);
+  }
+  .spec-tag {
+    display: inline-block;
+    font-size: 0.78rem;
+    color: var(--k-mint);
+    margin-bottom: 0.45rem;
+  }
+  .spec-box.is-gold .spec-tag {
+    color: var(--k-gold);
+  }
+  .spec-head {
+    font-family: var(--display);
+    font-size: clamp(1.2rem, 2.2vw, 1.48rem);
+    font-weight: 700;
+    line-height: 1.18;
+    margin: 0;
+  }
+  .spec-body {
+    font-size: 0.96rem;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .tw-wrap { text-wrap: wrap; }
+  .tw-balance { text-wrap: balance; }
+  .tw-pretty { text-wrap: pretty; }
+</style>
+
+<script>
+  const stage = document.getElementById('wrap-stage');
+  const range = document.getElementById('wrap-width') as HTMLInputElement | null;
+  const out = document.getElementById('wrap-out');
+  const setWidth = (px: number) => {
+    const clamped = Math.min(480, Math.max(220, px));
+    stage?.style.setProperty('--demo-w', `${clamped}px`);
+    if (range) range.value = String(clamped);
+    if (out) out.textContent = `${clamped}px`;
+  };
+  range?.addEventListener('input', () => setWidth(Number(range.value)));
+  document.querySelectorAll<HTMLButtonElement>('[data-set-w]').forEach((btn) => {
+    btn.addEventListener('click', () => setWidth(Number(btn.dataset.setW)));
+  });
+</script>

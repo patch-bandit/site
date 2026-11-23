@@ -1,0 +1,324 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
+import PageHero from '../../components/PageHero.astro';
+import WhyFree from '../../components/WhyFree.astro';
+import DevNote from '../../components/lab/DevNote.astro';
+
+const viewCss = `@keyframes reveal-up {
+  from {
+    transform: translateY(24px) scale(0.95);
+  }
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Only run when the browser supports view() and the visitor allows motion */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal-card {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 32%;
+    }
+  }
+}`;
+
+const scrollBarCss = `@keyframes grow-bar {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.progress-bar {
+  height: 4px;
+  background: #86e3be;
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .progress-bar {
+      animation: grow-bar linear both;
+      animation-timeline: scroll(nearest);
+    }
+  }
+}`;
+
+const milestones = [
+  { step: '01', title: 'No scroll listener', body: 'Your browser updates frames directly on its compositor thread instead of firing JavaScript on every scroll pixel.' },
+  { step: '02', title: 'Reversible by default', body: 'Scroll forward and the card settles into place; scroll back up and it glides smoothly in reverse.' },
+  { step: '03', title: 'Scoped to any box', body: 'Using scroll(nearest) ties a progress bar to an inner scroll window or to the full page.' },
+  { step: '04', title: 'Range controls timing', body: 'animation-range: entry 0% cover 32% finishes the glide well before the card reaches the middle of your screen.' },
+  { step: '05', title: 'Plain fallback built in', body: 'Browsers without animation-timeline ignore the @supports block and show every card in its finished resting spot.' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'CSS animate on scroll without JavaScript',
+  datePublished: '2026-11-22',
+  url: 'https://patchbandit.com/lab/css-animate-on-scroll/',
+};
+---
+<Base
+  title="CSS animate on scroll with animation-timeline: view() (no JavaScript)"
+  description="How to make elements CSS animate on scroll using animation-timeline: view() and pure CSS, with reduced-motion safety and a clean fallback for every browser."
+  schema={schema}
+  ogType="article"
+>
+  <PageHero art="/art/raccoon-focused.svg" alt="Snick the raccoon watching a timeline scroll by" tone="gold">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
+    <p class="eyebrow">Blueberry · 2026-11-22</p>
+    <h1>CSS animate on scroll without JavaScript</h1>
+    <p class="lead">You can make elements CSS animate on scroll using one line of CSS — <code>animation-timeline: view()</code> — so cards glide into place and progress bars fill in sync with your scrollbar, with zero JavaScript and a clean static fallback.</p>
+    <p class="story">Scroll the little box below and watch CSS do the work by itself.</p>
+  </PageHero>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="demo-h">
+      <div class="wrap cols2 wide-left top">
+        <div class="scroll-shell" role="group" aria-label="Scrollable CSS animation demo">
+          <div class="scroll-head">
+            <span class="mono small">Scroll inside this window</span>
+            <span class="mono small muted">pure CSS · zero script</span>
+          </div>
+          <div class="scroll-viewport" tabindex="0" aria-label="Scrollable milestone cards">
+            <div class="scroll-bar-track" aria-hidden="true">
+              <div class="scroll-bar-fill"></div>
+            </div>
+            <div class="scroll-cards">
+              {milestones.map((m) => (
+                <article class="s-card">
+                  <div class="s-meter" aria-hidden="true"><i></i></div>
+                  <p class="mono small s-step">Step {m.step}</p>
+                  <p class="s-title">{m.title}</p>
+                  <p>{m.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 id="demo-h">Scroll inside the demo frame</h2>
+          <p>The progress strip across the top of that frame uses <code>animation-timeline: scroll(nearest)</code>, while every card inside glides and extends its mint bar using <code>animation-timeline: view()</code>.</p>
+          <p>If you turn on Reduced Motion in your operating system settings, every card and bar sits quietly in its finished position with zero motion.</p>
+
+          <div class="sup-box" role="status">
+            <p class="mono small sup-on">Your browser supports <code>animation-timeline: view()</code> — the demo frame is live.</p>
+            <p class="mono small sup-off">Your browser does not support <code>animation-timeline: view()</code> yet — you are seeing the clean static fallback.</p>
+          </div>
+
+          <DevNote>
+            <p>Always declare <code>animation-timeline</code> <strong>after</strong> the <code>animation</code> shorthand property; writing the shorthand second resets <code>animation-timeline</code> back to <code>auto</code>. Keep text readable at rest (animate <code>transform</code> or an accent bar rather than starting at <code>opacity: 0</code>) so nothing looks blank if a visitor prints or captures the page.</p>
+          </DevNote>
+        </div>
+      </div>
+    </section>
+
+    <section class="band alt" data-node aria-labelledby="parts-h">
+      <div class="wrap">
+        <div class="split-head">
+          <h2 id="parts-h">How scroll animation CSS works in three parts</h2>
+          <p class="muted">As you scroll down this page, the mint bar along the top of each card below also runs on <code>animation-timeline: view()</code> — no script observer attached.</p>
+        </div>
+
+        <ul class="grid g3 sub sub3">
+          <li class="card page-view-card">
+            <div class="pv-accent" aria-hidden="true"></div>
+            <h3>1. Write normal keyframes</h3>
+            <p>Start with an ordinary <code>@keyframes</code> block that describes the starting and finished transform. Nothing new to learn in the keyframes themselves.</p>
+          </li>
+          <li class="card page-view-card">
+            <div class="pv-accent" aria-hidden="true"></div>
+            <h3>2. Attach a timeline</h3>
+            <p>Swap clock time for scroll position with <code>animation-timeline: view()</code> (tracks an element entering the screen) or <code>scroll()</code> (tracks the whole scrollbar).</p>
+          </li>
+          <li class="card page-view-card">
+            <div class="pv-accent" aria-hidden="true"></div>
+            <h3>3. Pick the range</h3>
+            <p>Set <code>animation-range: entry 0% cover 32%</code> so the move finishes smoothly in the lower third of the screen instead of dragging all the way to the top edge.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="band" data-node aria-labelledby="code-h">
+      <div class="wrap">
+        <h2 id="code-h">Copy the scroll animation CSS</h2>
+        <div class="cols2 top">
+          <CodeBlock label="Viewport reveal with animation-timeline: view() (CSS)" code={viewCss} />
+          <div>
+            <CodeBlock label="Reading progress bar with scroll() (CSS)" code={scrollBarCss} />
+            <p class="note"><strong>Browser support:</strong> <code>animation-timeline: view()</code> and <code>scroll()</code> work in current Chrome and Edge today. Firefox and Safari are still rolling out support and cleanly ignore the <code>@supports</code> block, displaying the finished static layout with no jump. Tested in Chromium only.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <WhyFree
+      nextHref="/lab/css-color-mix/"
+      nextTitle="CSS color-mix() playground"
+      nextBlurb="Mix two colors right in CSS and compare oklch, oklab, srgb, and hsl live."
+    />
+  </div>
+</Base>
+
+<style>
+  .scroll-shell {
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 2px solid var(--rim-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+  }
+  .scroll-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0.75rem 1.1rem;
+    background: var(--k-night);
+    border-bottom: 1px solid rgb(194 255 230 / 0.16);
+  }
+  .scroll-head .muted {
+    color: #d2cae2;
+  }
+  .scroll-viewport {
+    position: relative;
+    flex: 1;
+    min-height: 22rem;
+    max-height: 31rem;
+    overflow-y: auto;
+    padding: 0 1.1rem 1.4rem;
+    background: var(--code-bg);
+  }
+  .scroll-bar-track {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    margin: 0 -1.1rem 1rem;
+    height: 6px;
+    background: rgb(194 255 230 / 0.16);
+  }
+  .scroll-bar-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, var(--k-mint), var(--k-gold));
+    transform-origin: left center;
+  }
+  .scroll-cards {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .s-card {
+    background: var(--k-deep);
+    color: var(--k-cream);
+    border: 1px solid rgb(194 255 230 / 0.24);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+  }
+  .s-card .s-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.15;
+    margin: 0.2rem 0 0.4rem;
+    color: var(--k-cream);
+  }
+  .s-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #e6dff2;
+  }
+  .s-step {
+    color: var(--k-mint) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .s-meter {
+    height: 4px;
+    border-radius: 999px;
+    background: rgb(194 255 230 / 0.14);
+    overflow: hidden;
+    margin-bottom: 0.65rem;
+  }
+  .s-meter i {
+    display: block;
+    height: 100%;
+    background: var(--k-mint);
+    transform-origin: left center;
+  }
+
+  .sup-box {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: var(--code-bg);
+    color: var(--k-cream);
+    border: 2px solid var(--k-gold);
+  }
+  .sup-box p {
+    margin: 0;
+    color: var(--k-cream);
+  }
+  .sup-on { display: none; }
+  @supports (animation-timeline: view()) {
+    .sup-box { border-color: var(--k-mint); }
+    .sup-on { display: block; }
+    .sup-off { display: none; }
+  }
+
+  .pv-accent {
+    height: 5px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--k-mint), var(--k-gold));
+    transform-origin: left center;
+  }
+
+  @keyframes pb-bar {
+    from { transform: scaleX(0.08); }
+    to   { transform: scaleX(1); }
+  }
+  @keyframes pb-card-glide {
+    from { transform: translateY(16px) scale(0.96); }
+    to   { transform: translateY(0) scale(1); }
+  }
+  @keyframes pb-meter {
+    from { transform: scaleX(0.2); }
+    to   { transform: scaleX(1); }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      .scroll-bar-fill {
+        animation: pb-bar linear both;
+        animation-timeline: scroll(nearest);
+      }
+    }
+    @supports (animation-timeline: view()) {
+      .s-card {
+        animation: pb-card-glide linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 30%;
+      }
+      .s-meter i {
+        animation: pb-meter linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 45%;
+      }
+      .pv-accent {
+        animation: pb-meter linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 40%;
+      }
+    }
+  }
+</style>

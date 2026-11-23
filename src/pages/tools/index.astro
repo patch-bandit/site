@@ -1,0 +1,295 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Raccoon from '../../components/Raccoon.astro';
+import TypedLines, { type TypedLine } from '../../components/TypedLines.astro';
+import { LAB_EXPERIMENTS, STATIC_PAGES, TOOLS_LABEL, inWords } from '../../data/site';
+
+const labCount = (await getCollection('drops')).length + LAB_EXPERIMENTS.length;
+const page = STATIC_PAGES.find((p) => p.path === '/tools/')!;
+const statusLines: TypedLine[] = [
+  { k: 'cmd', t: 'status bandit-codes' },
+  { k: 'gold', t: 'state:   set free (live)' },
+  { k: 'out', t: 'runtime: your browser' },
+  { k: 'out', t: 'uploads: none (stays on device)' },
+  { k: 'dim', t: 'license: MIT · open now' },
+];
+
+let seed = 19;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+const blocks: { x: number; w: number; h: number }[] = [];
+for (let x = 0; x < 1600; ) { const w = 40 + rnd() * 110; blocks.push({ x, w, h: 18 + rnd() * 70 }); x += w + 3; }
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Free online tools from Patch Bandit',
+  url: 'https://patchbandit.com/tools/',
+};
+---
+<Base
+  title={page.title}
+  description="Free online tools from Patch Bandit: open source, no account, no trackers, and your files never leave your device. Starting with Bandit Codes, live now."
+  schema={schema}
+>
+  <section class="bench-opener flash" aria-labelledby="tools-h">
+    <div class="wrap">
+      <div class="bench-head">
+        <div class="bench-intro">
+          <p class="crumbs"><a href="/">The story</a> / {TOOLS_LABEL}</p>
+          <p class="eyebrow">{TOOLS_LABEL}</p>
+          <h1 id="tools-h">Free online tools, straight off the bench</h1>
+        </div>
+        <div class="bench-pitch">
+          <p class="lead">Our free online tools run right inside your browser tab with no sign-up, no tracking scripts, and full source code alongside every release.</p>
+          <p class="story">This shelf grows one tool at a time. Nothing is marked live until you can open it, use it, and read its source.</p>
+        </div>
+      </div>
+
+      <div class="bench-shelf">
+        <div class="bench-art art">
+          <Raccoon
+            pose="tools"
+            size="min(72vw, 256px)"
+            label="A CSS-drawn raccoon at a workbench tightening a hex bolt with a wrench, a small tied pouch beside the bench"
+          />
+          <p class="bench-cap mono small">bench 01 · 1 tool set free</p>
+        </div>
+
+        <div class="card glint bench-card">
+          <p class="status free">Set free</p>
+          <h2><a href="/tools/qr-code-generator/">Bandit Codes — QR code generator</a></h2>
+          <p>Paste a link, Wi-Fi login, contact card, or event and download a clean PNG or SVG right in your browser — a free QR code generator no sign up, no watermark, no tracking redirect, and live scan verification.</p>
+          <p class="bench-act"><a class="btn" href="/tools/qr-code-generator/">Open Bandit Codes</a></p>
+          <p class="mono small spec-line">runs in: your browser · cookies: none · MIT</p>
+        </div>
+
+        <div class="term tool-term" data-type>
+          <div class="term-bar"><i></i><i></i><i></i><span>~/tools/bandit-codes</span></div>
+          <div class="term-body tool-body">
+            <svg class="qr-art" viewBox="0 0 120 120" aria-hidden="true">
+              <rect x="6" y="6" width="34" height="34" rx="4" fill="none" stroke="#86e3be" stroke-width="6" />
+              <rect x="16" y="16" width="14" height="14" rx="2" fill="#86e3be" />
+              <rect x="80" y="6" width="34" height="34" rx="4" fill="none" stroke="#86e3be" stroke-width="6" />
+              <rect x="90" y="16" width="14" height="14" rx="2" fill="#86e3be" />
+              <rect x="6" y="80" width="34" height="34" rx="4" fill="none" stroke="#86e3be" stroke-width="6" />
+              <rect x="16" y="90" width="14" height="14" rx="2" fill="#86e3be" />
+              <rect x="52" y="12" width="10" height="10" rx="2" fill="#ffc857" />
+              <rect x="52" y="30" width="10" height="10" rx="2" fill="#fff2de" />
+              <rect x="12" y="52" width="10" height="10" rx="2" fill="#fff2de" />
+              <rect x="30" y="52" width="10" height="10" rx="2" fill="#ffc857" />
+              <rect x="52" y="52" width="16" height="16" rx="3" fill="#ff7b67" />
+              <rect x="78" y="52" width="10" height="10" rx="2" fill="#fff2de" />
+              <rect x="98" y="52" width="10" height="10" rx="2" fill="#86e3be" />
+              <rect x="52" y="80" width="10" height="10" rx="2" fill="#86e3be" />
+              <rect x="74" y="76" width="12" height="12" rx="2" fill="#ffc857" />
+              <rect x="96" y="78" width="12" height="12" rx="2" fill="#fff2de" />
+              <rect x="52" y="98" width="12" height="12" rx="2" fill="#fff2de" />
+              <rect x="74" y="98" width="12" height="12" rx="2" fill="#86e3be" />
+              <rect x="96" y="98" width="12" height="12" rx="2" fill="#ffc857" />
+            </svg>
+            <TypedLines lines={statusLines} srLabel="Bandit Codes status" class="tool-lines" />
+          </div>
+          <div class="term-foot">
+            <a href="/den/#how-typing-works">How the typing works &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <svg class="skyline" viewBox="0 0 1600 90" preserveAspectRatio="none" aria-hidden="true">
+      {blocks.map((b) => <rect x={b.x.toFixed(1)} y={(90 - b.h).toFixed(1)} width={b.w.toFixed(1)} height={b.h.toFixed(1)} />)}
+    </svg>
+    <div class="bo-scan" aria-hidden="true"></div>
+  </section>
+
+  <div class="route-host">
+    <div class="route-rail" data-route aria-hidden="true"><i></i></div>
+
+    <section class="band" data-node aria-labelledby="how-tools-h">
+      <div class="wrap">
+        <div class="split-head rv">
+          <div>
+            <p class="eyebrow">Every tool, same rules</p>
+            <h2 id="how-tools-h">How every tool here works</h2>
+          </div>
+          <p class="lead">Before a tool lands on this page, it has to pass the same plain checks as the rest of the site.</p>
+        </div>
+        <ul class="grid g3 sub sub3">
+          <li class="card rv">
+            <p class="num">01</p>
+            <h3>Runs on your device</h3>
+            <p>Your file or text stays in your browser tab. Check your Network tab anytime: zero uploads and zero third-party requests.</p>
+          </li>
+          <li class="card rv" style="--i:1">
+            <p class="num">02</p>
+            <h3>No account, no fee</h3>
+            <p>Open the page, finish the job, close the tab. No login wall, no trial timer, and no watermark on what you make.</p>
+          </li>
+          <li class="card rv" style="--i:2">
+            <p class="num">03</p>
+            <h3>Source included</h3>
+            <p>Every tool ships under a permissive open license so anyone can inspect it, copy it, or host their own copy.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="band night flash" data-node="end" aria-labelledby="tools-next-h">
+      <div class="wrap cols2 next-row">
+        <div class="card rv">
+          <p class="tag">Need code today?</p>
+          <h2 id="tools-next-h" class="h-sub">Open the lab</h2>
+          <p>Looking for code snippets too? The lab holds {inWords(labCount)} working CSS experiments and the CSS art raccoon, all live with MIT code to copy.</p>
+          <p class="next-act"><a class="btn alt" href="/lab/">Open the lab</a></p>
+        </div>
+        <div class="card mint rv" style="--i:1">
+          <p class="tag">More ideas</p>
+          <h2 class="h-sub">See the stash</h2>
+          <p>Eight more tool ideas sit in the stash, plus the stash terminal where you can pitch a tool you want built next.</p>
+          <p class="next-act"><a class="btn" href="/den/">See the stash</a></p>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .bench-opener {
+    background: var(--k-abyss);
+    color: var(--k-cream);
+    --text: var(--k-cream);
+    --muted: #d2cae2;
+    --link: var(--k-mint);
+    --link-hover: var(--k-gold);
+    --surface: #241539;
+    --surface-2: var(--k-night);
+    --rim: rgb(194 255 230 / 0.14);
+    --rim-strong: rgb(194 255 230 / 0.28);
+    --gold: var(--k-gold);
+    --coral: var(--k-coral);
+    --accent: var(--k-mint);
+    --accent-ink: var(--k-ink);
+    --glow: 0 0 0 1px rgb(194 255 230 / 0.28), 0 20px 50px -20px rgb(134 227 190 / 0.45);
+    padding: clamp(2rem, 4.5vw, 3.2rem) 0 clamp(3.8rem, 7vw, 5.5rem);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .bench-opener::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(50rem 26rem at 14% 72%, rgb(63 181 143 / 0.22), transparent 62%),
+      radial-gradient(56rem 28rem at 88% 20%, rgb(122 85 176 / 0.34), transparent 60%);
+  }
+  .bench-head {
+    display: grid;
+    gap: 1.1rem 2.5rem;
+    grid-template-columns: 1fr;
+    align-items: end;
+    margin-bottom: clamp(1.8rem, 3.5vw, 2.4rem);
+  }
+  .bench-head > * { min-width: 0; }
+  .bench-intro h1 {
+    font-size: clamp(2.1rem, 4.5vw, 3.35rem);
+    margin-bottom: 0;
+  }
+  .bench-pitch .lead { margin-bottom: 0.9rem; }
+  .bench-pitch .story {
+    font: 400 0.94rem/1.5 var(--mono);
+    color: var(--k-mint-glow);
+    border-left: 2px solid var(--k-mint);
+    padding-left: 0.9rem;
+    margin: 0;
+  }
+  @media (min-width: 56rem) {
+    .bench-head { grid-template-columns: 1.2fr 1fr; }
+  }
+
+  .bench-shelf {
+    display: grid;
+    gap: 1.4rem;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+  .bench-shelf > * { min-width: 0; }
+  @media (min-width: 52rem) {
+    .bench-shelf { grid-template-columns: 1fr 1fr; }
+    .bench-art { grid-column: 1 / -1; }
+  }
+  @media (min-width: 68rem) {
+    .bench-shelf { grid-template-columns: 18.25rem 1.08fr 1fr; }
+    .bench-art { grid-column: auto; }
+  }
+
+  .bench-art {
+    position: relative;
+    background: #1a0d2b;
+    border: 1px solid rgb(194 255 230 / 0.18);
+    border-radius: var(--radius);
+    padding: 1.1rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.75);
+  }
+  .bench-cap {
+    margin: 0;
+    color: var(--k-mint-glow);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .bench-opener .card {
+    border: 1px solid rgb(194 255 230 / 0.16);
+    box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.75);
+  }
+  .bench-card { display: flex; flex-direction: column; }
+  .bench-card h2 { font-size: clamp(1.4rem, 2.3vw, 1.75rem); margin-top: 0.7rem; }
+  .spec-line { margin-top: auto; padding-top: 0.7rem; color: var(--muted); }
+
+  .tool-term { display: flex; flex-direction: column; }
+  .tool-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    flex: 1;
+  }
+  .qr-art { width: 5.25rem; height: 5.25rem; display: block; flex: none; }
+  .tool-lines { min-width: 0; }
+  .tool-lines :global(.line) { font-size: 0.86rem; margin-bottom: 0.25rem; }
+  .tool-lines :global(.line:last-child) { margin-bottom: 0; }
+
+  .skyline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: clamp(2rem, 5vw, 3.8rem);
+    fill: var(--k-ink);
+    z-index: -1;
+  }
+  .bo-scan {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: url('/art/motif-glitch-scanlines.svg') 0 0 / 480px 240px;
+    opacity: 0.05;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .bo-scan { animation: bo-drift 8s linear infinite; }
+  }
+  @keyframes bo-drift { to { background-position: 0 240px; } }
+
+  .next-row { align-items: stretch; }
+  .next-row > .card { display: flex; flex-direction: column; }
+  .h-sub { font-size: clamp(1.45rem, 2.5vw, 1.95rem); }
+  .next-act { margin-top: auto !important; padding-top: 0.6rem; }
+</style>
