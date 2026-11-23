@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+
+const UPDATED = '2026-11-23';
+const items = [
+  {
+    tag: 'This site',
+    title: 'No cookies, no tracking, no ads',
+    body: 'Pages load only from patchbandit.com. There are no analytics scripts, no ad tags, and no third-party requests. The theme switch remembers your pick in your own browser and nowhere else.',
+  },
+  {
+    tag: 'The tools',
+    title: 'What you type stays on your device',
+    body: 'Bandit Codes and every lab demo run in your browser. Nothing you type, upload, or download is sent to us or anyone else.',
+  },
+  {
+    tag: 'Hosting',
+    title: 'Our host keeps normal request logs',
+    body: 'The site is served through Cloudflare, which processes standard request details (such as IP address and browser type) to deliver pages and block attacks. We do not use them to track anyone.',
+  },
+  {
+    tag: 'The snack jar',
+    title: 'Tips go through Stripe',
+    body: "If you tip, Stripe takes the payment on its own page and we never see your card number. We receive the amount, the email address Stripe's page asks for, and any name you choose to enter. We use them only to keep records of tips and to answer you if you write in. Stripe's privacy policy explains how Stripe uses your information.",
+  },
+  {
+    tag: 'Ideas',
+    title: 'Ideas live on GitHub',
+    body: 'The "pitch a tool" form only builds a link to a public GitHub Discussions page. What you post there is public and covered by GitHub\'s own privacy statement.',
+  },
+  {
+    tag: 'Questions',
+    title: 'Ask, or ask us to delete',
+    body: 'Write to stash@patchbandit.com with any question about this page, or to ask us to delete what we hold about a tip you made.',
+  },
+];
+---
+<Base
+  title="Privacy | Patch Bandit"
+  description="Patch Bandit has no cookies, no tracking, and no ads. Tools run in your browser. Tips go through Stripe, and we never see your card."
+>
+  <PageHero art="/art/raccoon-focused.svg" alt="The raccoon, focused, reading the fine print" tone="mint">
+    <p class="eyebrow mono">&gt; updated {UPDATED}</p>
+    <h1>Privacy, the short version</h1>
+    <p class="lead">We collect almost nothing, and this page lists all of it. If anything here changes, the date above changes with it.</p>
+  </PageHero>
+
+  <section class="band tight" aria-labelledby="what-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">The full list</p>
+          <h2 id="what-h">What we see, and what we don't</h2>
+        </div>
+        <p class="muted">Patch Bandit is a small open source project. The site's code is public, so anyone can check these claims against what actually ships.</p>
+      </div>
+      <ul class="grid g2 sub sub3">
+        {items.map((i) => (
+          <li class="card glint">
+            <p class="tag">{i.tag}</p>
+            <h3>{i.title}</h3>
+            <p>{i.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>

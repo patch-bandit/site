@@ -270,11 +270,7 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Op
               <p>Everything here stays free, with or without support. If a tool saved you a monthly fee and you want to toss a bagel in the jar, this is the only place we'll mention it.</p>
             </div>
             <div class="snack-act">
-              {SNACK_JAR.url ? (
-                <a class="btn alt" href={SNACK_JAR.url} target="_blank" rel="noopener noreferrer">Toss in a snack</a>
-              ) : (
-                <p class="mono small muted">The jar isn't wired up yet.</p>
-              )}
+              <a class="btn alt" href="/snacks/">Visit the snack jar</a>
             </div>
           </div>
         </div>

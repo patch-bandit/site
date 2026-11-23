@@ -89,19 +89,20 @@ const PRIVACY_LINE = true;
           </div>
           <div>
             <h2>The honest inventory</h2>
-            <p>Built: {inWords(built)} lab experiments. {FOOTER_TOOLS_STATUS} Users, partners, donations: none.</p>
+            <p>Built: {inWords(built)} lab experiments. {FOOTER_TOOLS_STATUS} Users, partners, tips: none yet.</p>
           </div>
           <div>
             <h2>The doors</h2>
             <ul class="doors">
               {NAV.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+              <li><a href="/snacks/">Snack jar</a></li>
               <li><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">Code account</a></li>
             </ul>
           </div>
         </div>
         <p class="signoff">{SIGNOFF}</p>
         <p class="fine">Lab code is free to copy, change, and share under the MIT License. Fonts are served from this site under the SIL Open Font License.</p>
-        {PRIVACY_LINE && <p class="fine" data-privacy-line>No cookies, no tracking, no ads. The theme switch remembers your pick in this browser only.</p>}
+        {PRIVACY_LINE && <p class="fine" data-privacy-line>No cookies, no tracking, no ads. The theme switch remembers your pick in this browser only. <a href="/privacy/">Privacy</a>.</p>}
         <p class="fine mono">psst: on any page, type <kbd>o</kbd><kbd>p</kbd><kbd>e</kbd><kbd>n</kbd>.</p>
       </div>
     </footer>

@@ -18,6 +18,8 @@ export const GET: APIRoute = async ({ site }) => {
     `- [Bandit Codes — free QR code generator](${link('/tools/qr-code-generator/')}): make PNG and SVG QR codes locally in your browser with live scan verification, no account, no tracking, MIT licensed`,
     `- [The stash](${link('/den/')}): open source project ideas, how the manifesto typing works, house rules, and how to build them together`,
     `- [The lab](${link('/lab/')}): the snack drop log of CSS experiments`,
+    `- [The snack jar](${link('/snacks/')}): optional tips through Stripe; every tool stays free`,
+    `- [Privacy](${link('/privacy/')}): no cookies, no tracking, tools run in your browser`,
     `- [CSS art raccoon](${link('/lab/css-art-raccoon/')}): a raccoon drawn in pure CSS, pulled apart piece by piece`,
     '',
     '## Experiments',

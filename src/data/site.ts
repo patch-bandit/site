@@ -22,10 +22,10 @@ export const HERO_TOOLS_BADGE = 'Bandit Codes is live.';
 export const MANIFESTO_TOOLS_STATUS = 'tools: 1 set free (bandit-codes)';
 export const FOOTER_TOOLS_STATUS = 'Tools: 1 set free (Bandit Codes).';
 
-// Optional snack jar (donation) block on /den/. Off by default; set provider, url, and enabled: true when ready.
+// Snack jar (tips): /snacks/ page plus the block on /den/. Paste the Stripe Payment Link into url; empty url shows 'opening soon'.
 export const SNACK_JAR = {
-  enabled: false,
-  provider: '',
+  enabled: true,
+  provider: 'stripe',
   url: '',
 };
 
