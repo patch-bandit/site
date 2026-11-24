@@ -20,7 +20,7 @@ const viewCss = `@keyframes reveal-up {
     .reveal-card {
       animation: reveal-up linear both;
       animation-timeline: view();
-      animation-range: entry 0% cover 32%;
+      animation-range: entry 0% cover 30%;
     }
   }
 }`;
@@ -49,7 +49,7 @@ const milestones = [
   { step: '01', title: 'No scroll listener', body: 'Your browser updates frames directly on its compositor thread instead of firing JavaScript on every scroll pixel.' },
   { step: '02', title: 'Reversible by default', body: 'Scroll forward and the card settles into place; scroll back up and it glides smoothly in reverse.' },
   { step: '03', title: 'Scoped to any box', body: 'Using scroll(nearest) ties a progress bar to an inner scroll window or to the full page.' },
-  { step: '04', title: 'Range controls timing', body: 'animation-range: entry 0% cover 32% finishes the glide well before the card reaches the middle of your screen.' },
+  { step: '04', title: 'Range controls timing', body: 'animation-range: entry 0% cover 30% finishes the glide well before the card reaches the middle of your screen.' },
   { step: '05', title: 'Plain fallback built in', body: 'Browsers without animation-timeline ignore the @supports block and show every card in its finished resting spot.' },
 ];
 
@@ -140,7 +140,7 @@ const schema = {
           <li class="card page-view-card">
             <div class="pv-accent" aria-hidden="true"></div>
             <h3>3. Pick the range</h3>
-            <p>Set <code>animation-range: entry 0% cover 32%</code> so the move finishes smoothly in the lower third of the screen instead of dragging all the way to the top edge.</p>
+            <p>Set <code>animation-range: entry 0% cover 30%</code> so the move finishes smoothly in the lower third of the screen instead of dragging all the way to the top edge.</p>
           </li>
         </ul>
       </div>
@@ -193,9 +193,10 @@ const schema = {
   }
   .scroll-viewport {
     position: relative;
-    flex: 1;
+    /* height: 0 keeps the cards out of the row height, so the frame matches the text column and the window fills it */
+    flex: 1 1 0;
+    height: 0;
     min-height: 22rem;
-    max-height: 31rem;
     overflow-y: auto;
     padding: 0 1.1rem 1.4rem;
     background: var(--code-bg);
@@ -296,26 +297,36 @@ const schema = {
     to   { transform: scaleX(1); }
   }
 
+  /* Longhands on purpose: the build's CSS minifier folds `animation` + `animation-timeline`
+     into one shorthand that browsers reject, which silently drops every scroll animation. */
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: scroll()) {
       .scroll-bar-fill {
-        animation: pb-bar linear both;
+        animation-name: pb-bar;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
         animation-timeline: scroll(nearest);
       }
     }
     @supports (animation-timeline: view()) {
       .s-card {
-        animation: pb-card-glide linear both;
+        animation-name: pb-card-glide;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
         animation-timeline: view();
         animation-range: entry 0% cover 30%;
       }
       .s-meter i {
-        animation: pb-meter linear both;
+        animation-name: pb-meter;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
         animation-timeline: view();
         animation-range: entry 0% cover 45%;
       }
       .pv-accent {
-        animation: pb-meter linear both;
+        animation-name: pb-meter;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
         animation-timeline: view();
         animation-range: entry 0% cover 40%;
       }
