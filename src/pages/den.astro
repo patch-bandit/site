@@ -45,7 +45,13 @@ const ideas: { name: string; what: string; status: 'idea' | 'bench' | 'free'; la
     href: '/tools/qr-code-generator/',
   },
   { name: 'A CSS grid generator', what: 'Pick columns and gaps, check the layout, copy the CSS. One page, no sign-up wall.', status: 'idea', label: 'Still in the stash. Paws off.' },
-  { name: 'A contrast checker', what: 'Two colors in, clear pass or fail out. It gives you the reason in plain words.', status: 'idea', label: 'Still in the stash. Paws off.' },
+  {
+    name: 'Spotlight: color contrast checker',
+    what: 'Check WCAG AA and AAA contrast for hex or RGB pairs, preview text and UI parts live, and grab the nearest passing color. Nothing leaves your browser.',
+    status: 'free',
+    label: 'Set free',
+    href: '/tools/contrast-checker/',
+  },
   { name: 'A README starter', what: 'Honest sections wired in from the start. It even includes the required "Not yet" block so nothing gets oversold.', status: 'idea', label: 'Still in the stash. Paws off.' },
   {
     name: 'UUID generator and unique ID maker',
@@ -54,7 +60,13 @@ const ideas: { name: string; what: string; status: 'idea' | 'bench' | 'free'; la
     label: 'Set free',
     href: '/tools/uuid-generator/',
   },
-  { name: 'A markdown to HTML converter', what: 'Paste plain text with simple marks and grab clean HTML right back. No server round-trip needed.', status: 'idea', label: 'Still in the stash. Paws off.' },
+  {
+    name: 'Markdown to HTML converter',
+    what: 'Paste Markdown and grab clean, safe HTML with live preview and GitHub Flavored Markdown support right in your browser. Copy a fragment or download a full page with no server round-trip.',
+    status: 'free',
+    label: 'Set free',
+    href: '/tools/markdown-to-html/',
+  },
   {
     name: 'px to rem converter',
     what: 'Two-way px and rem conversion with any root font size, plus batch CSS conversion right in your browser.',
@@ -63,7 +75,13 @@ const ideas: { name: string; what: string; status: 'idea' | 'bench' | 'free'; la
     href: '/tools/px-to-rem/',
   },
   { name: 'A commit message cheer-up', what: 'Takes your 3 AM "stuff" commit and turns it into a line a human can actually read.', status: 'idea', label: 'Still in the stash. Paws off.' },
-  { name: 'An HTML snack starter', what: 'Start from one clean page with solid defaults for headings, focus, and motion. No bloat to strip out first.', status: 'idea', label: 'Still in the stash. Paws off.' },
+  {
+    name: 'HTML boilerplate generator',
+    what: 'Start from one clean HTML5 page with solid defaults for headings, focus rings, reduced motion, and optional Open Graph tags. No bloat to strip out first.',
+    status: 'free',
+    label: 'Set free',
+    href: '/tools/html-boilerplate-generator/',
+  },
 ];
 
 const typingHtmlCss = `<!-- Render the full text in HTML so no-script and reduced-motion see it right away. -->
@@ -109,7 +127,7 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Op
     <p class="eyebrow">Inside the stash</p>
     <h1>Open source project ideas: the stash</h1>
     <p class="lead">These are the open source project ideas we'd like to build, kept in the stash where everyone can see them. Each one is a free tool that could replace a fee, a lock, or a tracker, and every card carries an honest status tag.</p>
-    <p class="story">Want working code right now? Grab {inWords(labCount)} live demos in the <a href="/lab/">lab</a>, or try three live tools over in <a href="/tools/">the loot</a>.</p>
+    <p class="story">Want working code right now? Grab {inWords(labCount)} live demos in the <a href="/lab/">lab</a>, or try six live tools over in <a href="/tools/">the loot</a>.</p>
     <Fragment slot="art">
       <svg class="heap" viewBox="0 0 400 360" role="img" aria-label="A stash of found things: a key, a gear, a chip, a disk, and a magnifier, each one an idea">
         <ellipse cx="200" cy="330" rx="170" ry="22" fill="#140a22" opacity="0.6" />
@@ -153,9 +171,9 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Op
           <p class="lead">Most of the stash is still ideas. When one moves to the bench or ships, its tag changes, and the inventory on the home page changes with it.</p>
         </div>
         <ul class="grid g3 sub sub3">
-          <li class="card rv"><p class="status idea">Still in the stash. Paws off.</p><h3>An idea</h3><p>Nothing built and no ship date. Six cards below wear this tag today.</p></li>
-          <li class="card rv" style="--i:1"><p class="status bench">On the bench</p><h3>Being built</h3><p>Bolts are turning in the open. The bench is clear for the next build now that three tools shipped.</p></li>
-          <li class="card rv" style="--i:2"><p class="status free">Set free</p><h3>Built and free</h3><p>Done, open, and free, with source you can inspect. <a href="/tools/qr-code-generator/">Bandit Codes</a>, <a href="/tools/px-to-rem/">px to rem converter</a>, and <a href="/tools/uuid-generator/">UUID generator</a> wear this tag now.</p></li>
+          <li class="card rv"><p class="status idea">Still in the stash. Paws off.</p><h3>An idea</h3><p>Nothing built and no ship date. Three cards below wear this tag today.</p></li>
+          <li class="card rv" style="--i:1"><p class="status bench">On the bench</p><h3>Being built</h3><p>Bolts are turning in the open. The bench is clear for the next build now that six tools shipped.</p></li>
+          <li class="card rv" style="--i:2"><p class="status free">Set free</p><h3>Built and free</h3><p>Done, open, and free, with source you can inspect. <a href="/tools/qr-code-generator/">Bandit Codes</a>, <a href="/tools/px-to-rem/">px to rem converter</a>, <a href="/tools/uuid-generator/">UUID generator</a>, <a href="/tools/contrast-checker/">Spotlight</a>, <a href="/tools/html-boilerplate-generator/">HTML boilerplate generator</a>, and <a href="/tools/markdown-to-html/">Markdown to HTML converter</a> wear this tag now.</p></li>
         </ul>
       </div>
     </section>

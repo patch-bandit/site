@@ -12,8 +12,8 @@ export const GET: APIRoute = async ({ site }) => {
     ...LAB_EXPERIMENTS.map((d) => d.date),
   ].sort();
   const entries = [
-    { path: '/', date: '2026-11-24' },
-    { path: '/tools/', date: '2026-11-24' },
+    { path: '/', date: '2026-11-25' },
+    { path: '/tools/', date: '2026-11-25' },
     { path: '/tools/qr-code-generator/', date: '2026-11-24' },
     ...qrGuides.map((g) => ({
       path: g.id === 'index' ? '/tools/qr-code-generator/guides/' : `/tools/qr-code-generator/guides/${g.id}/`,
@@ -21,9 +21,12 @@ export const GET: APIRoute = async ({ site }) => {
     })),
     { path: '/tools/px-to-rem/', date: '2026-11-24' },
     { path: '/tools/uuid-generator/', date: '2026-11-24' },
-    { path: '/den/', date: '2026-11-24' },
+    { path: '/tools/contrast-checker/', date: '2026-11-25' },
+    { path: '/tools/html-boilerplate-generator/', date: '2026-11-25' },
+    { path: '/tools/markdown-to-html/', date: '2026-11-25' },
+    { path: '/den/', date: '2026-11-25' },
     { path: '/snacks/', date: '2026-11-23' },
-    { path: '/privacy/', date: '2026-11-24' },
+    { path: '/privacy/', date: '2026-11-25' },
     { path: '/lab/', date: labDates.pop() ?? '2026-11-22' },
     ...LAB_EXPERIMENTS.map((d) => ({ path: d.path, date: d.date })),
     ...drops.map((d) => ({ path: `/lab/${d.id}/`, date: d.data.date.toISOString().slice(0, 10) })),

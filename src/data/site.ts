@@ -18,9 +18,9 @@ export const CREED = 'We outsmart systems, never people.';
 export const SIGNOFF = 'Paws up. Masks on.';
 
 // Hero badge and inventory tools status: update here when tools ship.
-export const HERO_TOOLS_BADGE = 'Three tools set free.';
-export const MANIFESTO_TOOLS_STATUS = 'tools: 3 set free (bandit-codes, px-to-rem, uuid-generator)';
-export const FOOTER_TOOLS_STATUS = 'Set free so far: 3. Bandit Codes, px to rem, and UUID generator. More in the stash.';
+export const HERO_TOOLS_BADGE = 'Six tools set free.';
+export const MANIFESTO_TOOLS_STATUS = 'tools: 6 set free (bandit-codes, px-to-rem, uuid-generator, spotlight, html-boilerplate-generator, markdown-to-html)';
+export const FOOTER_TOOLS_STATUS = 'Set free so far: 6. Bandit Codes, px to rem, UUID generator, Spotlight, HTML boilerplate generator, and Markdown to HTML. More in the stash.';
 
 // Snack jar (tips): /snacks/ page plus the block on /den/. Paste the Stripe Payment Link into url; empty url shows 'opening soon'.
 export const SNACK_JAR = {
@@ -73,6 +73,9 @@ export const STATIC_PAGES = [
   { path: '/tools/qr-code-generator/', title: 'Free QR code generator (Bandit Codes) | Patch Bandit' },
   { path: '/tools/px-to-rem/', title: 'px to rem converter | Patch Bandit' },
   { path: '/tools/uuid-generator/', title: 'UUID generator and unique ID maker | Patch Bandit' },
+  { path: '/tools/contrast-checker/', title: 'Color contrast checker (Spotlight) | Patch Bandit' },
+  { path: '/tools/html-boilerplate-generator/', title: 'HTML boilerplate generator | Patch Bandit' },
+  { path: '/tools/markdown-to-html/', title: 'Markdown to HTML converter | Patch Bandit' },
   { path: '/den/', title: "Open source project ideas: the raccoon's stash" },
   { path: '/lab/', title: 'CSS experiments from the raccoon lab: live demos, free code' },
   { path: '/lab/css-art-raccoon/', title: 'CSS art: a raccoon drawn in pure CSS, taken apart' },

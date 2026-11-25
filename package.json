@@ -6,12 +6,13 @@
   "scripts": {
     "build:qr": "rolldown qr-src/qr-generator.ts -o public/tools/qr-code-generator.bundle.mjs -f esm -p browser -m",
     "build": "npm run build:qr && npm run verify:qr && astro build",
-    "test": "node --test tests/qr/*.test.ts tests/tools.test.ts",
+    "test": "node --test tests/qr/*.test.ts tests/tools.test.ts tests/contrast.test.ts tests/html-boilerplate.test.ts tests/markdownToHtml.test.ts",
     "verify:qr": "node scripts/verify-qr-bundle.mjs"
   },
   "dependencies": {
     "@zxing/library": "0.23.0",
     "astro": "7.4.13",
+    "marked": "18.2.1",
     "qrcode": "1.5.4",
     "zod": "4.6.7"
   },

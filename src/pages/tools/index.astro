@@ -9,7 +9,7 @@ const labCount = (await getCollection('drops')).length + LAB_EXPERIMENTS.length;
 const page = STATIC_PAGES.find((p) => p.path === '/tools/')!;
 const statusLines: TypedLine[] = [
   { k: 'cmd', t: 'status ./tools' },
-  { k: 'gold', t: 'state:   3 set free (live)' },
+  { k: 'gold', t: 'state:   6 set free (live)' },
   { k: 'out', t: 'runtime: your browser' },
   { k: 'out', t: 'uploads: none (stays on device)' },
   { k: 'dim', t: 'license: MIT · open now' },
@@ -29,7 +29,7 @@ const schema = {
 ---
 <Base
   title={page.title}
-  description="Free online tools from Patch Bandit: open source, no account, no trackers, and your files never leave your device. Three browser tools live now."
+  description="Free online tools from Patch Bandit: open source, no account, no trackers, and your files never leave your device. Six browser tools live now."
   schema={schema}
 >
   <section class="bench-opener flash" aria-labelledby="tools-h">
@@ -53,7 +53,7 @@ const schema = {
             size="min(72vw, 256px)"
             label="A CSS-drawn raccoon at a workbench tightening a hex bolt with a wrench, a small tied pouch beside the bench"
           />
-          <p class="bench-cap mono small">bench 01 · 3 tools set free</p>
+          <p class="bench-cap mono small">bench 01 · 6 tools set free</p>
         </div>
 
         <div class="card glint bench-card">
@@ -112,9 +112,9 @@ const schema = {
             <p class="eyebrow">Set free</p>
             <h2 id="all-tools-h">Tools live right now</h2>
           </div>
-          <p class="lead">Three browser tools released so far. Every one runs locally in your tab with no sign-up and no tracking.</p>
+          <p class="lead">Six browser tools released so far. Every one runs locally in your tab with no sign-up and no tracking.</p>
         </div>
-        <ul class="grid g3 sub sub4">
+        <ul class="grid g2 sub sub4">
           <li class="card glint rv">
             <p class="status free">Set free</p>
             <h3><a href="/tools/qr-code-generator/">Bandit Codes</a></h3>
@@ -127,11 +127,29 @@ const schema = {
             <p>Two-way px and rem conversion with any root font size, quick reference tiles, and batch CSS conversion in one pass.</p>
             <p class="mono small muted">runs in: browser · batch CSS · MIT</p>
           </li>
-          <li class="card glint rv" style="--i:2">
+          <li class="card glint rv">
             <p class="status free">Set free</p>
             <h3><a href="/tools/uuid-generator/">UUID generator</a></h3>
             <p>Make 1 to 100 UUID v4, time-sorted RFC 9562 UUID v7, or custom short random IDs with browser Web Crypto.</p>
             <p class="mono small muted">runs in: browser · Web Crypto · MIT</p>
+          </li>
+          <li class="card glint rv" style="--i:1">
+            <p class="status free">Set free</p>
+            <h3><a href="/tools/contrast-checker/">Spotlight: contrast checker</a></h3>
+            <p>Check WCAG AA and AAA contrast for hex or RGB pairs, preview text and UI parts live, and grab the nearest passing color.</p>
+            <p class="mono small muted">runs in: browser · WCAG 2.1 · MIT</p>
+          </li>
+          <li class="card glint rv">
+            <p class="status free">Set free</p>
+            <h3><a href="/tools/html-boilerplate-generator/">HTML boilerplate generator</a></h3>
+            <p>Build one clean HTML5 starter page with headings, focus rings, reduced motion, and optional Open Graph tags, then copy or download index.html.</p>
+            <p class="mono small muted">runs in: browser · HTML5 &amp; CSS · MIT</p>
+          </li>
+          <li class="card glint rv" style="--i:1">
+            <p class="status free">Set free</p>
+            <h3><a href="/tools/markdown-to-html/">Markdown to HTML converter</a></h3>
+            <p>Convert GitHub Flavored Markdown into clean, safe HTML with live DOM preview and fragment or full-page export.</p>
+            <p class="mono small muted">runs in: browser · GFM · MIT</p>
           </li>
         </ul>
       </div>
@@ -177,7 +195,7 @@ const schema = {
         <div class="card mint rv" style="--i:1">
           <p class="tag">More ideas</p>
           <h2 class="h-sub">See the stash</h2>
-          <p>Six more tool ideas are sitting in the stash waiting for a bench slot. Got a better one? Pitch it straight through the stash terminal.</p>
+          <p>Three more tool ideas are sitting in the stash waiting for a bench slot. Got a better one? Pitch it straight through the stash terminal.</p>
           <p class="next-act"><a class="btn" href="/den/">See the stash</a></p>
         </div>
       </div>

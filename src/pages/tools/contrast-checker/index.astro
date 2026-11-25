@@ -1,0 +1,661 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import '../../../styles/tool-panels.css';
+import { DEFAULT_BG, DEFAULT_FG, evaluateContrast, formatRgb, parseColor } from '../../../lib/contrast';
+import { GITHUB_URL, TOOLS_LABEL } from '../../../data/site';
+
+const title = 'Color contrast checker (Spotlight) | Patch Bandit';
+const description =
+  'Free WCAG color contrast checker for hex and RGB colors. Check AA and AAA text and UI ratios, see a live preview, and find the nearest passing color.';
+const canonical = new URL('/tools/contrast-checker/', Astro.site).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Spotlight color contrast checker',
+  url: canonical,
+  applicationCategory: 'DesignApplication',
+  operatingSystem: 'Any',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+
+const initFg = parseColor(DEFAULT_FG)!;
+const initBg = parseColor(DEFAULT_BG)!;
+const initReport = evaluateContrast(initFg, initBg);
+
+const PRESET_PAIRS = [
+  { label: 'Cream on night', fg: '#fff2de', bg: '#140a22' },
+  { label: 'Black on white', fg: '#000000', bg: '#ffffff' },
+  { label: '#777 on white', fg: '#777777', bg: '#ffffff' },
+  { label: 'Coral on white', fg: '#ff7b67', bg: '#ffffff' },
+];
+---
+<Base title={title} description={description} schema={schema}>
+  <PageHero tone="gold">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/tools/">{TOOLS_LABEL}</a> / Spotlight</p>
+    <p class="eyebrow">Set free · MIT</p>
+    <h1>Color contrast checker</h1>
+    <p class="lead">Check WCAG AA and AAA contrast ratios for normal text, large text, and UI parts using hex or RGB colors. Preview the pair live, grab the nearest passing color, and share a pair in the URL hash.</p>
+    <p class="story">Two colors in, plain pass or fail out. No sign-up, no tracker, and your picks stay in this tab.</p>
+    <Fragment slot="art">
+      <svg class="cc-hero-art" viewBox="0 0 280 280" role="img" aria-label="Spotlight contrast meter comparing cream text on midnight purple with a 17.34 to 1 ratio and AA and AAA pass pills">
+        <rect x="20" y="24" width="240" height="232" rx="22" fill="#241539" stroke="#140a22" stroke-width="6" />
+        <rect x="36" y="42" width="208" height="82" rx="12" fill="#140a22" stroke="#ffc857" stroke-width="2.5" />
+        <text x="52" y="84" fill="#fff2de" font-family="Platypi, Georgia, serif" font-size="30" font-weight="700">Aa</text>
+        <text x="108" y="76" fill="#ffc857" font-family="Fira Code, monospace" font-size="22" font-weight="700">17.34:1</text>
+        <text x="108" y="102" fill="#c2ffe6" font-family="Fira Code, monospace" font-size="13" font-weight="600">#fff2de / #140a22</text>
+        <g class="cc-hero-beam">
+          <rect x="36" y="140" width="96" height="44" rx="10" fill="#133128" stroke="#86e3be" stroke-width="2.5" />
+          <text x="54" y="167" fill="#c2ffe6" font-family="Fira Code, monospace" font-size="15" font-weight="700">AA PASS</text>
+          <rect x="148" y="140" width="96" height="44" rx="10" fill="#133128" stroke="#86e3be" stroke-width="2.5" />
+          <text x="161" y="167" fill="#c2ffe6" font-family="Fira Code, monospace" font-size="15" font-weight="700">AAA PASS</text>
+        </g>
+        <rect x="36" y="200" width="208" height="36" rx="10" fill="#140a22" stroke="#4b2d6e" stroke-width="2" />
+        <circle cx="58" cy="218" r="9" fill="#fff2de" stroke="#86e3be" stroke-width="2" />
+        <circle cx="84" cy="218" r="9" fill="#140a22" stroke="#ffc857" stroke-width="2" />
+        <text x="106" y="223" fill="#d2cae2" font-family="Fira Code, monospace" font-size="13" font-weight="600">UI 3:1 · local</text>
+      </svg>
+    </Fragment>
+  </PageHero>
+
+  <section class="band" aria-labelledby="tool-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">The tool</p>
+          <h2 id="tool-h">Check a color pair</h2>
+        </div>
+        <p class="muted">Enter any hex or RGB color, pick with the color swatch, or swap foreground and background. Everything updates locally in this tab.</p>
+      </div>
+
+      <div class="tool-shell tool-stack" data-cc-app>
+        <noscript>
+          <div class="card">
+            <h3>JavaScript is needed to check colors live in your browser</h3>
+            <p>Spotlight runs all WCAG contrast math locally in your browser tab so nothing is ever sent anywhere. Enable JavaScript for this page to check color pairs live.</p>
+          </div>
+        </noscript>
+
+        <div class="card">
+          <div class="tool-card-head">
+            <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">1</span>Pick two colors</h3>
+            <div class="tool-actions">
+              <button type="button" class="tool-btn-sm" data-swap>Swap colors</button>
+              <button type="button" class="tool-btn-sm primary" data-copy-link>Copy share link</button>
+            </div>
+          </div>
+
+          <div class="tool-stack">
+            <div class="tool-two-col">
+              <div class="tool-field">
+                <label for="fg-input">Text or foreground color (hex or RGB)</label>
+                <div class="cc-color-row">
+                  <input
+                    id="fg-picker"
+                    class="cc-picker"
+                    type="color"
+                    value={DEFAULT_FG}
+                    aria-label="Pick text or foreground color"
+                    data-fg-picker
+                  />
+                  <input
+                    id="fg-input"
+                    class="tool-input"
+                    type="text"
+                    maxlength="64"
+                    spellcheck="false"
+                    autocomplete="off"
+                    value={DEFAULT_FG}
+                    placeholder="#140a22 or rgb(20, 10, 34)"
+                    data-fg-input
+                  />
+                </div>
+                <p class="cc-fmt mono small muted" data-fg-rgb>{formatRgb(initFg)}</p>
+                <p class="tool-badge-warn" role="alert" data-fg-err hidden></p>
+              </div>
+
+              <div class="tool-field">
+                <label for="bg-input">Background color (hex or RGB)</label>
+                <div class="cc-color-row">
+                  <input
+                    id="bg-picker"
+                    class="cc-picker"
+                    type="color"
+                    value={DEFAULT_BG}
+                    aria-label="Pick background color"
+                    data-bg-picker
+                  />
+                  <input
+                    id="bg-input"
+                    class="tool-input"
+                    type="text"
+                    maxlength="64"
+                    spellcheck="false"
+                    autocomplete="off"
+                    value={DEFAULT_BG}
+                    placeholder="#fff2de or rgb(255, 242, 222)"
+                    data-bg-input
+                  />
+                </div>
+                <p class="cc-fmt mono small muted" data-bg-rgb>{formatRgb(initBg)}</p>
+                <p class="tool-badge-warn" role="alert" data-bg-err hidden></p>
+              </div>
+            </div>
+
+            <div class="tool-actions">
+              <span class="small muted">Sample pairs:</span>
+              <div class="tool-chip-row" role="group" aria-label="Sample color pairs">
+                {PRESET_PAIRS.map((pair) => (
+                  <button
+                    type="button"
+                    class="tool-chip"
+                    data-preset-fg={pair.fg}
+                    data-preset-bg={pair.bg}
+                  >
+                    {pair.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div class="cc-verdict-bar">
+              <div class="cc-ratio-box">
+                <span class="cc-ratio-val" data-ratio>{initReport.formatted}</span>
+                <span class="cc-pill pass" data-grade>{initReport.grade}</span>
+              </div>
+              <p class="cc-verdict-text" role="status" aria-live="polite" aria-atomic="true" data-verdict>{`${initReport.formatted}. ${initReport.verdict}`}</p>
+            </div>
+
+            <p class="tool-status" role="status" aria-live="polite" data-copy-status>Shareable state lives in the URL hash only. Nothing is sent anywhere.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tool-card-head">
+            <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">2</span>Live preview and WCAG checks</h3>
+            <span class="mono small muted" data-pair-label>{DEFAULT_FG} on {DEFAULT_BG}</span>
+          </div>
+
+          <div class="tool-stack">
+            <div
+              class="cc-preview"
+              style={`color:${DEFAULT_FG};background-color:${DEFAULT_BG};`}
+              data-preview
+            >
+              <p class="cc-preview-large">Big heading preview at 24px bold</p>
+              <p class="cc-preview-body">Normal body text at 16px. Check whether a visitor can read a full paragraph without squinting or zooming in on a phone screen.</p>
+              <div class="cc-preview-ui">
+                <span class="cc-ui-btn">Primary button</span>
+                <span class="cc-ui-field">Input border</span>
+                <span class="cc-ui-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M8.5 12.5l2.3 2.3 4.8-5.2" />
+                  </svg>
+                  UI icon
+                </span>
+              </div>
+            </div>
+
+            <ul class="grid g3">
+              <li class="cc-check-card">
+                <h4>Normal text</h4>
+                <div class="cc-check-badges">
+                  <span class="cc-pill pass" data-check-normal-aa>AA 4.5:1 Pass</span>
+                  <span class="cc-pill pass" data-check-normal-aaa>AAA 7:1 Pass</span>
+                </div>
+                <p class="cc-check-note">Body copy under 24px regular or 18.66px bold.</p>
+              </li>
+              <li class="cc-check-card">
+                <h4>Large text</h4>
+                <div class="cc-check-badges">
+                  <span class="cc-pill pass" data-check-large-aa>AA 3:1 Pass</span>
+                  <span class="cc-pill pass" data-check-large-aaa>AAA 4.5:1 Pass</span>
+                </div>
+                <p class="cc-check-note">Headings 24px regular or 18.66px bold and up.</p>
+              </li>
+              <li class="cc-check-card">
+                <h4>UI parts</h4>
+                <div class="cc-check-badges">
+                  <span class="cc-pill pass" data-check-ui-aa>AA 3:1 Pass</span>
+                </div>
+                <p class="cc-check-note">Buttons, borders, focus rings, and icons under WCAG 2.1.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tool-card-head">
+            <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">3</span>Nearest passing color</h3>
+            <div class="tool-chip-row" role="group" aria-label="Target contrast ratio">
+              <button type="button" class="tool-chip" data-target="4.5" aria-pressed="true">AA normal (4.5:1)</button>
+              <button type="button" class="tool-chip" data-target="7" aria-pressed="false">AAA normal (7:1)</button>
+              <button type="button" class="tool-chip" data-target="3" aria-pressed="false">Large and UI (3:1)</button>
+            </div>
+          </div>
+
+          <div class="tool-stack">
+            <div class="tool-two-col">
+              <div class="cc-near-card">
+                <h4>Adjust text color</h4>
+                <div class="cc-swatch-bar" style={`color:${DEFAULT_FG};background-color:${DEFAULT_BG};`} data-near-fg-swatch>
+                  <span data-near-fg-hex>{DEFAULT_FG}</span>
+                  <span data-near-fg-ratio>{initReport.formatted}</span>
+                </div>
+                <p class="cc-near-msg" data-near-fg-msg>Already clears 4.5:1. No tweak needed.</p>
+                <div class="tool-actions">
+                  <button type="button" class="tool-btn-sm primary" data-apply-fg disabled>Use text color</button>
+                  <button type="button" class="tool-btn-sm" data-copy-near-fg>Copy hex</button>
+                </div>
+              </div>
+
+              <div class="cc-near-card">
+                <h4>Adjust background color</h4>
+                <div class="cc-swatch-bar" style={`color:${DEFAULT_FG};background-color:${DEFAULT_BG};`} data-near-bg-swatch>
+                  <span data-near-bg-hex>{DEFAULT_BG}</span>
+                  <span data-near-bg-ratio>{initReport.formatted}</span>
+                </div>
+                <p class="cc-near-msg" data-near-bg-msg>Already clears 4.5:1. No tweak needed.</p>
+                <div class="tool-actions">
+                  <button type="button" class="tool-btn-sm primary" data-apply-bg disabled>Use background color</button>
+                  <button type="button" class="tool-btn-sm" data-copy-near-bg>Copy hex</button>
+                </div>
+              </div>
+            </div>
+
+            <p class="tool-badge-ok">Runs in your browser with no uploads, no cookies, and no tracking. Shareable color pairs live in the URL hash only.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-h">WCAG math, right in your tab</h2>
+        </div>
+        <p class="muted">Spotlight calculates sRGB relative luminance directly in your browser using the W3C WCAG 2.1 and 2.2 formula, with no server call and no external package.</p>
+      </div>
+      <ul class="grid g3 sub sub3">
+        <li class="card">
+          <p class="num">01</p>
+          <h3>WCAG thresholds</h3>
+          <p>Normal body text needs at least 4.5:1 for AA and 7:1 for AAA. Large text (24px regular or 18.66px bold and up) needs 3:1 for AA and 4.5:1 for AAA. Non-text UI parts and icons need 3:1 under WCAG 2.1.</p>
+        </li>
+        <li class="card">
+          <p class="num">02</p>
+          <h3>Nearest passing color</h3>
+          <p>Spotlight holds your color's hue and saturation steady, searches lightness in both lighter and darker directions, and checks the exact 8-bit hex against your target ratio before suggesting it.</p>
+        </li>
+        <li class="card">
+          <p class="num">03</p>
+          <h3>Private share links</h3>
+          <p>When you share a color pair, Spotlight writes <code>#fg=...&amp;bg=...</code> to the URL hash. Browsers keep fragments local and never send them to a server. MIT source lives in the <a href={`${GITHUB_URL}/spotlight-contrast-checker`} target="_blank" rel="noopener noreferrer">spotlight-contrast-checker repository</a>.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cc-hero-art { width: 100%; height: auto; display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .cc-hero-beam { animation: cc-pulse 3.4s ease-in-out infinite alternate; }
+  }
+  @keyframes cc-pulse {
+    from { opacity: 0.88; transform: translateY(-2px); }
+    to { opacity: 1; transform: translateY(2px); }
+  }
+</style>
+
+<script>
+  import {
+    DEFAULT_BG,
+    DEFAULT_FG,
+    decodeHashState,
+    encodeHashState,
+    evaluateContrast,
+    findNearestPassingColor,
+    formatRgb,
+    parseColor,
+    rgbToHex,
+    type RgbColor,
+  } from '../../../lib/contrast';
+
+  const app = document.querySelector<HTMLElement>('[data-cc-app]');
+  if (app) {
+    const fgPicker = app.querySelector<HTMLInputElement>('[data-fg-picker]')!;
+    const fgInput = app.querySelector<HTMLInputElement>('[data-fg-input]')!;
+    const fgRgbEl = app.querySelector<HTMLElement>('[data-fg-rgb]')!;
+    const fgErrEl = app.querySelector<HTMLElement>('[data-fg-err]')!;
+
+    const bgPicker = app.querySelector<HTMLInputElement>('[data-bg-picker]')!;
+    const bgInput = app.querySelector<HTMLInputElement>('[data-bg-input]')!;
+    const bgRgbEl = app.querySelector<HTMLElement>('[data-bg-rgb]')!;
+    const bgErrEl = app.querySelector<HTMLElement>('[data-bg-err]')!;
+
+    const swapBtn = app.querySelector<HTMLButtonElement>('[data-swap]')!;
+    const copyLinkBtn = app.querySelector<HTMLButtonElement>('[data-copy-link]')!;
+    const presetBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-preset-fg]')];
+
+    const ratioEl = app.querySelector<HTMLElement>('[data-ratio]')!;
+    const gradeEl = app.querySelector<HTMLElement>('[data-grade]')!;
+    const verdictEl = app.querySelector<HTMLElement>('[data-verdict]')!;
+    const copyStatusEl = app.querySelector<HTMLElement>('[data-copy-status]')!;
+    const pairLabelEl = app.querySelector<HTMLElement>('[data-pair-label]')!;
+    const previewEl = app.querySelector<HTMLElement>('[data-preview]')!;
+
+    const normalAaEl = app.querySelector<HTMLElement>('[data-check-normal-aa]')!;
+    const normalAaaEl = app.querySelector<HTMLElement>('[data-check-normal-aaa]')!;
+    const largeAaEl = app.querySelector<HTMLElement>('[data-check-large-aa]')!;
+    const largeAaaEl = app.querySelector<HTMLElement>('[data-check-large-aaa]')!;
+    const uiAaEl = app.querySelector<HTMLElement>('[data-check-ui-aa]')!;
+
+    const targetBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-target]')];
+
+    const nearFgSwatch = app.querySelector<HTMLElement>('[data-near-fg-swatch]')!;
+    const nearFgHex = app.querySelector<HTMLElement>('[data-near-fg-hex]')!;
+    const nearFgRatio = app.querySelector<HTMLElement>('[data-near-fg-ratio]')!;
+    const nearFgMsg = app.querySelector<HTMLElement>('[data-near-fg-msg]')!;
+    const applyFgBtn = app.querySelector<HTMLButtonElement>('[data-apply-fg]')!;
+    const copyNearFgBtn = app.querySelector<HTMLButtonElement>('[data-copy-near-fg]')!;
+
+    const nearBgSwatch = app.querySelector<HTMLElement>('[data-near-bg-swatch]')!;
+    const nearBgHex = app.querySelector<HTMLElement>('[data-near-bg-hex]')!;
+    const nearBgRatio = app.querySelector<HTMLElement>('[data-near-bg-ratio]')!;
+    const nearBgMsg = app.querySelector<HTMLElement>('[data-near-bg-msg]')!;
+    const applyBgBtn = app.querySelector<HTMLButtonElement>('[data-apply-bg]')!;
+    const copyNearBgBtn = app.querySelector<HTMLButtonElement>('[data-copy-near-bg]')!;
+
+    let fgColor: RgbColor = parseColor(DEFAULT_FG)!;
+    let bgColor: RgbColor = parseColor(DEFAULT_BG)!;
+    let targetRatio = 4.5;
+    let suggestedFgHex = DEFAULT_FG;
+    let suggestedBgHex = DEFAULT_BG;
+    const copyTimers = new WeakMap<HTMLButtonElement, number>();
+
+    const setPill = (el: HTMLElement, label: string, pass: boolean) => {
+      el.textContent = `${label} ${pass ? 'Pass' : 'Fail'}`;
+      el.classList.toggle('pass', pass);
+      el.classList.toggle('fail', !pass);
+    };
+
+    const syncHash = () => {
+      const nextHash = encodeHashState(fgColor, bgColor);
+      if (window.location.hash !== nextHash) {
+        try {
+          window.history.replaceState(null, '', nextHash);
+        } catch {
+          // Ignore restricted history environments.
+        }
+      }
+    };
+
+    const copyText = async (text: string, msg: string, btn?: HTMLButtonElement) => {
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        copyStatusEl.textContent = msg;
+        if (btn) {
+          if (!btn.dataset.origLabel) {
+            btn.dataset.origLabel = btn.textContent || '';
+          }
+          const prev = copyTimers.get(btn);
+          if (prev !== undefined) window.clearTimeout(prev);
+          btn.textContent = 'Copied';
+          const timer = window.setTimeout(() => {
+            btn.textContent = btn.dataset.origLabel || '';
+            copyTimers.delete(btn);
+          }, 1400);
+          copyTimers.set(btn, timer);
+        }
+      } catch {
+        copyStatusEl.textContent = 'Clipboard access was blocked. Copy the value directly from the page.';
+      }
+    };
+
+    const setButtonDisabled = (btn: HTMLButtonElement, disabled: boolean, fallbackFocus: HTMLElement) => {
+      if (disabled && document.activeElement === btn) {
+        fallbackFocus.focus();
+      }
+      btn.disabled = disabled;
+    };
+
+    const renderNearest = () => {
+      targetBtns.forEach((b) => {
+        b.setAttribute('aria-pressed', Number(b.dataset.target) === targetRatio ? 'true' : 'false');
+      });
+
+      const fgHex = rgbToHex(fgColor);
+      const bgHex = rgbToHex(bgColor);
+      const targetLabel = `${targetRatio}:1`;
+
+      const nearFg = findNearestPassingColor(fgColor, bgColor, targetRatio);
+      if (!nearFg) {
+        suggestedFgHex = '';
+        nearFgSwatch.style.color = fgHex;
+        nearFgSwatch.style.backgroundColor = bgHex;
+        nearFgHex.textContent = 'No match';
+        nearFgRatio.textContent = targetLabel;
+        nearFgMsg.textContent = `No text color can hit ${targetLabel} on ${bgHex}. Adjust the background color instead.`;
+        setButtonDisabled(applyFgBtn, true, fgInput);
+        setButtonDisabled(copyNearFgBtn, true, fgInput);
+      } else if (nearFg.direction === 'unchanged') {
+        suggestedFgHex = nearFg.hex;
+        nearFgSwatch.style.color = nearFg.hex;
+        nearFgSwatch.style.backgroundColor = bgHex;
+        nearFgHex.textContent = nearFg.hex;
+        nearFgRatio.textContent = nearFg.formatted;
+        nearFgMsg.textContent = `Already clears ${targetLabel}. No tweak needed.`;
+        setButtonDisabled(applyFgBtn, true, fgInput);
+        setButtonDisabled(copyNearFgBtn, false, fgInput);
+      } else {
+        suggestedFgHex = nearFg.hex;
+        nearFgSwatch.style.color = nearFg.hex;
+        nearFgSwatch.style.backgroundColor = bgHex;
+        nearFgHex.textContent = nearFg.hex;
+        nearFgRatio.textContent = nearFg.formatted;
+        const flipNote = nearFg.flipsPolarity ? ' (flips light/dark)' : '';
+        nearFgMsg.textContent = `Shift text ${nearFg.direction} to ${nearFg.hex}${flipNote} to hit ${nearFg.formatted} on ${bgHex}.`;
+        setButtonDisabled(applyFgBtn, false, fgInput);
+        setButtonDisabled(copyNearFgBtn, false, fgInput);
+      }
+
+      const nearBg = findNearestPassingColor(bgColor, fgColor, targetRatio);
+      if (!nearBg) {
+        suggestedBgHex = '';
+        nearBgSwatch.style.color = fgHex;
+        nearBgSwatch.style.backgroundColor = bgHex;
+        nearBgHex.textContent = 'No match';
+        nearBgRatio.textContent = targetLabel;
+        nearBgMsg.textContent = `No background color can hit ${targetLabel} behind ${fgHex}. Adjust the text color instead.`;
+        setButtonDisabled(applyBgBtn, true, bgInput);
+        setButtonDisabled(copyNearBgBtn, true, bgInput);
+      } else if (nearBg.direction === 'unchanged') {
+        suggestedBgHex = nearBg.hex;
+        nearBgSwatch.style.color = fgHex;
+        nearBgSwatch.style.backgroundColor = nearBg.hex;
+        nearBgHex.textContent = nearBg.hex;
+        nearBgRatio.textContent = nearBg.formatted;
+        nearBgMsg.textContent = `Already clears ${targetLabel}. No tweak needed.`;
+        setButtonDisabled(applyBgBtn, true, bgInput);
+        setButtonDisabled(copyNearBgBtn, false, bgInput);
+      } else {
+        suggestedBgHex = nearBg.hex;
+        nearBgSwatch.style.color = fgHex;
+        nearBgSwatch.style.backgroundColor = nearBg.hex;
+        nearBgHex.textContent = nearBg.hex;
+        nearBgRatio.textContent = nearBg.formatted;
+        const flipNote = nearBg.flipsPolarity ? ' (flips light/dark)' : '';
+        nearBgMsg.textContent = `Shift background ${nearBg.direction} to ${nearBg.hex}${flipNote} to hit ${nearBg.formatted} behind ${fgHex}.`;
+        setButtonDisabled(applyBgBtn, false, bgInput);
+        setButtonDisabled(copyNearBgBtn, false, bgInput);
+      }
+    };
+
+    const render = (options: { syncInputs?: boolean; updateHash?: boolean } = {}) => {
+      const { syncInputs = false, updateHash = false } = options;
+      const fgHex = rgbToHex(fgColor);
+      const bgHex = rgbToHex(bgColor);
+
+      fgPicker.value = fgHex;
+      bgPicker.value = bgHex;
+      if (syncInputs) {
+        fgInput.value = fgHex;
+        bgInput.value = bgHex;
+        fgErrEl.hidden = true;
+        bgErrEl.hidden = true;
+        fgInput.removeAttribute('aria-invalid');
+        bgInput.removeAttribute('aria-invalid');
+      }
+
+      fgRgbEl.textContent = formatRgb(fgColor);
+      bgRgbEl.textContent = formatRgb(bgColor);
+
+      const report = evaluateContrast(fgColor, bgColor);
+      ratioEl.textContent = report.formatted;
+      gradeEl.textContent = report.grade;
+      gradeEl.classList.toggle('pass', report.checks.normalAA);
+      gradeEl.classList.toggle('fail', !report.checks.normalAA);
+      verdictEl.textContent = `${report.formatted}. ${report.verdict}`;
+      pairLabelEl.textContent = `${fgHex} on ${bgHex}`;
+
+      previewEl.style.color = fgHex;
+      previewEl.style.backgroundColor = bgHex;
+
+      setPill(normalAaEl, 'AA 4.5:1', report.checks.normalAA);
+      setPill(normalAaaEl, 'AAA 7:1', report.checks.normalAAA);
+      setPill(largeAaEl, 'AA 3:1', report.checks.largeAA);
+      setPill(largeAaaEl, 'AAA 4.5:1', report.checks.largeAAA);
+      setPill(uiAaEl, 'AA 3:1', report.checks.uiAA);
+
+      renderNearest();
+      if (updateHash) syncHash();
+    };
+
+    const applyFromHash = () => {
+      const fromHash = decodeHashState(window.location.hash);
+      if (fromHash.fg) fgColor = fromHash.fg;
+      if (fromHash.bg) bgColor = fromHash.bg;
+      render({ syncInputs: true, updateHash: false });
+    };
+
+    fgInput.addEventListener('input', () => {
+      const parsed = parseColor(fgInput.value);
+      if (!parsed) {
+        fgErrEl.hidden = false;
+        fgErrEl.textContent = 'Enter a hex value like #777 or #140a22, or RGB like rgb(20, 10, 34).';
+        fgInput.setAttribute('aria-invalid', 'true');
+        return;
+      }
+      fgErrEl.hidden = true;
+      fgInput.removeAttribute('aria-invalid');
+      fgColor = parsed;
+      render({ syncInputs: false, updateHash: true });
+    });
+
+    bgInput.addEventListener('input', () => {
+      const parsed = parseColor(bgInput.value);
+      if (!parsed) {
+        bgErrEl.hidden = false;
+        bgErrEl.textContent = 'Enter a hex value like #fff or #fff2de, or RGB like rgb(255, 242, 222).';
+        bgInput.setAttribute('aria-invalid', 'true');
+        return;
+      }
+      bgErrEl.hidden = true;
+      bgInput.removeAttribute('aria-invalid');
+      bgColor = parsed;
+      render({ syncInputs: false, updateHash: true });
+    });
+
+    fgPicker.addEventListener('input', () => {
+      const parsed = parseColor(fgPicker.value);
+      if (!parsed) return;
+      fgColor = parsed;
+      fgInput.value = rgbToHex(parsed);
+      fgErrEl.hidden = true;
+      fgInput.removeAttribute('aria-invalid');
+      render({ syncInputs: false, updateHash: true });
+    });
+
+    bgPicker.addEventListener('input', () => {
+      const parsed = parseColor(bgPicker.value);
+      if (!parsed) return;
+      bgColor = parsed;
+      bgInput.value = rgbToHex(parsed);
+      bgErrEl.hidden = true;
+      bgInput.removeAttribute('aria-invalid');
+      render({ syncInputs: false, updateHash: true });
+    });
+
+    swapBtn.addEventListener('click', () => {
+      const prevFg = fgColor;
+      fgColor = bgColor;
+      bgColor = prevFg;
+      render({ syncInputs: true, updateHash: true });
+      copyStatusEl.textContent = `Swapped colors: ${rgbToHex(fgColor)} on ${rgbToHex(bgColor)}.`;
+    });
+
+    copyLinkBtn.addEventListener('click', () => {
+      syncHash();
+      const url = `${window.location.origin}${window.location.pathname}${encodeHashState(fgColor, bgColor)}`;
+      copyText(url, `Copied share link with ${encodeHashState(fgColor, bgColor)}.`, copyLinkBtn);
+    });
+
+    presetBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const nextFg = parseColor(btn.dataset.presetFg || '');
+        const nextBg = parseColor(btn.dataset.presetBg || '');
+        if (!nextFg || !nextBg) return;
+        fgColor = nextFg;
+        bgColor = nextBg;
+        render({ syncInputs: true, updateHash: true });
+      });
+    });
+
+    targetBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const val = Number(btn.dataset.target);
+        if (val === 3 || val === 4.5 || val === 7) {
+          targetRatio = val;
+          renderNearest();
+        }
+      });
+    });
+
+    applyFgBtn.addEventListener('click', () => {
+      const parsed = parseColor(suggestedFgHex);
+      if (!parsed) return;
+      fgColor = parsed;
+      fgInput.focus();
+      render({ syncInputs: true, updateHash: true });
+      copyStatusEl.textContent = `Updated text color to ${suggestedFgHex}.`;
+    });
+
+    applyBgBtn.addEventListener('click', () => {
+      const parsed = parseColor(suggestedBgHex);
+      if (!parsed) return;
+      bgColor = parsed;
+      bgInput.focus();
+      render({ syncInputs: true, updateHash: true });
+      copyStatusEl.textContent = `Updated background color to ${suggestedBgHex}.`;
+    });
+
+    copyNearFgBtn.addEventListener('click', () => {
+      copyText(suggestedFgHex, `Copied ${suggestedFgHex}.`, copyNearFgBtn);
+    });
+
+    copyNearBgBtn.addEventListener('click', () => {
+      copyText(suggestedBgHex, `Copied ${suggestedBgHex}.`, copyNearBgBtn);
+    });
+
+    window.addEventListener('hashchange', applyFromHash);
+    applyFromHash();
+  }
+</script>

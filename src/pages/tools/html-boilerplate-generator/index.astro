@@ -1,0 +1,865 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import '../../../styles/tool-panels.css';
+import {
+  DEFAULT_OPTIONS,
+  PRESETS,
+  QUICK_LANGS,
+  generateHtmlBoilerplate,
+} from '../../../lib/htmlBoilerplate';
+import { GITHUB_URL, TOOLS_LABEL } from '../../../data/site';
+
+const title = 'HTML boilerplate generator | Patch Bandit';
+const description =
+  'Free HTML boilerplate generator for one clean HTML5 starter page with headings, focus rings, reduced motion, and optional Open Graph tags. Browser only.';
+const canonical = new URL('/tools/html-boilerplate-generator/', Astro.site).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'HTML boilerplate generator',
+  url: canonical,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+
+const initial = generateHtmlBoilerplate(DEFAULT_OPTIONS);
+---
+<Base title={title} description={description} schema={schema}>
+  <PageHero tone="mint">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/tools/">{TOOLS_LABEL}</a> / HTML boilerplate generator</p>
+    <p class="eyebrow">Free tool · MIT</p>
+    <h1>HTML boilerplate generator</h1>
+    <p class="lead">Build one clean HTML5 starter page with sensible defaults for headings, focus rings, reduced motion, and optional Open Graph tags. Copy the code or download index.html straight from your browser.</p>
+    <p class="story">One clean HTML snack starter. No bloated folder tree to rip out before you write line one.</p>
+    <Fragment slot="art">
+      <svg class="hb-hero-art" viewBox="0 0 280 280" role="img" aria-label="An HTML5 starter page card showing doctype, viewport, focus ring, and reduced motion badges">
+        <rect x="20" y="24" width="240" height="232" rx="22" fill="#241539" stroke="#140a22" stroke-width="6" />
+        <rect x="36" y="44" width="208" height="44" rx="10" fill="#140a22" stroke="#86e3be" stroke-width="2.5" />
+        <text x="50" y="72" fill="#86e3be" font-family="Fira Code, monospace" font-size="16" font-weight="700">&lt;!doctype html&gt;</text>
+        <g class="hb-hero-row">
+          <rect x="36" y="104" width="98" height="36" rx="9" fill="#140a22" stroke="#ffc857" stroke-width="2.2" />
+          <text x="54" y="127" fill="#ffe6a6" font-family="Fira Code, monospace" font-size="13" font-weight="600">utf-8</text>
+          <rect x="146" y="104" width="98" height="36" rx="9" fill="#140a22" stroke="#ffc857" stroke-width="2.2" />
+          <text x="160" y="127" fill="#ffe6a6" font-family="Fira Code, monospace" font-size="13" font-weight="600">viewport</text>
+        </g>
+        <g>
+          <rect x="36" y="152" width="98" height="36" rx="9" fill="#140a22" stroke="#ff7b67" stroke-width="2.2" />
+          <text x="54" y="175" fill="#fff2de" font-family="Fira Code, monospace" font-size="13" font-weight="600">focus</text>
+          <rect x="146" y="152" width="98" height="36" rx="9" fill="#140a22" stroke="#86e3be" stroke-width="2.2" />
+          <text x="166" y="175" fill="#c2ffe6" font-family="Fira Code, monospace" font-size="13" font-weight="600">motion</text>
+        </g>
+        <rect x="36" y="204" width="208" height="34" rx="9" fill="#86e3be" stroke="#140a22" stroke-width="3" />
+        <text x="72" y="226" fill="#140a22" font-family="Fira Code, monospace" font-size="14" font-weight="700">index.html</text>
+      </svg>
+    </Fragment>
+  </PageHero>
+
+  <section class="band" aria-labelledby="tool-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">The tool</p>
+          <h2 id="tool-h">Build your HTML5 starter</h2>
+        </div>
+        <p class="muted">Pick a preset, adjust the head tags and CSS defaults, inspect the sandboxed preview, and copy or download a single index.html file.</p>
+      </div>
+
+      <div class="tool-shell" data-hb-app>
+        <noscript>
+          <div class="card" style="margin-bottom:1.5rem">
+            <h3>JavaScript is needed to customize the HTML boilerplate live</h3>
+            <p>The default HTML5 starter is shown in the code box below. Enable JavaScript for this page to toggle options, switch presets, and download index.html locally.</p>
+          </div>
+        </noscript>
+
+        <div class="hb-workspace">
+          <div class="card id-controls-stack">
+            <div class="tool-card-head" style="margin-bottom:0">
+              <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">1</span>Page options</h3>
+              <button type="button" class="tool-btn-sm" data-reset>Reset</button>
+            </div>
+
+            <fieldset class="tool-fieldset">
+              <legend>Starter preset</legend>
+              <div class="tool-seg-grid">
+                {PRESETS.map((preset) => (
+                  <button
+                    type="button"
+                    class="tool-seg-btn"
+                    data-preset={preset.id}
+                    aria-pressed={preset.id === 'clean' ? 'true' : 'false'}
+                  >
+                    <span class="tool-seg-name">{preset.label}</span>
+                    <span class="tool-seg-sub">{preset.summary}</span>
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            <div class="tool-field">
+              <label for="hb-title">Page title</label>
+              <input
+                id="hb-title"
+                class="tool-input"
+                type="text"
+                maxlength="140"
+                autocomplete="off"
+                value={DEFAULT_OPTIONS.title}
+                data-title
+              />
+            </div>
+
+            <div class="tool-field">
+              <label for="hb-desc">Meta description</label>
+              <input
+                id="hb-desc"
+                class="tool-input"
+                type="text"
+                maxlength="300"
+                autocomplete="off"
+                value={DEFAULT_OPTIONS.description}
+                data-desc
+              />
+            </div>
+
+            <div class="hb-two-fields">
+              <div class="tool-field">
+                <label for="hb-lang">Language (lang)</label>
+                <input
+                  id="hb-lang"
+                  class="tool-input"
+                  type="text"
+                  maxlength="35"
+                  autocomplete="off"
+                  value={DEFAULT_OPTIONS.lang}
+                  data-lang
+                />
+                <div class="tool-chip-row" role="group" aria-label="Quick language codes">
+                  {QUICK_LANGS.map((code) => (
+                    <button
+                      type="button"
+                      class="tool-chip"
+                      data-lang-preset={code}
+                      aria-pressed={code === DEFAULT_OPTIONS.lang ? 'true' : 'false'}
+                    >
+                      {code}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div class="tool-field">
+                <label for="hb-accent">Accent and theme color</label>
+                <div class="hb-color-row">
+                  <input
+                    id="hb-accent-pick"
+                    class="hb-color-swatch"
+                    type="color"
+                    value={DEFAULT_OPTIONS.accentColor}
+                    aria-label="Pick accent color"
+                    data-accent-pick
+                  />
+                  <input
+                    id="hb-accent"
+                    class="tool-input"
+                    type="text"
+                    maxlength="7"
+                    spellcheck="false"
+                    autocomplete="off"
+                    value={DEFAULT_OPTIONS.accentColor}
+                    data-accent
+                  />
+                </div>
+              </div>
+            </div>
+
+            <fieldset class="tool-fieldset">
+              <legend>Head tags</legend>
+              <div class="hb-check-grid">
+                <label class="tool-check">
+                  <input type="checkbox" checked={DEFAULT_OPTIONS.includeViewport} data-viewport />
+                  <span>Viewport meta</span>
+                </label>
+                <label class="tool-check">
+                  <input type="checkbox" checked={DEFAULT_OPTIONS.includeColorScheme} data-color-scheme />
+                  <span>Color scheme meta</span>
+                </label>
+                <label class="tool-check">
+                  <input type="checkbox" checked={DEFAULT_OPTIONS.includeThemeColor} data-theme-color />
+                  <span>Theme color meta</span>
+                </label>
+                <label class="tool-check">
+                  <input type="checkbox" checked={DEFAULT_OPTIONS.includeFavicon} data-favicon />
+                  <span>Inline SVG favicon</span>
+                </label>
+                <label class="tool-check">
+                  <input type="checkbox" checked={DEFAULT_OPTIONS.includeCanonical} data-canonical />
+                  <span>Canonical link</span>
+                </label>
+                <label class="tool-check">
+                  <input type="checkbox" checked={DEFAULT_OPTIONS.includeOpenGraph} data-og />
+                  <span>Open Graph cards</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="hb-two-fields" data-url-fields hidden>
+              <div class="tool-field">
+                <label for="hb-url">Page URL (https://...)</label>
+                <input
+                  id="hb-url"
+                  class="tool-input"
+                  type="url"
+                  autocomplete="off"
+                  value={DEFAULT_OPTIONS.canonicalUrl}
+                  placeholder="https://example.com/"
+                  data-url
+                />
+              </div>
+              <div class="tool-field" data-og-img-wrap hidden>
+                <label for="hb-og-img">Social image URL (optional)</label>
+                <input
+                  id="hb-og-img"
+                  class="tool-input"
+                  type="url"
+                  autocomplete="off"
+                  value={DEFAULT_OPTIONS.ogImageUrl}
+                  placeholder="https://example.com/cover.png"
+                  data-og-img
+                />
+              </div>
+            </div>
+
+            <div class="hb-two-fields">
+              <div class="tool-field">
+                <label for="hb-css-mode">Starter CSS</label>
+                <select id="hb-css-mode" class="tool-select" data-css-mode>
+                  <option value="inline-base" selected>Inline baseline</option>
+                  <option value="inline-classless">Inline classless</option>
+                  <option value="linked">External link</option>
+                  <option value="none">No CSS</option>
+                </select>
+              </div>
+              <div class="tool-field">
+                <label for="hb-script-mode">JavaScript tag</label>
+                <select id="hb-script-mode" class="tool-select" data-script-mode>
+                  <option value="none" selected>No script</option>
+                  <option value="defer">Deferred script</option>
+                  <option value="module">ES module</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="hb-two-fields" data-asset-fields hidden>
+              <div class="tool-field" data-css-href-wrap hidden>
+                <label for="hb-css-href">Stylesheet path</label>
+                <input
+                  id="hb-css-href"
+                  class="tool-input"
+                  type="text"
+                  autocomplete="off"
+                  spellcheck="false"
+                  value={DEFAULT_OPTIONS.stylesheetHref}
+                  data-css-href
+                />
+              </div>
+              <div class="tool-field" data-script-src-wrap hidden>
+                <label for="hb-script-src">Script path</label>
+                <input
+                  id="hb-script-src"
+                  class="tool-input"
+                  type="text"
+                  autocomplete="off"
+                  spellcheck="false"
+                  value={DEFAULT_OPTIONS.scriptSrc}
+                  data-script-src
+                />
+              </div>
+            </div>
+
+            <fieldset class="tool-fieldset">
+              <legend>Structure and formatting</legend>
+              <div class="hb-check-grid">
+                <label class="tool-check">
+                  <input type="checkbox" checked={DEFAULT_OPTIONS.includeSkipLink} data-skip-link />
+                  <span>Skip-to-content link</span>
+                </label>
+                <label class="tool-check">
+                  <input type="checkbox" checked={DEFAULT_OPTIONS.includeLandmarks} data-landmarks />
+                  <span>Semantic landmarks</span>
+                </label>
+                <label class="tool-check">
+                  <input type="checkbox" checked={DEFAULT_OPTIONS.includeArticleWrapper} data-article />
+                  <span>Article wrapper</span>
+                </label>
+                <label class="tool-check">
+                  <input type="checkbox" checked={DEFAULT_OPTIONS.includeComments} data-comments />
+                  <span>Section comments</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="hb-two-fields">
+              <div class="tool-field">
+                <label for="hb-author">Author meta (optional)</label>
+                <input
+                  id="hb-author"
+                  class="tool-input"
+                  type="text"
+                  maxlength="100"
+                  autocomplete="off"
+                  placeholder="Leave blank to omit"
+                  value={DEFAULT_OPTIONS.author}
+                  data-author
+                />
+              </div>
+              <div class="tool-field">
+                <label for="hb-indent">Indentation</label>
+                <select id="hb-indent" class="tool-select" data-indent>
+                  <option value="2" selected>2 spaces</option>
+                  <option value="4">4 spaces</option>
+                  <option value="tab">Tabs</option>
+                </select>
+              </div>
+            </div>
+
+            <p class="tool-badge-ok">Runs locally in your browser with no server requests, no uploads, and no cookies.</p>
+          </div>
+
+          <div class="card id-output-card">
+            <div class="tool-card-head" style="margin-bottom:0">
+              <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">2</span>Ready index.html</h3>
+              <div class="tool-actions">
+                <div class="tool-chip-row" role="group" aria-label="Output view">
+                  <button type="button" class="tool-chip" data-view="code" aria-pressed="true">Code</button>
+                  <button type="button" class="tool-chip" data-view="preview" aria-pressed="false">Live preview</button>
+                </div>
+                <button type="button" class="tool-btn-sm primary" data-copy-html>Copy HTML</button>
+                <button type="button" class="tool-btn-sm" data-download-html>Download</button>
+              </div>
+            </div>
+
+            <div class="id-meta-row" data-meta>
+              <span>Lines: {initial.stats.lines}</span>
+              <span>Size: {initial.stats.bytes} B</span>
+              <span>External files: {initial.stats.externalAssets}</span>
+            </div>
+
+            <ul class="hb-checks" aria-label="Boilerplate defaults checklist" data-checks>
+              {initial.stats.checks.map((chk) => (
+                <li class={chk.ok ? 'hb-chk ok' : 'hb-chk off'}>{chk.ok ? 'On: ' : 'Off: '}{chk.label}</li>
+              ))}
+            </ul>
+
+            <p class="tool-badge-warn" data-warn hidden></p>
+
+            <div class="hb-output-wrap" data-panel="code">
+              <label class="sr" for="hb-output">Starter index.html code</label>
+              <textarea
+                id="hb-output"
+                class="tool-textarea hb-code-out"
+                readonly
+                spellcheck="false"
+                data-output
+              >{initial.html}</textarea>
+            </div>
+
+            <div class="hb-preview-wrap" data-panel="preview" hidden>
+              <iframe
+                class="hb-preview-frame"
+                sandbox=""
+                title="Sandboxed preview of the starter HTML page"
+                srcdoc={initial.previewHtml}
+                data-preview
+              ></iframe>
+              <p class="muted small" style="margin:0">Preview runs inside a strict sandbox with scripts and external links disabled.</p>
+            </div>
+
+            <p class="tool-status" role="status" aria-live="polite" data-status>Ready. Edit any option to update index.html live.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-h">Modern HTML5 defaults with no bloat</h2>
+        </div>
+        <p class="muted">Older HTML5 boilerplate zips ship legacy server configs, browser hacks, and unused files. This tool builds one clean index.html tailored to your page.</p>
+      </div>
+      <ul class="grid g3 sub sub3">
+        <li class="card">
+          <p class="num">01</p>
+          <h3>Essential head tags</h3>
+          <p>Starts with <code>&lt;!doctype html&gt;</code>, a valid <code>lang</code> attribute, UTF-8 encoding, and mobile viewport scaling. Legacy IE compatibility meta tags are left out because modern browsers ignore them.</p>
+        </li>
+        <li class="card">
+          <p class="num">02</p>
+          <h3>Focus and motion built in</h3>
+          <p>The inline starter CSS wires in <code>color-scheme: light dark</code>, readable line lengths, clear <code>:focus-visible</code> rings, a skip-to-content link, and a <code>prefers-reduced-motion</code> guard from the start.</p>
+        </li>
+        <li class="card">
+          <p class="num">03</p>
+          <h3>One file, no network calls</h3>
+          <p>An optional inline SVG data-URI favicon prevents extra tab requests, and every text field is escaped before insertion. MIT source lives in the <a href={`${GITHUB_URL}/html-boilerplate-generator`} target="_blank" rel="noopener noreferrer">html-boilerplate-generator repository</a>.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hb-hero-art { width: 100%; height: auto; display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hb-hero-row { animation: hb-shift 3.4s ease-in-out infinite alternate; }
+  }
+  @keyframes hb-shift {
+    from { transform: translateX(-3px); }
+    to { transform: translateX(3px); }
+  }
+
+  .hb-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media (min-width: 62rem) {
+    .hb-workspace {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+      align-items: stretch;
+    }
+  }
+  .hb-workspace > * { min-width: 0; }
+
+  .hb-two-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem 1rem;
+    align-items: start;
+  }
+  @media (min-width: 34rem) {
+    .hb-two-fields {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .hb-color-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .hb-color-swatch {
+    width: 3.1rem;
+    min-width: 3.1rem;
+    min-height: 2.85rem;
+    padding: 0.25rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--t-line);
+    background: var(--t-input-bg);
+    cursor: pointer;
+  }
+
+  .hb-check-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem 1rem;
+  }
+  @media (min-width: 28rem) {
+    .hb-check-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .hb-checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .hb-checks :global(.hb-chk) {
+    font: 600 0.78rem/1.2 var(--mono);
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid var(--t-line);
+    background: var(--surface-2);
+    color: var(--muted);
+  }
+  .hb-checks :global(.hb-chk.ok) {
+    background: var(--t-ok-bg);
+    color: var(--t-ok-ink);
+    border-color: var(--t-ok-ink);
+  }
+
+  .hb-output-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  .hb-code-out {
+    flex: 1;
+    min-height: 26rem;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .hb-preview-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    flex: 1;
+  }
+  .hb-preview-frame {
+    width: 100%;
+    min-height: 26rem;
+    flex: 1;
+    border: 1.5px solid var(--t-line);
+    border-radius: 12px;
+    background: #ffffff;
+  }
+</style>
+
+<script>
+  import {
+    DEFAULT_ACCENT,
+    DEFAULT_OPTIONS,
+    generateHtmlBoilerplate,
+    getPresetOptions,
+    sanitizeHexColor,
+    type BoilerplateOptions,
+    type CssMode,
+    type IndentMode,
+    type PresetId,
+    type ScriptMode,
+  } from '../../../lib/htmlBoilerplate';
+
+  const app = document.querySelector<HTMLElement>('[data-hb-app]');
+  if (app) {
+    const presetBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-preset]')];
+    const resetBtn = app.querySelector<HTMLButtonElement>('[data-reset]')!;
+
+    const titleIn = app.querySelector<HTMLInputElement>('[data-title]')!;
+    const descIn = app.querySelector<HTMLInputElement>('[data-desc]')!;
+    const langIn = app.querySelector<HTMLInputElement>('[data-lang]')!;
+    const langBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-lang-preset]')];
+    const accentPick = app.querySelector<HTMLInputElement>('[data-accent-pick]')!;
+    const accentIn = app.querySelector<HTMLInputElement>('[data-accent]')!;
+    const authorIn = app.querySelector<HTMLInputElement>('[data-author]')!;
+
+    const viewportIn = app.querySelector<HTMLInputElement>('[data-viewport]')!;
+    const colorSchemeIn = app.querySelector<HTMLInputElement>('[data-color-scheme]')!;
+    const themeColorIn = app.querySelector<HTMLInputElement>('[data-theme-color]')!;
+    const faviconIn = app.querySelector<HTMLInputElement>('[data-favicon]')!;
+    const canonicalIn = app.querySelector<HTMLInputElement>('[data-canonical]')!;
+    const ogIn = app.querySelector<HTMLInputElement>('[data-og]')!;
+
+    const urlFields = app.querySelector<HTMLElement>('[data-url-fields]')!;
+    const urlIn = app.querySelector<HTMLInputElement>('[data-url]')!;
+    const ogImgWrap = app.querySelector<HTMLElement>('[data-og-img-wrap]')!;
+    const ogImgIn = app.querySelector<HTMLInputElement>('[data-og-img]')!;
+
+    const cssModeSel = app.querySelector<HTMLSelectElement>('[data-css-mode]')!;
+    const scriptModeSel = app.querySelector<HTMLSelectElement>('[data-script-mode]')!;
+    const assetFields = app.querySelector<HTMLElement>('[data-asset-fields]')!;
+    const cssHrefWrap = app.querySelector<HTMLElement>('[data-css-href-wrap]')!;
+    const cssHrefIn = app.querySelector<HTMLInputElement>('[data-css-href]')!;
+    const scriptSrcWrap = app.querySelector<HTMLElement>('[data-script-src-wrap]')!;
+    const scriptSrcIn = app.querySelector<HTMLInputElement>('[data-script-src]')!;
+
+    const skipLinkIn = app.querySelector<HTMLInputElement>('[data-skip-link]')!;
+    const landmarksIn = app.querySelector<HTMLInputElement>('[data-landmarks]')!;
+    const articleIn = app.querySelector<HTMLInputElement>('[data-article]')!;
+    const commentsIn = app.querySelector<HTMLInputElement>('[data-comments]')!;
+    const indentSel = app.querySelector<HTMLSelectElement>('[data-indent]')!;
+
+    const viewBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-view]')];
+    const codePanel = app.querySelector<HTMLElement>('[data-panel="code"]')!;
+    const previewPanel = app.querySelector<HTMLElement>('[data-panel="preview"]')!;
+    const copyBtn = app.querySelector<HTMLButtonElement>('[data-copy-html]')!;
+    const downloadBtn = app.querySelector<HTMLButtonElement>('[data-download-html]')!;
+
+    const metaEl = app.querySelector<HTMLElement>('[data-meta]')!;
+    const checksEl = app.querySelector<HTMLUListElement>('[data-checks]')!;
+    const warnEl = app.querySelector<HTMLElement>('[data-warn]')!;
+    const outputEl = app.querySelector<HTMLTextAreaElement>('[data-output]')!;
+    const previewEl = app.querySelector<HTMLIFrameElement>('[data-preview]')!;
+    const statusEl = app.querySelector<HTMLElement>('[data-status]')!;
+
+    let activePreset: PresetId | null = 'clean';
+    let currentHtml = outputEl.value;
+    let copyTimer: number | undefined;
+    let lastValidAccent = DEFAULT_ACCENT;
+    let deferAccentWarn = false;
+
+    const isPartialHexInput = (raw: string): boolean => {
+      const trimmed = raw.trim();
+      return trimmed.length > 0 && trimmed.length < 7 && /^#[0-9a-fA-F]{0,5}$/.test(trimmed);
+    };
+
+    const readOptions = (): BoilerplateOptions => ({
+      title: titleIn.value,
+      description: descIn.value,
+      lang: langIn.value,
+      author: authorIn.value,
+      canonicalUrl: urlIn.value,
+      ogImageUrl: ogImgIn.value,
+      accentColor: accentIn.value,
+      includeViewport: viewportIn.checked,
+      includeColorScheme: colorSchemeIn.checked,
+      includeThemeColor: themeColorIn.checked,
+      includeFavicon: faviconIn.checked,
+      includeCanonical: canonicalIn.checked,
+      includeOpenGraph: ogIn.checked,
+      includeSkipLink: skipLinkIn.checked,
+      includeLandmarks: landmarksIn.checked,
+      includeArticleWrapper: articleIn.checked,
+      includeComments: commentsIn.checked,
+      cssMode: (cssModeSel.value as CssMode) || 'inline-base',
+      stylesheetHref: cssHrefIn.value,
+      scriptMode: (scriptModeSel.value as ScriptMode) || 'none',
+      scriptSrc: scriptSrcIn.value,
+      indent: (indentSel.value as IndentMode) || '2',
+    });
+
+    const applyOptionsToForm = (opts: BoilerplateOptions) => {
+      titleIn.value = opts.title;
+      descIn.value = opts.description;
+      langIn.value = opts.lang;
+      authorIn.value = opts.author;
+      urlIn.value = opts.canonicalUrl;
+      ogImgIn.value = opts.ogImageUrl;
+      accentIn.value = opts.accentColor;
+      const validAccent = sanitizeHexColor(opts.accentColor, DEFAULT_ACCENT).color;
+      lastValidAccent = validAccent;
+      deferAccentWarn = false;
+      accentPick.value = validAccent;
+      viewportIn.checked = opts.includeViewport;
+      colorSchemeIn.checked = opts.includeColorScheme;
+      themeColorIn.checked = opts.includeThemeColor;
+      faviconIn.checked = opts.includeFavicon;
+      canonicalIn.checked = opts.includeCanonical;
+      ogIn.checked = opts.includeOpenGraph;
+      skipLinkIn.checked = opts.includeSkipLink;
+      landmarksIn.checked = opts.includeLandmarks;
+      articleIn.checked = opts.includeArticleWrapper;
+      commentsIn.checked = opts.includeComments;
+      cssModeSel.value = opts.cssMode;
+      cssHrefIn.value = opts.stylesheetHref;
+      scriptModeSel.value = opts.scriptMode;
+      scriptSrcIn.value = opts.scriptSrc;
+      indentSel.value = opts.indent;
+    };
+
+    const syncVisibility = (opts: BoilerplateOptions) => {
+      const showUrl = opts.includeCanonical || opts.includeOpenGraph;
+      urlFields.hidden = !showUrl;
+      ogImgWrap.hidden = !opts.includeOpenGraph;
+
+      const showCssHref = opts.cssMode === 'linked';
+      const showScriptSrc = opts.scriptMode !== 'none';
+      assetFields.hidden = !showCssHref && !showScriptSrc;
+      cssHrefWrap.hidden = !showCssHref;
+      scriptSrcWrap.hidden = !showScriptSrc;
+
+      presetBtns.forEach((btn) => {
+        btn.setAttribute('aria-pressed', btn.dataset.preset === activePreset ? 'true' : 'false');
+      });
+
+      const normLang = langIn.value.trim().toLowerCase();
+      langBtns.forEach((btn) => {
+        btn.setAttribute('aria-pressed', btn.dataset.langPreset === normLang ? 'true' : 'false');
+      });
+    };
+
+    const render = (announce?: string) => {
+      const opts = readOptions();
+      const effectiveOpts =
+        deferAccentWarn && !sanitizeHexColor(opts.accentColor, DEFAULT_ACCENT).valid
+          ? { ...opts, accentColor: lastValidAccent }
+          : opts;
+      syncVisibility(opts);
+      const res = generateHtmlBoilerplate(effectiveOpts);
+      currentHtml = res.html;
+      outputEl.value = res.html;
+      previewEl.srcdoc = res.previewHtml;
+
+      metaEl.replaceChildren();
+      [
+        `Lines: ${res.stats.lines}`,
+        `Size: ${res.stats.bytes} B`,
+        `External files: ${res.stats.externalAssets}`,
+      ].forEach((text) => {
+        const span = document.createElement('span');
+        span.textContent = text;
+        metaEl.appendChild(span);
+      });
+
+      const frag = document.createDocumentFragment();
+      res.stats.checks.forEach((chk) => {
+        const li = document.createElement('li');
+        li.className = chk.ok ? 'hb-chk ok' : 'hb-chk off';
+        li.textContent = `${chk.ok ? 'On: ' : 'Off: '}${chk.label}`;
+        frag.appendChild(li);
+      });
+      checksEl.replaceChildren(frag);
+
+      if (res.warnings.length > 0) {
+        warnEl.hidden = false;
+        warnEl.textContent = res.warnings.join(' ');
+      } else {
+        warnEl.hidden = true;
+        warnEl.textContent = '';
+      }
+
+      if (announce) {
+        statusEl.textContent = announce;
+      }
+    };
+
+    presetBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.preset as PresetId;
+        if (id === 'clean' || id === 'minimal' || id === 'article') {
+          activePreset = id;
+          applyOptionsToForm(getPresetOptions(id));
+          render(`Loaded the ${btn.querySelector('.tool-seg-name')?.textContent ?? id} preset.`);
+        }
+      });
+    });
+
+    resetBtn.addEventListener('click', () => {
+      activePreset = 'clean';
+      applyOptionsToForm({ ...DEFAULT_OPTIONS });
+      render('Reset all options to the Clean starter preset.');
+    });
+
+    langBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        activePreset = null;
+        langIn.value = btn.dataset.langPreset || 'en';
+        render(`Language set to ${langIn.value}.`);
+      });
+    });
+
+    accentPick.addEventListener('input', () => {
+      activePreset = null;
+      deferAccentWarn = false;
+      lastValidAccent = accentPick.value;
+      accentIn.value = accentPick.value;
+      render();
+    });
+
+    accentIn.addEventListener('input', () => {
+      activePreset = null;
+      const checked = sanitizeHexColor(accentIn.value, DEFAULT_ACCENT);
+      if (checked.valid) {
+        lastValidAccent = checked.color;
+        accentPick.value = checked.color;
+        deferAccentWarn = false;
+      } else {
+        deferAccentWarn = isPartialHexInput(accentIn.value);
+      }
+      render();
+    });
+
+    accentIn.addEventListener('blur', () => {
+      if (deferAccentWarn) {
+        deferAccentWarn = false;
+        render();
+      }
+    });
+
+    const inputEls: HTMLElement[] = [
+      titleIn,
+      descIn,
+      langIn,
+      authorIn,
+      urlIn,
+      ogImgIn,
+      cssHrefIn,
+      scriptSrcIn,
+    ];
+    inputEls.forEach((el) => {
+      el.addEventListener('input', () => {
+        activePreset = null;
+        render();
+      });
+    });
+
+    const changeEls: HTMLElement[] = [
+      viewportIn,
+      colorSchemeIn,
+      themeColorIn,
+      faviconIn,
+      canonicalIn,
+      ogIn,
+      cssModeSel,
+      scriptModeSel,
+      skipLinkIn,
+      landmarksIn,
+      articleIn,
+      commentsIn,
+      indentSel,
+    ];
+    changeEls.forEach((el) => {
+      el.addEventListener('change', () => {
+        activePreset = null;
+        render();
+      });
+    });
+
+    viewBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const showPreview = btn.dataset.view === 'preview';
+        viewBtns.forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+        codePanel.hidden = showPreview;
+        previewPanel.hidden = !showPreview;
+        statusEl.textContent = showPreview
+          ? 'Showing sandboxed live preview.'
+          : 'Showing starter index.html code.';
+      });
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(currentHtml);
+        statusEl.textContent = 'Copied index.html to your clipboard.';
+        if (copyTimer !== undefined) window.clearTimeout(copyTimer);
+        copyBtn.textContent = 'Copied';
+        copyTimer = window.setTimeout(() => {
+          copyBtn.textContent = 'Copy HTML';
+          copyTimer = undefined;
+        }, 1500);
+      } catch {
+        statusEl.textContent = 'Clipboard access was blocked. Select the code box and press Ctrl+C.';
+      }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const blob = new Blob([currentHtml], { type: 'text/html;charset=utf-8' });
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = 'index.html';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+      statusEl.textContent = 'Downloaded index.html locally.';
+    });
+
+    render();
+  }
+</script>

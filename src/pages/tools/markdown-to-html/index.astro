@@ -1,0 +1,500 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import '../../../styles/tool-panels.css';
+import { GITHUB_URL, TOOLS_LABEL } from '../../../data/site';
+
+const title = 'Markdown to HTML converter | Patch Bandit';
+const description =
+  'Free Markdown to HTML converter with live preview and GitHub Flavored Markdown support. Copy clean HTML or download a page in your browser, no account.';
+const canonical = new URL('/tools/markdown-to-html/', Astro.site).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Markdown to HTML converter',
+  url: canonical,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+
+const SAMPLE_DOC = `# Patch notes from the bench
+
+Paste **Markdown** on the left and grab clean, safe HTML right back. Works with *emphasis*, ~~strikethrough~~, inline \`code\`, and [links](https://patchbandit.com/tools/).
+
+## What works out of the box
+
+- [x] GitHub Flavored Markdown tables and task lists
+- [x] Fenced code blocks with language labels
+- [ ] Accounts, tracking scripts, or server uploads
+
+| Output | Best for | Format |
+| :--- | :--- | ---: |
+| Fragment | Docs, templates, CMS fields | \`.html\` |
+| Full page | Standalone handout or draft | \`HTML5\` |
+
+> Nothing leaves your browser tab. Raw HTML tags are escaped or stripped before output.
+
+\`\`\`html
+<p>Clean markup, ready to paste.</p>
+\`\`\``;
+---
+<Base title={title} description={description} schema={schema}>
+  <PageHero tone="mint">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/tools/">{TOOLS_LABEL}</a> / Markdown to HTML converter</p>
+    <p class="eyebrow">Free tool · MIT</p>
+    <h1>Markdown to HTML converter</h1>
+    <p class="lead">Paste Markdown and get clean, safe HTML right back, with live preview and GitHub Flavored Markdown support. Copy an HTML fragment or download a full page with no account and no uploads.</p>
+    <p class="story">Plain text with a few marks shouldn't need a round-trip to someone else's server. Paste it here and grab clean HTML straight off the bench.</p>
+    <Fragment slot="art">
+      <svg class="md-hero-art" viewBox="0 0 280 280" role="img" aria-label="A split workbench card converting # md on the left into h1 HTML on the right">
+        <rect x="18" y="26" width="244" height="228" rx="22" fill="#241539" stroke="#140a22" stroke-width="6" />
+        <rect x="34" y="48" width="96" height="118" rx="12" fill="#140a22" stroke="#ffc857" stroke-width="2.5" />
+        <text x="46" y="76" fill="#ffc857" font-family="Fira Code, monospace" font-size="14" font-weight="700"># Hi</text>
+        <text x="46" y="102" fill="#fff2de" font-family="Fira Code, monospace" font-size="12" font-weight="600">**bold**</text>
+        <text x="46" y="126" fill="#d2cae2" font-family="Fira Code, monospace" font-size="12" font-weight="500">- item</text>
+        <text x="46" y="150" fill="#86e3be" font-family="Fira Code, monospace" font-size="12" font-weight="500">`code`</text>
+
+        <rect x="150" y="48" width="96" height="118" rx="12" fill="#140a22" stroke="#86e3be" stroke-width="2.5" />
+        <text x="160" y="76" fill="#86e3be" font-family="Fira Code, monospace" font-size="13" font-weight="700">&lt;h1&gt;</text>
+        <text x="160" y="102" fill="#ffc857" font-family="Fira Code, monospace" font-size="11.5" font-weight="600">&lt;strong&gt;</text>
+        <text x="160" y="126" fill="#fff2de" font-family="Fira Code, monospace" font-size="12" font-weight="500">&lt;li&gt;</text>
+        <text x="160" y="150" fill="#ff7b67" font-family="Fira Code, monospace" font-size="11.5" font-weight="600">&lt;code&gt;</text>
+
+        <g class="md-hero-arrow">
+          <circle cx="140" cy="107" r="15" fill="#86e3be" stroke="#140a22" stroke-width="3" />
+          <path d="M134 107 h11 m-4 -5 l5 5 l-5 5" fill="none" stroke="#140a22" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+
+        <rect x="34" y="186" width="212" height="44" rx="10" fill="#140a22" stroke="#4b2d6e" stroke-width="2" />
+        <text x="48" y="213" fill="#c2ffe6" font-family="Fira Code, monospace" font-size="13" font-weight="600">GFM · DOM preview · MIT</text>
+      </svg>
+    </Fragment>
+  </PageHero>
+
+  <section class="band" aria-labelledby="tool-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">The tool</p>
+          <h2 id="tool-h">Convert Markdown to HTML</h2>
+        </div>
+        <p class="muted">Type or paste Markdown on the left, check the clean HTML source on the right, and review the live preview below. Everything stays in this browser tab.</p>
+      </div>
+
+      <div class="tool-shell tool-stack" data-md-app>
+        <noscript>
+          <div class="card">
+            <h3>JavaScript is needed to convert Markdown live in your browser</h3>
+            <p>This Markdown to HTML converter runs locally in your browser tab so your text is never uploaded. Enable JavaScript for this page to use the live converter.</p>
+          </div>
+        </noscript>
+
+        <div class="card">
+          <div class="tool-card-head">
+            <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">1</span>Markdown and HTML</h3>
+            <div class="tool-actions">
+              <input id="md-file-in" type="file" accept=".md,.markdown,.txt,text/markdown,text/plain" class="sr" data-file-in />
+              <label for="md-file-in" class="tool-btn-sm">Open .md file</label>
+              <button type="button" class="tool-btn-sm" data-sample="doc">Sample doc</button>
+              <button type="button" class="tool-btn-sm" data-sample="table">Table sample</button>
+              <button type="button" class="tool-btn-sm" data-clear-md>Clear</button>
+            </div>
+          </div>
+
+          <div class="tool-stack">
+            <div class="md-options-bar">
+              <div class="tool-field">
+                <span class="md-opt-label" id="out-mode-lbl">Output format</span>
+                <div class="tool-chip-row" role="group" aria-labelledby="out-mode-lbl">
+                  <button type="button" class="tool-chip" data-out-mode="fragment" aria-pressed="true">HTML fragment</button>
+                  <button type="button" class="tool-chip" data-out-mode="document" aria-pressed="false">Full HTML page</button>
+                </div>
+              </div>
+
+              <div class="tool-field">
+                <span class="md-opt-label" id="raw-html-lbl">Raw HTML in input</span>
+                <div class="tool-chip-row" role="group" aria-labelledby="raw-html-lbl">
+                  <button type="button" class="tool-chip" data-raw-html="escape" aria-pressed="true">Escape tags</button>
+                  <button type="button" class="tool-chip" data-raw-html="strip" aria-pressed="false">Strip tags</button>
+                </div>
+              </div>
+
+              <div class="md-checks-group">
+                <label class="tool-check">
+                  <input type="checkbox" data-opt-breaks />
+                  <span>Line breaks as &lt;br&gt;</span>
+                </label>
+                <label class="tool-check">
+                  <input type="checkbox" data-opt-ids />
+                  <span>Heading IDs</span>
+                </label>
+                <label class="tool-check">
+                  <input type="checkbox" checked data-opt-pretty />
+                  <span>Pretty indent</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="tool-two-col">
+              <div class="tool-field">
+                <div class="md-pane-head">
+                  <label for="md-in">Markdown input</label>
+                  <span class="md-count mono" data-md-count>0 words</span>
+                </div>
+                <textarea id="md-in" class="tool-textarea md-textarea" spellcheck="true" data-md-in>{SAMPLE_DOC}</textarea>
+              </div>
+              <div class="tool-field">
+                <div class="md-pane-head">
+                  <label for="html-out">Clean HTML output</label>
+                  <span class="md-count mono" data-html-count>0 chars</span>
+                </div>
+                <textarea id="html-out" class="tool-textarea md-textarea" readonly spellcheck="false" data-html-out></textarea>
+              </div>
+            </div>
+
+            <p class="tool-badge-warn" data-md-error hidden></p>
+
+            <div class="tool-formula-bar">
+              <p class="tool-status" role="status" aria-live="polite" data-md-status>Ready.</p>
+              <div class="tool-actions">
+                <button type="button" class="tool-btn-sm" data-download-html>Download fragment</button>
+                <button type="button" class="tool-btn-sm primary" data-copy-html>Copy HTML</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tool-card-head">
+            <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">2</span>Live preview</h3>
+            <div class="tool-actions">
+              <button type="button" class="tool-btn-sm" data-copy-text>Copy plain text</button>
+            </div>
+          </div>
+
+          <p class="tool-badge-ok md-preview-note">Rendered locally with direct DOM elements (no <code>innerHTML</code>). External images appear as safe text placeholders so previewing untrusted Markdown makes no network requests.</p>
+
+          <div class="md-preview" id="md-preview" aria-label="Rendered Markdown preview" data-md-preview></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-h">Safe HTML, right in your tab</h2>
+        </div>
+        <p class="muted">Markdown is parsed into tokens in your browser, serialized into clean HTML, and previewed with direct DOM nodes. No server ever sees your text.</p>
+      </div>
+      <ul class="grid g3 sub sub3">
+        <li class="card">
+          <p class="num">01</p>
+          <h3>Parsed with marked</h3>
+          <p>Uses the open source <code>marked</code> (MIT; <a href="/tools/THIRD-PARTY-NOTICES.txt">third-party notices</a>) lexer to parse CommonMark and GitHub Flavored Markdown, including tables, task lists, fenced code blocks, strikethrough, and autolinks, locally in your tab.</p>
+        </li>
+        <li class="card">
+          <p class="num">02</p>
+          <h3>Safe output and preview</h3>
+          <p>Links and images are checked for safe URL schemes, raw HTML tags are escaped or stripped, and the live preview builds DOM nodes directly without <code>innerHTML</code>. External images stay text placeholders in preview so no tracking pixels load.</p>
+        </li>
+        <li class="card">
+          <p class="num">03</p>
+          <h3>Copy or download clean code</h3>
+          <p>Grab a semantic HTML fragment for a post or template, or export a standalone <code>.html</code> file with UTF-8 charset and clean readable styling. MIT source lives in the <a href={`${GITHUB_URL}/markdown-to-html`} target="_blank" rel="noopener noreferrer">markdown-to-html repository</a>.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .md-hero-art { width: 100%; height: auto; display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .md-hero-arrow { animation: md-nudge 3.2s ease-in-out infinite alternate; }
+  }
+  @keyframes md-nudge {
+    from { transform: translateX(-3px); }
+    to { transform: translateX(3px); }
+  }
+</style>
+
+<script>
+  import {
+    MAX_INPUT_CHARS,
+    convertMarkdownToHtml,
+    type HtmlOutputMode,
+    type RawHtmlMode,
+  } from '../../../lib/markdownToHtml';
+  import { renderTokensToFragment } from '../../../lib/markdownDomPreview';
+
+  const app = document.querySelector<HTMLElement>('[data-md-app]');
+  if (app) {
+    const mdIn = app.querySelector<HTMLTextAreaElement>('[data-md-in]')!;
+    const htmlOut = app.querySelector<HTMLTextAreaElement>('[data-html-out]')!;
+    const mdCount = app.querySelector<HTMLElement>('[data-md-count]')!;
+    const htmlCount = app.querySelector<HTMLElement>('[data-html-count]')!;
+    const statusEl = app.querySelector<HTMLElement>('[data-md-status]')!;
+    const errEl = app.querySelector<HTMLElement>('[data-md-error]')!;
+    const previewEl = app.querySelector<HTMLElement>('[data-md-preview]')!;
+
+    const outModeBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-out-mode]')];
+    const rawHtmlBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-raw-html]')];
+    const breaksIn = app.querySelector<HTMLInputElement>('[data-opt-breaks]')!;
+    const idsIn = app.querySelector<HTMLInputElement>('[data-opt-ids]')!;
+    const prettyIn = app.querySelector<HTMLInputElement>('[data-opt-pretty]')!;
+
+    const fileIn = app.querySelector<HTMLInputElement>('[data-file-in]')!;
+    const sampleBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-sample]')];
+    const clearBtn = app.querySelector<HTMLButtonElement>('[data-clear-md]')!;
+    const copyHtmlBtn = app.querySelector<HTMLButtonElement>('[data-copy-html]')!;
+    const downloadBtn = app.querySelector<HTMLButtonElement>('[data-download-html]')!;
+    const copyTextBtn = app.querySelector<HTMLButtonElement>('[data-copy-text]')!;
+
+    const defaultSample = mdIn.value;
+    const tableSample = `# Weekly bench checklist
+
+| Item | Owner | Ready |
+| :--- | :---: | ---: |
+| Parser tests | Bench | Yes |
+| Table scroll | UI | Yes |
+| External requests | Privacy | None |
+
+## Release steps
+
+1. Run unit tests locally.
+2. Check mobile layout at 390px wide.
+3. Verify keyboard focus and contrast.
+
+- [x] Escape raw \`<script>\` tags
+- [x] Block unsafe links
+- [ ] Grab a bagel`;
+
+    let outputMode: HtmlOutputMode = 'fragment';
+    let rawHtml: RawHtmlMode = 'escape';
+    let lastPlainText = '';
+    let lastTitle = 'converted-markdown';
+    const copyTimers = new WeakMap<HTMLButtonElement, number>();
+
+    const syncButtons = () => {
+      outModeBtns.forEach((b) =>
+        b.setAttribute('aria-pressed', b.dataset.outMode === outputMode ? 'true' : 'false'),
+      );
+      rawHtmlBtns.forEach((b) =>
+        b.setAttribute('aria-pressed', b.dataset.rawHtml === rawHtml ? 'true' : 'false'),
+      );
+      downloadBtn.textContent = outputMode === 'document' ? 'Download page' : 'Download fragment';
+    };
+
+    const flashButton = (btn: HTMLButtonElement, label: string) => {
+      if (!btn.dataset.origLabel) {
+        btn.dataset.origLabel = btn.textContent || '';
+      }
+      const prev = copyTimers.get(btn);
+      if (prev !== undefined) window.clearTimeout(prev);
+      btn.textContent = label;
+      const timer = window.setTimeout(() => {
+        btn.textContent = btn.dataset.origLabel || '';
+        copyTimers.delete(btn);
+      }, 1500);
+      copyTimers.set(btn, timer);
+    };
+
+    const copyText = async (text: string, label: string, btn: HTMLButtonElement) => {
+      if (!text) {
+        statusEl.textContent = 'Nothing to copy yet.';
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        statusEl.textContent = `Copied ${label}.`;
+        flashButton(btn, 'Copied');
+      } catch {
+        statusEl.textContent = 'Clipboard access was blocked. Select the output and press Ctrl+C.';
+      }
+    };
+
+    const makeFilename = (title: string): string => {
+      const slug = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 60);
+      return `${slug || 'converted-markdown'}.html`;
+    };
+
+    const render = () => {
+      syncButtons();
+      const src = mdIn.value;
+
+      if (src.length > MAX_INPUT_CHARS) {
+        errEl.hidden = false;
+        errEl.textContent = `Input is over the ${MAX_INPUT_CHARS.toLocaleString('en-US')} character limit. Trim the text to convert it.`;
+        htmlOut.value = '';
+        previewEl.replaceChildren();
+        lastPlainText = '';
+        mdCount.textContent = `${src.length.toLocaleString('en-US')} chars`;
+        htmlCount.textContent = '0 chars';
+        statusEl.textContent = 'Input exceeds the size limit.';
+        return;
+      }
+
+      errEl.hidden = true;
+      errEl.textContent = '';
+
+      if (!src.trim()) {
+        htmlOut.value = '';
+        previewEl.replaceChildren();
+        const empty = document.createElement('p');
+        empty.className = 'muted';
+        empty.textContent = 'Start typing or paste Markdown above to see the live preview here.';
+        previewEl.appendChild(empty);
+        lastPlainText = '';
+        lastTitle = 'converted-markdown';
+        mdCount.textContent = '0 words';
+        htmlCount.textContent = '0 chars';
+        statusEl.textContent = 'Paste Markdown on the left to convert it here.';
+        return;
+      }
+
+      try {
+        const res = convertMarkdownToHtml(src, {
+          outputMode,
+          rawHtml,
+          breaks: breaksIn.checked,
+          headingIds: idsIn.checked,
+          pretty: prettyIn.checked,
+        });
+
+        htmlOut.value = res.html;
+        lastPlainText = res.plainText;
+        lastTitle = res.title;
+
+        const frag = renderTokensToFragment(res.tokens, document, {
+          rawHtml,
+          headingIds: idsIn.checked,
+        });
+        previewEl.replaceChildren(frag as unknown as DocumentFragment);
+
+        const wordWord = res.stats.words === 1 ? 'word' : 'words';
+        const lineWord = res.stats.lines === 1 ? 'line' : 'lines';
+        mdCount.textContent = `${res.stats.words.toLocaleString('en-US')} ${wordWord} · ${res.stats.lines.toLocaleString('en-US')} ${lineWord}`;
+        htmlCount.textContent = `${res.stats.htmlChars.toLocaleString('en-US')} chars`;
+
+        const modeLabel = outputMode === 'document' ? 'full HTML page' : 'HTML fragment';
+        statusEl.textContent = `Converted ${res.stats.words.toLocaleString('en-US')} ${wordWord} to a safe ${modeLabel} locally in your browser.`;
+      } catch {
+        errEl.hidden = false;
+        errEl.textContent = 'Could not convert that Markdown input. Check for unusually deep nesting and try again.';
+        htmlOut.value = '';
+        previewEl.replaceChildren();
+        lastPlainText = '';
+        statusEl.textContent = 'Conversion stopped.';
+      }
+    };
+
+    let inputTimer: number | undefined;
+    const renderNow = () => {
+      if (inputTimer !== undefined) {
+        window.clearTimeout(inputTimer);
+        inputTimer = undefined;
+      }
+      render();
+    };
+
+    outModeBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        outputMode = btn.dataset.outMode === 'document' ? 'document' : 'fragment';
+        renderNow();
+      });
+    });
+
+    rawHtmlBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        rawHtml = btn.dataset.rawHtml === 'strip' ? 'strip' : 'escape';
+        renderNow();
+      });
+    });
+
+    breaksIn.addEventListener('change', renderNow);
+    idsIn.addEventListener('change', renderNow);
+    prettyIn.addEventListener('change', renderNow);
+    mdIn.addEventListener('input', () => {
+      if (inputTimer !== undefined) {
+        window.clearTimeout(inputTimer);
+        inputTimer = undefined;
+      }
+      if (mdIn.value.length > 10_000) {
+        inputTimer = window.setTimeout(() => {
+          inputTimer = undefined;
+          render();
+        }, 150);
+      } else {
+        render();
+      }
+    });
+
+    sampleBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        mdIn.value = btn.dataset.sample === 'table' ? tableSample : defaultSample;
+        renderNow();
+      });
+    });
+
+    clearBtn.addEventListener('click', () => {
+      mdIn.value = '';
+      renderNow();
+      mdIn.focus();
+    });
+
+    fileIn.addEventListener('change', async () => {
+      const file = fileIn.files?.[0];
+      if (!file) return;
+      if (file.size > MAX_INPUT_CHARS * 2) {
+        errEl.hidden = false;
+        errEl.textContent = 'That file is too large for in-tab conversion. Pick a file under 500 KB.';
+        fileIn.value = '';
+        return;
+      }
+      try {
+        const text = await file.text();
+        mdIn.value = text;
+        renderNow();
+        statusEl.textContent = `Loaded ${file.name} locally in your browser.`;
+      } catch {
+        errEl.hidden = false;
+        errEl.textContent = 'Could not read that file from your device.';
+      }
+      fileIn.value = '';
+    });
+
+    copyHtmlBtn.addEventListener('click', () => copyText(htmlOut.value, 'clean HTML', copyHtmlBtn));
+    copyTextBtn.addEventListener('click', () => copyText(lastPlainText, 'plain text', copyTextBtn));
+
+    downloadBtn.addEventListener('click', () => {
+      const html = htmlOut.value;
+      if (!html) {
+        statusEl.textContent = 'Nothing to download yet.';
+        return;
+      }
+      const blob = new Blob([html + '\n'], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = makeFilename(lastTitle);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      const kind = outputMode === 'document' ? 'full HTML page' : 'HTML fragment';
+      statusEl.textContent = `Downloaded ${a.download} (${kind}) locally.`;
+    });
+
+    renderNow();
+  }
+</script>

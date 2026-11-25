@@ -9,7 +9,7 @@ const noticesPath = path.join(root, "public", "tools", "THIRD-PARTY-NOTICES.txt"
 
 const actual = crypto.createHash("sha256").update(fs.readFileSync(bundlePath)).digest("hex");
 const notices = fs.readFileSync(noticesPath, "utf8");
-const match = notices.match(/^Bundle SHA-256:\s*([0-9a-f]{64})\r?$/m);
+const match = notices.match(/^(?:Bandit Codes )?Bundle SHA-256:\s*([0-9a-f]{64})\r?$/m);
 if (!match) {
   console.error("FAIL: Bundle SHA-256 line not found in public/tools/THIRD-PARTY-NOTICES.txt");
   process.exit(1);
