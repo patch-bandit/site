@@ -7,7 +7,7 @@ const facts = [
   {
     tag: 'The tools',
     title: 'Nothing changes for you',
-    body: 'Every tool and every lab snippet stays free and open, whether you tip or not. No perks, no paywall, no nagging.',
+    body: 'Every tool and lab snippet stays free and open, tips or no tips. You get no perks, no paywall, and no nagging.',
   },
   {
     tag: 'The card',
@@ -16,13 +16,13 @@ const facts = [
   },
   {
     tag: 'The tax bit',
-    title: 'A tip, not a donation',
+    title: 'No tax deduction',
     body: 'Patch Bandit is not a charity, so a tip is not tax-deductible as a gift. Your card statement shows PATCHBANDIT.',
   },
   {
     tag: 'The snacks',
     title: 'Where it goes',
-    body: 'Domain fees, the odd paid tool for testing, and the snacks that keep the next free tool coming. Tips also tell us which tools people actually use.',
+    body: 'Domain bills, the odd paid tool for testing, and the snacks that fuel the next build. Tips also show us which tools are actually earning their keep.',
   },
 ];
 ---
@@ -33,12 +33,12 @@ const facts = [
   <PageHero art="/art/raccoon-celebrate.svg" alt="The raccoon celebrating with both paws up" tone="gold">
     <p class="eyebrow mono">&gt; snack jar: {SNACK_JAR.url ? 'open' : 'opening soon'}</p>
     <h1>The snack jar</h1>
-    <p class="lead">Everything here stays free. If a tool saved you a monthly fee and you want to say thanks, toss a snack in the jar. Pick any amount from two dollars up.</p>
+    <p class="lead">Every tool here stays free, no strings attached. If one saved you a monthly bill and you want to toss a snack in the jar, pick any amount from two dollars up.</p>
     <div class="btn-row">
       {SNACK_JAR.url ? (
         <a class="btn" href={SNACK_JAR.url} target="_blank" rel="noopener noreferrer">Toss in a snack</a>
       ) : (
-        <p class="mono small muted">The jar opens in a day or two.</p>
+        <p class="mono small muted">The jar opens in a day or two. Still wiping off the counter.</p>
       )}
       <a class="btn alt" href="/tools/">See the tools</a>
     </div>
@@ -48,7 +48,7 @@ const facts = [
     <div class="wrap">
       <div class="split-head">
         <div>
-          <p class="eyebrow">Before you tip</p>
+          <p class="eyebrow">Straight facts first</p>
           <h2 id="how-h">What happens when you toss in a snack</h2>
         </div>
         <p class="muted">The button opens a Stripe checkout page in a new tab. Stripe's privacy policy explains how Stripe uses your information, and our <a href="/privacy/">privacy page</a> covers the rest of this site.</p>

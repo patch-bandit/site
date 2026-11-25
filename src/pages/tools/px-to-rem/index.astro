@@ -1,0 +1,516 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import '../../../styles/tool-panels.css';
+import { GITHUB_URL, TOOLS_LABEL } from '../../../data/site';
+
+const title = 'px to rem converter | Patch Bandit';
+const description =
+  'Free px to rem converter for single values and pasted CSS. Convert px to rem or rem to px with any root font size. Runs in your browser, no account.';
+const canonical = new URL('/tools/px-to-rem/', Astro.site).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'px to rem converter',
+  url: canonical,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+
+const QUICK_ROOTS = [10, 14, 16, 18, 20];
+const SCALE_PX = [12, 14, 16, 18, 20, 24, 32, 48];
+const SAMPLE_CSS = `.card {
+  font-size: 18px;
+  line-height: 28px;
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid #4b2d6e;
+  max-width: calc(100% - 32px);
+}`;
+---
+<Base title={title} description={description} schema={schema}>
+  <PageHero tone="gold">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/tools/">{TOOLS_LABEL}</a> / px to rem converter</p>
+    <p class="eyebrow">Free tool · MIT</p>
+    <h1>px to rem converter</h1>
+    <p class="lead">Convert px to rem or rem to px with any root font size, or paste a block of CSS to convert every pixel value in one pass. No account, no limits, no uploads.</p>
+    <p class="story">Dividing by sixteen in your head gets old fast. Paste the stylesheet and let the browser handle the math.</p>
+    <Fragment slot="art">
+      <svg class="px-hero-art" viewBox="0 0 280 280" role="img" aria-label="A drafting scale card showing 16px paired with 1rem">
+        <rect x="20" y="28" width="240" height="224" rx="22" fill="#241539" stroke="#140a22" stroke-width="6" />
+        <rect x="36" y="46" width="208" height="68" rx="12" fill="#140a22" stroke="#86e3be" stroke-width="2.5" />
+        <text x="54" y="90" fill="#ffc857" font-family="Fira Code, monospace" font-size="28" font-weight="700">16px</text>
+        <text x="134" y="88" fill="#c2ffe6" font-family="Fira Code, monospace" font-size="22" font-weight="700">=</text>
+        <text x="160" y="90" fill="#86e3be" font-family="Fira Code, monospace" font-size="28" font-weight="700">1rem</text>
+        <rect x="36" y="138" width="208" height="46" rx="10" fill="#fff2de" stroke="#140a22" stroke-width="4" />
+        <g stroke="#140a22" stroke-width="3" stroke-linecap="round">
+          <line x1="56" y1="138" x2="56" y2="162" />
+          <line x1="76" y1="138" x2="76" y2="152" />
+          <line x1="96" y1="138" x2="96" y2="162" />
+          <line x1="116" y1="138" x2="116" y2="152" />
+          <line x1="136" y1="138" x2="136" y2="168" />
+          <line x1="156" y1="138" x2="156" y2="152" />
+          <line x1="176" y1="138" x2="176" y2="162" />
+          <line x1="196" y1="138" x2="196" y2="152" />
+          <line x1="216" y1="138" x2="216" y2="162" />
+        </g>
+        <rect class="px-hero-marker" x="131" y="132" width="10" height="58" rx="5" fill="#ff7b67" stroke="#140a22" stroke-width="2.5" />
+        <text x="52" y="218" fill="#d2cae2" font-family="Fira Code, monospace" font-size="14" font-weight="600">rem = px / root</text>
+        <circle cx="222" cy="213" r="8" fill="#86e3be" />
+      </svg>
+    </Fragment>
+  </PageHero>
+
+  <section class="band" aria-labelledby="tool-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">The tool</p>
+          <h2 id="tool-h">Convert px and rem</h2>
+        </div>
+        <p class="muted">Type in either box for an instant two-way conversion, or drop a stylesheet into batch mode. Everything runs locally in this browser tab.</p>
+      </div>
+
+      <div class="tool-shell tool-stack" data-px-app>
+        <noscript>
+          <div class="card">
+            <h3>JavaScript is needed to convert values live in your browser</h3>
+            <p>This px to rem converter runs locally in your browser tab so nothing is ever uploaded. Enable JavaScript for this page to use the live converter.</p>
+          </div>
+        </noscript>
+
+        <div class="card">
+          <div class="tool-card-head">
+            <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">1</span>Two-way converter</h3>
+            <div class="tool-actions">
+              <button type="button" class="tool-btn-sm" data-copy-px>Copy px</button>
+              <button type="button" class="tool-btn-sm primary" data-copy-rem>Copy rem</button>
+            </div>
+          </div>
+
+          <div class="tool-stack">
+            <div class="tool-root-bar">
+              <div class="tool-field">
+                <label for="root-px">Root font size (px)</label>
+                <div class="tool-input-wrap">
+                  <input id="root-px" class="tool-input" type="number" inputmode="decimal" min="1" max="256" step="any" value="16" data-root-in />
+                  <span class="tool-unit-badge" aria-hidden="true">px</span>
+                </div>
+              </div>
+              <div class="tool-field">
+                <label for="precision-sel">Common roots and decimals</label>
+                <div class="tool-actions">
+                  <div class="tool-chip-row" role="group" aria-label="Quick root font sizes">
+                    {QUICK_ROOTS.map((r) => (
+                      <button type="button" class="tool-chip" data-root-preset={r} aria-pressed={r === 16 ? 'true' : 'false'}>{r}px</button>
+                    ))}
+                  </div>
+                  <select id="precision-sel" class="tool-select" style="width:auto;min-width:9.5rem" aria-label="Decimal places" data-precision>
+                    <option value="2">2 decimals</option>
+                    <option value="3">3 decimals</option>
+                    <option value="4" selected>4 decimals</option>
+                    <option value="6">6 decimals</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="tool-two-col">
+              <div class="tool-field">
+                <label for="px-in">Pixels (px)</label>
+                <div class="tool-input-wrap">
+                  <input id="px-in" class="tool-input tool-input-lg" type="number" inputmode="decimal" step="any" value="24" data-px-in />
+                  <span class="tool-unit-badge" aria-hidden="true">px</span>
+                </div>
+              </div>
+              <div class="tool-field">
+                <label for="rem-in">Root em (rem)</label>
+                <div class="tool-input-wrap">
+                  <input id="rem-in" class="tool-input tool-input-lg" type="number" inputmode="decimal" step="any" value="1.5" data-rem-in />
+                  <span class="tool-unit-badge" aria-hidden="true">rem</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tool-formula-bar">
+              <p class="tool-formula-text" data-formula>24px / 16px = 1.5rem</p>
+              <p class="tool-status" role="status" aria-live="polite" data-single-status>Type in either field to convert live.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tool-card-head">
+            <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">2</span>Batch CSS converter</h3>
+            <div class="tool-actions">
+              <div class="tool-chip-row" role="group" aria-label="Batch conversion direction">
+                <button type="button" class="tool-chip" data-batch-dir="px-to-rem" aria-pressed="true">px to rem</button>
+                <button type="button" class="tool-chip" data-batch-dir="rem-to-px" aria-pressed="false">rem to px</button>
+              </div>
+              <label class="tool-check" data-skip1-wrap>
+                <input type="checkbox" data-skip-one />
+                <span>Keep 1px hairlines</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="tool-stack">
+            <div class="tool-two-col">
+              <div class="tool-field">
+                <label for="css-in" data-css-in-label>Paste CSS (with px values)</label>
+                <textarea id="css-in" class="tool-textarea" spellcheck="false" data-css-in>{SAMPLE_CSS}</textarea>
+              </div>
+              <div class="tool-field">
+                <label for="css-out" data-css-out-label>Converted CSS (rem)</label>
+                <textarea id="css-out" class="tool-textarea" readonly spellcheck="false" data-css-out></textarea>
+              </div>
+            </div>
+
+            <div class="tool-formula-bar">
+              <p class="tool-status" role="status" aria-live="polite" data-batch-status>Ready.</p>
+              <div class="tool-actions">
+                <button type="button" class="tool-btn-sm" data-load-sample>Sample CSS</button>
+                <button type="button" class="tool-btn-sm" data-clear-css>Clear</button>
+                <button type="button" class="tool-btn-sm primary" data-copy-css>Copy CSS</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tool-card-head">
+            <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">3</span><span data-scale-heading>Quick reference at 16px root</span></h3>
+            <p class="tool-status" role="status" aria-live="polite" data-scale-status>Click any tile to copy its rem value.</p>
+          </div>
+          <ul class="scale-grid" data-scale-grid>
+            {SCALE_PX.map((px) => (
+              <li>
+                <button type="button" class="scale-btn" data-scale-px={px}>
+                  <span class="scale-px">{px}px</span>
+                  <span class="scale-rem" data-scale-rem>{Number((px / 16).toFixed(4))}rem</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-h">Plain math, right in the browser</h2>
+        </div>
+        <p class="muted">No server request and no external library needed. Every calculation happens inside this tab using the root font size you choose.</p>
+      </div>
+      <ul class="grid g3 sub sub3">
+        <li class="card">
+          <p class="num">01</p>
+          <h3>The formula</h3>
+          <p>Divide pixels by the root font size to get rem (<code>rem = px / root</code>), or multiply rem by the root size to get pixels. At the default 16px browser root, 24px is 1.5rem.</p>
+        </li>
+        <li class="card">
+          <p class="num">02</p>
+          <h3>Safe CSS batch mode</h3>
+          <p>Batch mode scans your pasted CSS in one pass so comments, quoted strings, <code>url()</code> paths, and class or custom-property names stay untouched while every pixel length converts.</p>
+        </li>
+        <li class="card">
+          <p class="num">03</p>
+          <h3>Why rem helps</h3>
+          <p>Sizing type and spacing in rem respects a visitor's default browser font setting. Note that CSS <code>@media</code> queries always compute rem from the browser default of 16px. MIT source lives on the <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">code account</a>.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .px-hero-art { width: 100%; height: auto; display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .px-hero-marker { animation: px-slide 3.6s ease-in-out infinite alternate; }
+  }
+  @keyframes px-slide {
+    from { transform: translateX(-44px); }
+    to { transform: translateX(44px); }
+  }
+</style>
+
+<script>
+  import {
+    convertCssPxToRem,
+    convertCssRemToPx,
+    formatUnitNumber,
+    pxToRem,
+    remToPx,
+  } from '../../../lib/pxToRem';
+
+  const app = document.querySelector<HTMLElement>('[data-px-app]');
+  if (app) {
+    const rootIn = app.querySelector<HTMLInputElement>('[data-root-in]')!;
+    const precSel = app.querySelector<HTMLSelectElement>('[data-precision]')!;
+    const pxIn = app.querySelector<HTMLInputElement>('[data-px-in]')!;
+    const remIn = app.querySelector<HTMLInputElement>('[data-rem-in]')!;
+    const formulaEl = app.querySelector<HTMLElement>('[data-formula]')!;
+    const singleStatus = app.querySelector<HTMLElement>('[data-single-status]')!;
+    const copyPxBtn = app.querySelector<HTMLButtonElement>('[data-copy-px]')!;
+    const copyRemBtn = app.querySelector<HTMLButtonElement>('[data-copy-rem]')!;
+    const rootPresets = [...app.querySelectorAll<HTMLButtonElement>('[data-root-preset]')];
+
+    const cssIn = app.querySelector<HTMLTextAreaElement>('[data-css-in]')!;
+    const cssOut = app.querySelector<HTMLTextAreaElement>('[data-css-out]')!;
+    const cssInLabel = app.querySelector<HTMLElement>('[data-css-in-label]')!;
+    const cssOutLabel = app.querySelector<HTMLElement>('[data-css-out-label]')!;
+    const batchStatus = app.querySelector<HTMLElement>('[data-batch-status]')!;
+    const skipOneIn = app.querySelector<HTMLInputElement>('[data-skip-one]')!;
+    const skip1Wrap = app.querySelector<HTMLElement>('[data-skip1-wrap]')!;
+    const dirBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-batch-dir]')];
+    const sampleBtn = app.querySelector<HTMLButtonElement>('[data-load-sample]')!;
+    const clearBtn = app.querySelector<HTMLButtonElement>('[data-clear-css]')!;
+    const copyCssBtn = app.querySelector<HTMLButtonElement>('[data-copy-css]')!;
+
+    const scaleHeading = app.querySelector<HTMLElement>('[data-scale-heading]')!;
+    const scaleStatus = app.querySelector<HTMLElement>('[data-scale-status]')!;
+    const scaleBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-scale-px]')];
+
+    const samplePxCss = cssIn.value;
+    const sampleRemCss = `.card {\n  font-size: 1.125rem;\n  line-height: 1.75rem;\n  padding: 1.25rem 1.5rem;\n  border-radius: 0.75rem;\n  max-width: calc(100% - 2rem);\n}`;
+
+    let lastEdited: 'px' | 'rem' = 'px';
+    let batchDir: 'px-to-rem' | 'rem-to-px' = 'px-to-rem';
+    const copyTimers = new WeakMap<HTMLButtonElement, number>();
+
+    const MIN_ROOT_PX = 0.01;
+    const getRoot = (): number | null => {
+      const n = Number(rootIn.value);
+      return Number.isFinite(n) && n >= MIN_ROOT_PX ? n : null;
+    };
+
+    const getPrecision = (): number => {
+      const n = Number.parseInt(precSel.value, 10);
+      return Number.isInteger(n) && n >= 0 && n <= 8 ? n : 4;
+    };
+
+    const syncRootPresets = (root: number | null) => {
+      rootPresets.forEach((btn) => {
+        const val = Number(btn.dataset.rootPreset);
+        btn.setAttribute('aria-pressed', root !== null && Math.abs(root - val) < 1e-9 ? 'true' : 'false');
+      });
+    };
+
+    const updateScale = (root: number, precision: number) => {
+      scaleHeading.textContent = `Quick reference at ${formatUnitNumber(root, precision)}px root`;
+      scaleBtns.forEach((btn) => {
+        const px = Number(btn.dataset.scalePx);
+        const remText = `${formatUnitNumber(pxToRem(px, root, precision), precision)}rem`;
+        const out = btn.querySelector<HTMLElement>('[data-scale-rem]');
+        if (out) out.textContent = remText;
+      });
+    };
+
+    const updateSingle = () => {
+      const root = getRoot();
+      const precision = getPrecision();
+      syncRootPresets(root);
+      if (root === null) {
+        if (lastEdited === 'px') {
+          remIn.value = '';
+        } else {
+          pxIn.value = '';
+        }
+        formulaEl.textContent = 'Enter a root font size of at least 0.01px.';
+        singleStatus.textContent = 'Root font size must be at least 0.01px.';
+        return;
+      }
+      updateScale(root, precision);
+      if (lastEdited === 'px') {
+        const raw = pxIn.value.trim();
+        if (raw === '') {
+          remIn.value = '';
+          formulaEl.textContent = `Root: ${formatUnitNumber(root, precision)}px`;
+          singleStatus.textContent = 'Type in either field to convert live.';
+          return;
+        }
+        const px = Number(raw);
+        if (!Number.isFinite(px)) {
+          remIn.value = '';
+          formulaEl.textContent = 'Value is out of range.';
+          singleStatus.textContent = 'That number is too large to convert. Try a smaller value.';
+          return;
+        }
+        try {
+          const rem = pxToRem(px, root, precision);
+          const remStr = formatUnitNumber(rem, precision);
+          remIn.value = remStr;
+          formulaEl.textContent = `${formatUnitNumber(px, precision)}px / ${formatUnitNumber(root, precision)}px = ${remStr}rem`;
+          singleStatus.textContent = 'Type in either field to convert live.';
+        } catch {
+          remIn.value = '';
+          formulaEl.textContent = 'Result is out of range.';
+          singleStatus.textContent = 'That value overflows at this root font size. Try a smaller number or larger root.';
+        }
+      } else {
+        const raw = remIn.value.trim();
+        if (raw === '') {
+          pxIn.value = '';
+          formulaEl.textContent = `Root: ${formatUnitNumber(root, precision)}px`;
+          singleStatus.textContent = 'Type in either field to convert live.';
+          return;
+        }
+        const rem = Number(raw);
+        if (!Number.isFinite(rem)) {
+          pxIn.value = '';
+          formulaEl.textContent = 'Value is out of range.';
+          singleStatus.textContent = 'That number is too large to convert. Try a smaller value.';
+          return;
+        }
+        try {
+          const px = remToPx(rem, root, precision);
+          const pxStr = formatUnitNumber(px, precision);
+          pxIn.value = pxStr;
+          formulaEl.textContent = `${formatUnitNumber(rem, precision)}rem * ${formatUnitNumber(root, precision)}px = ${pxStr}px`;
+          singleStatus.textContent = 'Type in either field to convert live.';
+        } catch {
+          pxIn.value = '';
+          formulaEl.textContent = 'Result is out of range.';
+          singleStatus.textContent = 'That value overflows at this root font size. Try a smaller number or smaller root.';
+        }
+      }
+    };
+
+    const updateBatch = () => {
+      const root = getRoot();
+      const precision = getPrecision();
+      if (root === null) {
+        cssOut.value = '';
+        batchStatus.textContent = 'Enter a root font size of at least 0.01px to convert CSS.';
+        return;
+      }
+      const src = cssIn.value;
+      if (!src.trim()) {
+        cssOut.value = '';
+        batchStatus.textContent = 'Paste CSS on the left to convert it here.';
+        return;
+      }
+      try {
+        const res =
+          batchDir === 'px-to-rem'
+            ? convertCssPxToRem(src, { rootPx: root, precision, skipOnePx: skipOneIn.checked })
+            : convertCssRemToPx(src, { rootPx: root, precision });
+        cssOut.value = res.css;
+        const unitWord = res.count === 1 ? 'value' : 'values';
+        batchStatus.textContent = `Converted ${res.count} ${unitWord} at ${formatUnitNumber(root, precision)}px root.`;
+      } catch {
+        cssOut.value = '';
+        batchStatus.textContent = 'A value in the CSS is too large to convert at this root font size.';
+      }
+    };
+
+    const copyText = async (text: string, statusEl: HTMLElement, btn?: HTMLButtonElement) => {
+      if (!text) {
+        statusEl.textContent = 'Nothing to copy yet.';
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        statusEl.textContent = `Copied ${text.length > 40 ? 'converted CSS' : text}.`;
+        if (btn) {
+          if (!btn.dataset.origLabel) {
+            btn.dataset.origLabel = btn.textContent || '';
+          }
+          const prevTimer = copyTimers.get(btn);
+          if (prevTimer !== undefined) window.clearTimeout(prevTimer);
+          btn.textContent = 'Copied';
+          const timer = window.setTimeout(() => {
+            btn.textContent = btn.dataset.origLabel || '';
+            copyTimers.delete(btn);
+          }, 1500);
+          copyTimers.set(btn, timer);
+        }
+      } catch {
+        statusEl.textContent = 'Clipboard access was blocked. Select the value and press Ctrl+C.';
+      }
+    };
+
+    pxIn.addEventListener('input', () => {
+      lastEdited = 'px';
+      updateSingle();
+    });
+    remIn.addEventListener('input', () => {
+      lastEdited = 'rem';
+      updateSingle();
+    });
+    rootIn.addEventListener('input', () => {
+      updateSingle();
+      updateBatch();
+    });
+    precSel.addEventListener('change', () => {
+      updateSingle();
+      updateBatch();
+    });
+    rootPresets.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        rootIn.value = btn.dataset.rootPreset || '16';
+        updateSingle();
+        updateBatch();
+      });
+    });
+
+    copyPxBtn.addEventListener('click', () => {
+      const val = pxIn.value.trim();
+      copyText(val ? `${val}px` : '', singleStatus, copyPxBtn);
+    });
+    copyRemBtn.addEventListener('click', () => {
+      const val = remIn.value.trim();
+      copyText(val ? `${val}rem` : '', singleStatus, copyRemBtn);
+    });
+
+    dirBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const next = btn.dataset.batchDir === 'rem-to-px' ? 'rem-to-px' : 'px-to-rem';
+        batchDir = next;
+        dirBtns.forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+        skip1Wrap.hidden = batchDir !== 'px-to-rem';
+        cssInLabel.textContent =
+          batchDir === 'px-to-rem' ? 'Paste CSS (with px values)' : 'Paste CSS (with rem values)';
+        cssOutLabel.textContent =
+          batchDir === 'px-to-rem' ? 'Converted CSS (rem)' : 'Converted CSS (px)';
+        updateBatch();
+      });
+    });
+
+    cssIn.addEventListener('input', updateBatch);
+    skipOneIn.addEventListener('change', updateBatch);
+    sampleBtn.addEventListener('click', () => {
+      cssIn.value = batchDir === 'px-to-rem' ? samplePxCss : sampleRemCss;
+      updateBatch();
+    });
+    clearBtn.addEventListener('click', () => {
+      cssIn.value = '';
+      updateBatch();
+      cssIn.focus();
+    });
+    copyCssBtn.addEventListener('click', () => copyText(cssOut.value, batchStatus, copyCssBtn));
+
+    scaleBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const rem = btn.querySelector<HTMLElement>('[data-scale-rem]')?.textContent?.trim() || '';
+        const px = btn.dataset.scalePx || '';
+        if (px) {
+          lastEdited = 'px';
+          pxIn.value = px;
+          updateSingle();
+        }
+        copyText(rem, scaleStatus);
+      });
+    });
+
+    updateSingle();
+    updateBatch();
+  }
+</script>

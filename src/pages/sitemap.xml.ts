@@ -6,17 +6,24 @@ import { LAB_EXPERIMENTS } from '../data/site';
 export const GET: APIRoute = async ({ site }) => {
   const base = site!.href;
   const drops = await getCollection('drops');
+  const qrGuides = (await getCollection('qrGuides')).sort((a, b) => a.data.order - b.data.order);
   const labDates = [
     ...drops.map((d) => d.data.date.toISOString().slice(0, 10)),
     ...LAB_EXPERIMENTS.map((d) => d.date),
   ].sort();
   const entries = [
-    { path: '/', date: '2026-11-22' },
-    { path: '/tools/', date: '2026-11-22' },
-    { path: '/tools/qr-code-generator/', date: '2026-11-22' },
-    { path: '/den/', date: '2026-11-23' },
+    { path: '/', date: '2026-11-24' },
+    { path: '/tools/', date: '2026-11-24' },
+    { path: '/tools/qr-code-generator/', date: '2026-11-24' },
+    ...qrGuides.map((g) => ({
+      path: g.id === 'index' ? '/tools/qr-code-generator/guides/' : `/tools/qr-code-generator/guides/${g.id}/`,
+      date: '2026-11-24',
+    })),
+    { path: '/tools/px-to-rem/', date: '2026-11-24' },
+    { path: '/tools/uuid-generator/', date: '2026-11-24' },
+    { path: '/den/', date: '2026-11-24' },
     { path: '/snacks/', date: '2026-11-23' },
-    { path: '/privacy/', date: '2026-11-23' },
+    { path: '/privacy/', date: '2026-11-24' },
     { path: '/lab/', date: labDates.pop() ?? '2026-11-22' },
     ...LAB_EXPERIMENTS.map((d) => ({ path: d.path, date: d.date })),
     ...drops.map((d) => ({ path: `/lab/${d.id}/`, date: d.data.date.toISOString().slice(0, 10) })),

@@ -6,64 +6,138 @@ import { GITHUB_URL, TOOLS_LABEL } from '../../../data/site';
 
 const title = 'Free QR code generator (Bandit Codes) | Patch Bandit';
 const description =
-  'Free QR code generator for links, Wi-Fi, contacts, email, texts, map spots, and events. Runs in your browser: no account, no tracking, MIT licensed.';
+  'Free QR code generator for codes you own. Make static or own-domain QR codes, build redirect rules or a copy-paste snippet, and plan an escape from lock-in.';
 const canonical = new URL('/tools/qr-code-generator/', Astro.site).href;
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
   name: 'Bandit Codes',
+  description,
   url: canonical,
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Any',
+  browserRequirements: 'Runs locally in a modern browser; no server required',
   isAccessibleForFree: true,
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  featureList: [
+    'Generate static and own-domain QR codes in PNG and SVG',
+    'Live in-browser scan verification and rule-of-thumb print width',
+    'Export forwarding rules for Netlify, Cloudflare, Vercel, Apache, nginx, WordPress, and static HTML',
+    'Build and update the self-hosted Bandit Codes HTML snippet and codes.json locally',
+    'Decode photos of printed QR codes locally to check for subscription lock-in and plan replacements',
+  ],
 };
 ---
 <Base title={title} description={description} schema={schema}>
   <PageHero tone="mint">
     <p class="crumbs"><a href="/">The story</a> / <a href="/tools/">{TOOLS_LABEL}</a> / Bandit Codes</p>
-    <p class="eyebrow">First free tool · MIT</p>
-    <h1>Bandit Codes: free QR code generator on your device.</h1>
-    <p class="lead">Use this free QR code generator to pick what your code should do, choose a look, and download PNG or SVG. Every code is read back in your browser to check that it scans. No account, no limits, no subscription.</p>
-    <p class="story">Nothing you type leaves this tab. Zero servers, zero uploads, zero tracking.</p>
+    <p class="eyebrow">Set free · MIT</p>
+    <h1>Bandit Codes: free QR code generator for codes you own.</h1>
+    <p class="lead">Use this free QR code generator to make codes you own, write forwarding rules or a copy-paste snippet for your own site, and plan a move off subscription QR lock-in. Every code is read back in your browser before you print.</p>
+    <p class="story">Nothing leaves this tab. No server, no account, and no middleman sitting on your printed links.</p>
     <Fragment slot="art">
-      <svg class="qr-hero-art" viewBox="0 0 280 280" role="img" aria-label="A styled QR code with a glowing mint scan line passing across it">
-        <rect x="24" y="24" width="232" height="232" rx="22" fill="#fff2de" stroke="#140a22" stroke-width="6" />
-        <g fill="#140a22">
-          <rect x="44" y="44" width="54" height="54" rx="8" />
-          <rect x="182" y="44" width="54" height="54" rx="8" />
-          <rect x="44" y="182" width="54" height="54" rx="8" />
+      <svg class="qr-hero-art" viewBox="0 0 280 280" role="img" aria-label="A scannable QR code styled as Snick the raccoon with notched ears above the frame, bandit mask finder eyes, tiny raccoon paw print squares, and Snick peeking out of the center holding a toasted golden sesame bagel" data-qr-cutout="45" data-qr-ec-total="10/32" data-qr-ec-peak="4/8" data-qr-quiet-modules="4.43">
+        <defs>
+          <clipPath id="qr-hero-card-clip">
+            <rect x="27" y="37" width="226" height="226" rx="19" />
+          </clipPath>
+          <clipPath id="qr-hero-badge-clip">
+            <circle cx="140" cy="150" r="17.5" />
+          </clipPath>
+          <linearGradient id="qr-hero-glow-mint" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#86e3be" stop-opacity="0" />
+            <stop offset="0.5" stop-color="#86e3be" stop-opacity="0.22" />
+            <stop offset="1" stop-color="#86e3be" stop-opacity="0" />
+          </linearGradient>
+          <g id="qr-hero-paw-mod">
+            <circle cx="2.7" cy="3.38" r="1.88" />
+            <circle cx="1.2" cy="1.45" r="0.79" />
+            <circle cx="2.7" cy="0.92" r="0.79" />
+            <circle cx="4.2" cy="1.45" r="0.79" />
+          </g>
+        </defs>
+        <g class="qr-hero-ears" stroke="#140a22" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M46 37 L53 19 L62 16 L56 10 L62 5 Q65 3 68 6 L94 37 Z" fill="#c4bbd6" />
+          <path d="M62 34 L63 14 L82 34 Z" fill="#ff7b67" stroke="none" />
+          <path d="M186 37 L212 6 Q215 3 218 5 L234 37 Z" fill="#c4bbd6" />
+          <path d="M198 34 L217 14 L220 34 Z" fill="#ff7b67" stroke="none" />
         </g>
-        <g fill="#fff2de">
-          <rect x="54" y="54" width="34" height="34" rx="4" />
-          <rect x="192" y="54" width="34" height="34" rx="4" />
-          <rect x="54" y="192" width="34" height="34" rx="4" />
+        <g fill="none" stroke="#86e3be" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+          <path d="M12 52 V32 Q12 24 20 24 H36" />
+          <path d="M244 24 H260 Q268 24 268 32 V52" />
+          <path d="M12 248 V266 Q12 274 20 274 H40" />
+          <path d="M240 274 H260 Q268 274 268 266 V248" />
         </g>
-        <g fill="#ff7b67">
-          <rect x="63" y="63" width="16" height="16" rx="3" />
-          <rect x="201" y="63" width="16" height="16" rx="3" />
-          <rect x="63" y="201" width="16" height="16" rx="3" />
+        <rect class="qr-hero-card-bg" x="24" y="34" width="232" height="232" rx="22" fill="#fff2de" />
+        <g clip-path="url(#qr-hero-card-clip)">
+          <g class="qr-hero-finders">
+            <rect x="50.9" y="60.9" width="37.8" height="37.8" rx="8.7" fill="#140a22" />
+            <rect x="56.3" y="66.3" width="27" height="27" rx="5" fill="#fff2de" />
+            <rect x="61.7" y="71.7" width="16.2" height="16.2" rx="4.3" fill="#140a22" />
+            <rect x="191.3" y="60.9" width="37.8" height="37.8" rx="8.7" fill="#140a22" />
+            <rect x="196.7" y="66.3" width="27" height="27" rx="5" fill="#fff2de" />
+            <rect x="202.1" y="71.7" width="16.2" height="16.2" rx="4.3" fill="#140a22" />
+            <rect x="50.9" y="201.3" width="37.8" height="37.8" rx="8.7" fill="#140a22" />
+            <rect x="56.3" y="206.7" width="27" height="27" rx="5" fill="#fff2de" />
+            <rect x="61.7" y="212.1" width="16.2" height="16.2" rx="4.3" fill="#140a22" />
+          </g>
+          <g class="qr-hero-finder-glints">
+            <g class="qr-hero-eye-glint">
+              <rect x="64.4" y="74.2" width="3.5" height="2.3" rx="1" fill="#86e3be" />
+              <circle cx="65.6" cy="84" r="0.95" fill="#fff2de" opacity="0.8" />
+            </g>
+            <g class="qr-hero-eye-glint">
+              <rect x="204.8" y="74.2" width="3.5" height="2.3" rx="1" fill="#86e3be" />
+              <circle cx="206" cy="84" r="0.95" fill="#fff2de" opacity="0.8" />
+            </g>
+            <path d="M65.7 214.3 Q66.2 215.6 67.5 216.1 Q66.2 216.6 65.7 217.9 Q65.2 216.6 63.9 216.1 Q65.2 215.6 65.7 214.3 Z" fill="#ffc857" />
+          </g>
+          <g class="qr-hero-modules" fill="#2b1a42"><rect x="94.2" y="61" width="16" height="5.2" rx="1.4" /><rect x="126.6" y="61" width="26.8" height="5.2" rx="1.4" /><rect x="164.4" y="61" width="5.2" height="5.2" rx="1.4" /><rect x="175.2" y="61" width="10.6" height="5.2" rx="1.4" /><rect x="94.2" y="66.4" width="5.2" height="5.2" rx="1.4" /><rect x="126.6" y="66.4" width="10.6" height="5.2" rx="1.4" /><rect x="164.4" y="66.4" width="5.2" height="5.2" rx="1.4" /><rect x="180.6" y="66.4" width="5.2" height="5.2" rx="1.4" /><rect x="94.2" y="71.8" width="5.2" height="5.2" rx="1.4" /><rect x="105" y="71.8" width="5.2" height="5.2" rx="1.4" /><rect x="132" y="71.8" width="5.2" height="5.2" rx="1.4" /><rect x="159" y="71.8" width="26.8" height="5.2" rx="1.4" /><rect x="105" y="77.2" width="5.2" height="5.2" rx="1.4" /><rect x="115.8" y="77.2" width="5.2" height="5.2" rx="1.4" /><rect x="126.6" y="77.2" width="10.6" height="5.2" rx="1.4" /><rect x="169.8" y="77.2" width="10.6" height="5.2" rx="1.4" /><rect x="99.6" y="82.6" width="5.2" height="5.2" rx="1.4" /><rect x="110.4" y="82.6" width="10.6" height="5.2" rx="1.4" /><rect x="148.2" y="82.6" width="16" height="5.2" rx="1.4" /><rect x="94.2" y="88" width="16" height="5.2" rx="1.4" /><rect x="126.6" y="88" width="5.2" height="5.2" rx="1.4" /><rect x="137.4" y="88" width="5.2" height="5.2" rx="1.4" /><rect x="153.6" y="88" width="10.6" height="5.2" rx="1.4" /><rect x="169.8" y="88" width="5.2" height="5.2" rx="1.4" /><rect x="94.2" y="93.4" width="5.2" height="5.2" rx="1.4" /><rect x="105" y="93.4" width="5.2" height="5.2" rx="1.4" /><rect x="115.8" y="93.4" width="5.2" height="5.2" rx="1.4" /><rect x="126.6" y="93.4" width="5.2" height="5.2" rx="1.4" /><rect x="137.4" y="93.4" width="5.2" height="5.2" rx="1.4" /><rect x="148.2" y="93.4" width="5.2" height="5.2" rx="1.4" /><rect x="159" y="93.4" width="5.2" height="5.2" rx="1.4" /><rect x="169.8" y="93.4" width="5.2" height="5.2" rx="1.4" /><rect x="180.6" y="93.4" width="5.2" height="5.2" rx="1.4" /><rect x="94.2" y="98.8" width="10.6" height="5.2" rx="1.4" /><rect x="115.8" y="98.8" width="10.6" height="5.2" rx="1.4" /><rect x="164.4" y="98.8" width="10.6" height="5.2" rx="1.4" /><rect x="180.6" y="98.8" width="5.2" height="5.2" rx="1.4" /><rect x="61.8" y="104.2" width="16" height="5.2" rx="1.4" /><rect x="83.4" y="104.2" width="5.2" height="5.2" rx="1.4" /><rect x="94.2" y="104.2" width="5.2" height="5.2" rx="1.4" /><rect x="115.8" y="104.2" width="5.2" height="5.2" rx="1.4" /><rect x="169.8" y="104.2" width="5.2" height="5.2" rx="1.4" /><rect x="180.6" y="104.2" width="21.4" height="5.2" rx="1.4" /><rect x="213" y="104.2" width="16" height="5.2" rx="1.4" /><rect x="56.4" y="109.6" width="5.2" height="5.2" rx="1.4" /><rect x="67.2" y="109.6" width="5.2" height="5.2" rx="1.4" /><rect x="78" y="109.6" width="5.2" height="5.2" rx="1.4" /><rect x="99.6" y="109.6" width="5.2" height="5.2" rx="1.4" /><rect x="110.4" y="109.6" width="10.6" height="5.2" rx="1.4" /><rect x="169.8" y="109.6" width="26.8" height="5.2" rx="1.4" /><rect x="223.8" y="109.6" width="5.2" height="5.2" rx="1.4" /><rect x="51" y="115" width="10.6" height="5.2" rx="1.4" /><rect x="72.6" y="115" width="37.6" height="5.2" rx="1.4" /><rect x="115.8" y="115" width="5.2" height="5.2" rx="1.4" /><rect x="126.6" y="115" width="5.2" height="5.2" rx="1.4" /><rect x="169.8" y="115" width="5.2" height="5.2" rx="1.4" /><rect x="207.6" y="115" width="16" height="5.2" rx="1.4" /><rect x="56.4" y="120.4" width="5.2" height="5.2" rx="1.4" /><rect x="67.2" y="120.4" width="10.6" height="5.2" rx="1.4" /><rect x="94.2" y="120.4" width="5.2" height="5.2" rx="1.4" /><rect x="115.8" y="120.4" width="5.2" height="5.2" rx="1.4" /><rect x="126.6" y="120.4" width="26.8" height="5.2" rx="1.4" /><rect x="186" y="120.4" width="10.6" height="5.2" rx="1.4" /><rect x="207.6" y="120.4" width="10.6" height="5.2" rx="1.4" /><rect x="51" y="125.8" width="5.2" height="5.2" rx="1.4" /><rect x="61.8" y="125.8" width="10.6" height="5.2" rx="1.4" /><rect x="83.4" y="125.8" width="5.2" height="5.2" rx="1.4" /><rect x="94.2" y="125.8" width="16" height="5.2" rx="1.4" /><rect x="121.2" y="125.8" width="10.6" height="5.2" rx="1.4" /><rect x="137.4" y="125.8" width="5.2" height="5.2" rx="1.4" /><rect x="153.6" y="125.8" width="37.6" height="5.2" rx="1.4" /><rect x="196.8" y="125.8" width="16" height="5.2" rx="1.4" /><rect x="51" y="131.2" width="10.6" height="5.2" rx="1.4" /><rect x="67.2" y="131.2" width="10.6" height="5.2" rx="1.4" /><rect x="94.2" y="131.2" width="5.2" height="5.2" rx="1.4" /><rect x="105" y="131.2" width="5.2" height="5.2" rx="1.4" /><rect x="115.8" y="131.2" width="10.6" height="5.2" rx="1.4" /><rect x="175.2" y="131.2" width="5.2" height="5.2" rx="1.4" /><rect x="191.4" y="131.2" width="10.6" height="5.2" rx="1.4" /><rect x="213" y="131.2" width="5.2" height="5.2" rx="1.4" /><rect x="51" y="136.6" width="26.8" height="5.2" rx="1.4" /><rect x="83.4" y="136.6" width="21.4" height="5.2" rx="1.4" /><rect x="110.4" y="136.6" width="10.6" height="5.2" rx="1.4" /><rect x="169.8" y="136.6" width="5.2" height="5.2" rx="1.4" /><rect x="180.6" y="136.6" width="5.2" height="5.2" rx="1.4" /><rect x="196.8" y="136.6" width="5.2" height="5.2" rx="1.4" /><rect x="207.6" y="136.6" width="16" height="5.2" rx="1.4" /><rect x="61.8" y="142" width="10.6" height="5.2" rx="1.4" /><rect x="94.2" y="142" width="5.2" height="5.2" rx="1.4" /><rect x="105" y="142" width="16" height="5.2" rx="1.4" /><rect x="164.4" y="142" width="53.8" height="5.2" rx="1.4" /><rect x="223.8" y="142" width="5.2" height="5.2" rx="1.4" /><rect x="83.4" y="147.4" width="5.2" height="5.2" rx="1.4" /><rect x="94.2" y="147.4" width="5.2" height="5.2" rx="1.4" /><rect x="105" y="147.4" width="5.2" height="5.2" rx="1.4" /><rect x="115.8" y="147.4" width="5.2" height="5.2" rx="1.4" /><rect x="159" y="147.4" width="5.2" height="5.2" rx="1.4" /><rect x="186" y="147.4" width="5.2" height="5.2" rx="1.4" /><rect x="196.8" y="147.4" width="16" height="5.2" rx="1.4" /><rect x="218.4" y="147.4" width="10.6" height="5.2" rx="1.4" /><rect x="94.2" y="152.8" width="5.2" height="5.2" rx="1.4" /><rect x="105" y="152.8" width="16" height="5.2" rx="1.4" /><rect x="159" y="152.8" width="5.2" height="5.2" rx="1.4" /><rect x="175.2" y="152.8" width="10.6" height="5.2" rx="1.4" /><rect x="191.4" y="152.8" width="5.2" height="5.2" rx="1.4" /><rect x="223.8" y="152.8" width="5.2" height="5.2" rx="1.4" /><rect x="67.2" y="158.2" width="10.6" height="5.2" rx="1.4" /><rect x="83.4" y="158.2" width="37.6" height="5.2" rx="1.4" /><rect x="186" y="158.2" width="21.4" height="5.2" rx="1.4" /><rect x="213" y="158.2" width="10.6" height="5.2" rx="1.4" /><rect x="78" y="163.6" width="5.2" height="5.2" rx="1.4" /><rect x="94.2" y="163.6" width="5.2" height="5.2" rx="1.4" /><rect x="110.4" y="163.6" width="10.6" height="5.2" rx="1.4" /><rect x="175.2" y="163.6" width="21.4" height="5.2" rx="1.4" /><rect x="202.2" y="163.6" width="16" height="5.2" rx="1.4" /><rect x="56.4" y="169" width="59.2" height="5.2" rx="1.4" /><rect x="121.2" y="169" width="10.6" height="5.2" rx="1.4" /><rect x="180.6" y="169" width="5.2" height="5.2" rx="1.4" /><rect x="196.8" y="169" width="16" height="5.2" rx="1.4" /><rect x="51" y="174.4" width="5.2" height="5.2" rx="1.4" /><rect x="67.2" y="174.4" width="16" height="5.2" rx="1.4" /><rect x="94.2" y="174.4" width="5.2" height="5.2" rx="1.4" /><rect x="110.4" y="174.4" width="5.2" height="5.2" rx="1.4" /><rect x="126.6" y="174.4" width="10.6" height="5.2" rx="1.4" /><rect x="153.6" y="174.4" width="5.2" height="5.2" rx="1.4" /><rect x="213" y="174.4" width="5.2" height="5.2" rx="1.4" /><rect x="51" y="179.8" width="5.2" height="5.2" rx="1.4" /><rect x="61.8" y="179.8" width="37.6" height="5.2" rx="1.4" /><rect x="110.4" y="179.8" width="5.2" height="5.2" rx="1.4" /><rect x="121.2" y="179.8" width="5.2" height="5.2" rx="1.4" /><rect x="137.4" y="179.8" width="10.6" height="5.2" rx="1.4" /><rect x="153.6" y="179.8" width="5.2" height="5.2" rx="1.4" /><rect x="175.2" y="179.8" width="10.6" height="5.2" rx="1.4" /><rect x="207.6" y="179.8" width="16" height="5.2" rx="1.4" /><rect x="51" y="185.2" width="5.2" height="5.2" rx="1.4" /><rect x="67.2" y="185.2" width="5.2" height="5.2" rx="1.4" /><rect x="94.2" y="185.2" width="21.4" height="5.2" rx="1.4" /><rect x="121.2" y="185.2" width="10.6" height="5.2" rx="1.4" /><rect x="137.4" y="185.2" width="5.2" height="5.2" rx="1.4" /><rect x="153.6" y="185.2" width="5.2" height="5.2" rx="1.4" /><rect x="164.4" y="185.2" width="16" height="5.2" rx="1.4" /><rect x="207.6" y="185.2" width="10.6" height="5.2" rx="1.4" /><rect x="51" y="190.6" width="5.2" height="5.2" rx="1.4" /><rect x="78" y="190.6" width="10.6" height="5.2" rx="1.4" /><rect x="94.2" y="190.6" width="10.6" height="5.2" rx="1.4" /><rect x="115.8" y="190.6" width="26.8" height="5.2" rx="1.4" /><rect x="148.2" y="190.6" width="16" height="5.2" rx="1.4" /><rect x="169.8" y="190.6" width="43" height="5.2" rx="1.4" /><rect x="218.4" y="190.6" width="5.2" height="5.2" rx="1.4" /><rect x="94.2" y="196" width="5.2" height="5.2" rx="1.4" /><rect x="105" y="196" width="16" height="5.2" rx="1.4" /><rect x="132" y="196" width="10.6" height="5.2" rx="1.4" /><rect x="153.6" y="196" width="5.2" height="5.2" rx="1.4" /><rect x="164.4" y="196" width="10.6" height="5.2" rx="1.4" /><rect x="180.6" y="196" width="5.2" height="5.2" rx="1.4" /><rect x="202.2" y="196" width="26.8" height="5.2" rx="1.4" /><rect x="115.8" y="201.4" width="10.6" height="5.2" rx="1.4" /><rect x="142.8" y="201.4" width="5.2" height="5.2" rx="1.4" /><rect x="153.6" y="201.4" width="5.2" height="5.2" rx="1.4" /><rect x="164.4" y="201.4" width="5.2" height="5.2" rx="1.4" /><rect x="175.2" y="201.4" width="10.6" height="5.2" rx="1.4" /><rect x="191.4" y="201.4" width="5.2" height="5.2" rx="1.4" /><rect x="202.2" y="201.4" width="5.2" height="5.2" rx="1.4" /><rect x="213" y="201.4" width="10.6" height="5.2" rx="1.4" /><rect x="99.6" y="206.8" width="10.6" height="5.2" rx="1.4" /><rect x="115.8" y="206.8" width="5.2" height="5.2" rx="1.4" /><rect x="142.8" y="206.8" width="10.6" height="5.2" rx="1.4" /><rect x="164.4" y="206.8" width="21.4" height="5.2" rx="1.4" /><rect x="202.2" y="206.8" width="5.2" height="5.2" rx="1.4" /><rect x="213" y="206.8" width="16" height="5.2" rx="1.4" /><rect x="94.2" y="212.2" width="10.6" height="5.2" rx="1.4" /><rect x="137.4" y="212.2" width="5.2" height="5.2" rx="1.4" /><rect x="153.6" y="212.2" width="16" height="5.2" rx="1.4" /><rect x="180.6" y="212.2" width="26.8" height="5.2" rx="1.4" /><rect x="218.4" y="212.2" width="10.6" height="5.2" rx="1.4" /><rect x="94.2" y="217.6" width="16" height="5.2" rx="1.4" /><rect x="121.2" y="217.6" width="5.2" height="5.2" rx="1.4" /><rect x="137.4" y="217.6" width="10.6" height="5.2" rx="1.4" /><rect x="153.6" y="217.6" width="5.2" height="5.2" rx="1.4" /><rect x="169.8" y="217.6" width="10.6" height="5.2" rx="1.4" /><rect x="186" y="217.6" width="5.2" height="5.2" rx="1.4" /><rect x="202.2" y="217.6" width="5.2" height="5.2" rx="1.4" /><rect x="213" y="217.6" width="10.6" height="5.2" rx="1.4" /><rect x="94.2" y="223" width="5.2" height="5.2" rx="1.4" /><rect x="105" y="223" width="5.2" height="5.2" rx="1.4" /><rect x="121.2" y="223" width="10.6" height="5.2" rx="1.4" /><rect x="142.8" y="223" width="5.2" height="5.2" rx="1.4" /><rect x="153.6" y="223" width="16" height="5.2" rx="1.4" /><rect x="175.2" y="223" width="5.2" height="5.2" rx="1.4" /><rect x="186" y="223" width="10.6" height="5.2" rx="1.4" /><rect x="207.6" y="223" width="5.2" height="5.2" rx="1.4" /><rect x="105" y="228.4" width="10.6" height="5.2" rx="1.4" /><rect x="142.8" y="228.4" width="5.2" height="5.2" rx="1.4" /><rect x="164.4" y="228.4" width="5.2" height="5.2" rx="1.4" /><rect x="191.4" y="228.4" width="10.6" height="5.2" rx="1.4" /><rect x="207.6" y="228.4" width="10.6" height="5.2" rx="1.4" /><rect x="115.8" y="233.8" width="10.6" height="5.2" rx="1.4" /><rect x="137.4" y="233.8" width="10.6" height="5.2" rx="1.4" /><rect x="164.4" y="233.8" width="5.2" height="5.2" rx="1.4" /><rect x="175.2" y="233.8" width="10.6" height="5.2" rx="1.4" /></g>
+          <g class="qr-hero-paws" fill="#140a22"><use href="#qr-hero-paw-mod" x="115.7" y="60.9" /><use href="#qr-hero-paw-mod" x="148.1" y="71.7" /><use href="#qr-hero-paw-mod" x="180.5" y="82.5" /><use href="#qr-hero-paw-mod" x="131.9" y="98.7" /><use href="#qr-hero-paw-mod" x="153.5" y="98.7" /><use href="#qr-hero-paw-mod" x="104.9" y="104.1" /><use href="#qr-hero-paw-mod" x="126.5" y="104.1" /><use href="#qr-hero-paw-mod" x="137.3" y="104.1" /><use href="#qr-hero-paw-mod" x="148.1" y="104.1" /><use href="#qr-hero-paw-mod" x="158.9" y="104.1" /><use href="#qr-hero-paw-mod" x="131.9" y="109.5" /><use href="#qr-hero-paw-mod" x="142.7" y="109.5" /><use href="#qr-hero-paw-mod" x="153.5" y="114.9" /><use href="#qr-hero-paw-mod" x="196.7" y="114.9" /><use href="#qr-hero-paw-mod" x="223.7" y="131.1" /><use href="#qr-hero-paw-mod" x="158.9" y="136.5" /><use href="#qr-hero-paw-mod" x="77.9" y="141.9" /><use href="#qr-hero-paw-mod" x="56.3" y="147.3" /><use href="#qr-hero-paw-mod" x="50.9" y="152.7" /><use href="#qr-hero-paw-mod" x="61.7" y="152.7" /><use href="#qr-hero-paw-mod" x="56.3" y="158.1" /><use href="#qr-hero-paw-mod" x="169.7" y="158.1" /><use href="#qr-hero-paw-mod" x="50.9" y="163.5" /><use href="#qr-hero-paw-mod" x="153.5" y="163.5" /><use href="#qr-hero-paw-mod" x="164.3" y="163.5" /><use href="#qr-hero-paw-mod" x="169.7" y="168.9" /><use href="#qr-hero-paw-mod" x="218.3" y="168.9" /><use href="#qr-hero-paw-mod" x="164.3" y="174.3" /><use href="#qr-hero-paw-mod" x="223.7" y="174.3" /><use href="#qr-hero-paw-mod" x="196.7" y="179.7" /><use href="#qr-hero-paw-mod" x="61.7" y="190.5" /><use href="#qr-hero-paw-mod" x="110.3" y="212.1" /><use href="#qr-hero-paw-mod" x="218.3" y="233.7" /></g>
+          <g class="qr-hero-center">
+            <circle cx="140" cy="150" r="18.5" fill="#fff2de" />
+            <circle cx="140" cy="150" r="17.5" fill="#2b1a42" />
+            <g clip-path="url(#qr-hero-badge-clip)">
+              <g transform="translate(140 150) scale(0.9615) translate(-140 -150)">
+                <path d="M123 169 C125 161 131 158 140 158 C149 158 155 161 157 169 Z" fill="#86e3be" stroke="#140a22" stroke-width="1.6" />
+                <path d="M126 146 L127 139 L130 138 L128 135 L130 132 L137 140 Z" fill="#c4bbd6" stroke="#140a22" stroke-width="1.5" stroke-linejoin="round" />
+                <path d="M130 142 L130 135 L135 140 Z" fill="#ff7b67" />
+                <path d="M143 140 L150 132 L154 146 Z" fill="#c4bbd6" stroke="#140a22" stroke-width="1.5" stroke-linejoin="round" />
+                <path d="M145 140 L150 135 L151 142 Z" fill="#ff7b67" />
+                <ellipse cx="140" cy="148.5" rx="13" ry="10.2" fill="#c4bbd6" stroke="#140a22" stroke-width="1.6" />
+                <path d="M138.8 138.5 H141.2 L141.6 146 H138.4 Z" fill="#5b5075" />
+                <ellipse cx="140" cy="153.5" rx="6.6" ry="4.6" fill="#fff2de" />
+                <path d="M127.5 147.2 C131 143.2 136.5 143.5 140 146.2 C143.5 143.5 149 143.2 152.5 147.2 C150.5 151.8 145.5 152.4 140 149.8 C134.5 152.4 129.5 151.8 127.5 147.2 Z" fill="#140a22" />
+                <ellipse cx="134.8" cy="147.8" rx="2.8" ry="2.2" fill="#fff2de" />
+                <ellipse cx="145.2" cy="147.8" rx="2.8" ry="2.2" fill="#fff2de" />
+                <g class="qr-hero-snick-eyes">
+                  <circle cx="135.2" cy="147.8" r="1.55" fill="#86e3be" />
+                  <circle cx="135.2" cy="147.8" r="0.85" fill="#140a22" />
+                  <circle cx="145.6" cy="147.8" r="1.55" fill="#86e3be" />
+                  <circle cx="145.6" cy="147.8" r="0.85" fill="#140a22" />
+                </g>
+                <ellipse cx="140" cy="152.2" rx="2" ry="1.35" fill="#140a22" />
+                <path d="M137.4 155 Q140 156.8 142.8 154.8" fill="none" stroke="#140a22" stroke-width="1.2" stroke-linecap="round" />
+                <g class="qr-hero-center-bagel">
+                  <circle cx="150.5" cy="160.5" r="6.2" fill="#ffc857" stroke="#140a22" stroke-width="1.6" />
+                  <path d="M146 163.5 A5 5 0 0 0 155 157.5 A4.5 4.5 0 0 1 146 163.5 Z" fill="#e89a2c" />
+                  <circle cx="150.5" cy="160.5" r="2" fill="#2b1a42" stroke="#140a22" stroke-width="1.1" />
+                  <circle cx="147.5" cy="157.8" r="0.65" fill="#fff2de" />
+                  <circle cx="152.6" cy="157.3" r="0.65" fill="#140a22" />
+                  <circle cx="153.6" cy="162.4" r="0.65" fill="#fff2de" />
+                </g>
+              </g>
+            </g>
+            <circle cx="140" cy="150" r="17.5" fill="none" stroke="#140a22" stroke-width="2" />
+            <path class="qr-hero-badge-spark" d="M126.5 135.5 Q127.6 138.8 130.9 139.9 Q127.6 141 126.5 144.3 Q125.4 141 122.1 139.9 Q125.4 138.8 126.5 135.5 Z" fill="#ffc857" stroke="#140a22" stroke-width="1.1" stroke-linejoin="round" />
+          </g>
+          <g class="qr-hero-scan-bar">
+            <rect x="28" y="138" width="224" height="24" fill="url(#qr-hero-glow-mint)" />
+            <rect x="30" y="148" width="220" height="4" rx="2" fill="#3fb58f" fill-opacity="0.4" />
+            <rect x="36" y="149" width="208" height="2" rx="1" fill="#c2ffe6" fill-opacity="0.34" />
+          </g>
         </g>
-        <g fill="#4b2d6e">
-          <rect x="114" y="50" width="16" height="16" rx="4" />
-          <rect x="144" y="50" width="20" height="16" rx="4" />
-          <rect x="128" y="80" width="18" height="18" rx="4" />
-          <rect x="52" y="118" width="18" height="18" rx="4" />
-          <rect x="82" y="118" width="34" height="18" rx="4" />
-          <rect x="130" y="118" width="18" height="36" rx="4" />
-          <rect x="162" y="114" width="24" height="18" rx="4" />
-          <rect x="202" y="118" width="24" height="24" rx="5" />
-          <rect x="66" y="150" width="22" height="18" rx="4" />
-          <rect x="104" y="150" width="16" height="18" rx="4" />
-          <rect x="162" y="148" width="24" height="24" rx="5" />
-          <rect x="202" y="158" width="18" height="18" rx="4" />
-          <rect x="118" y="186" width="22" height="18" rx="4" />
-          <rect x="156" y="188" width="18" height="34" rx="4" />
-          <rect x="190" y="192" width="36" height="18" rx="4" />
-          <rect x="118" y="216" width="24" height="18" rx="4" />
-          <rect x="196" y="220" width="26" height="14" rx="4" />
-        </g>
-        <rect class="qr-hero-scan" x="34" y="136" width="212" height="8" rx="4" fill="#86e3be" />
+        <rect class="qr-hero-card-border" x="24" y="34" width="232" height="232" rx="22" fill="none" stroke="#140a22" stroke-width="6" />
       </svg>
     </Fragment>
   </PageHero>
@@ -72,47 +146,81 @@ const schema = {
     <div class="wrap">
       <div class="split-head">
         <div>
-          <p class="eyebrow">The tool</p>
-          <h2 id="tool-h">Make your QR code</h2>
+          <p class="eyebrow">The studio</p>
+          <h2 id="tool-h">Make codes, write rules, or check lock-in</h2>
         </div>
-        <p class="muted">Nine code types, six presets, custom colors, center logos, and a live scan check. Everything runs in plain TypeScript right here in this page.</p>
+        <p class="muted">Nine QR types, own-domain forwarding rules for seven hosts, a copy-paste snippet for site builders, and a local photo check to plan your move off vendor codes. Everything stays on your device.</p>
       </div>
 
       <div class="qr-app" id="generator" data-qr-app>
         <noscript>
           <div class="card qr-noscript">
-            <h3>JavaScript is needed to draw codes in your browser</h3>
-            <p>Bandit Codes builds and scan-checks QR codes locally in your browser tab so nothing is ever sent to a server. Enable JavaScript for this page, or run the MIT-licensed command line tool locally.</p>
+            <h3>JavaScript is needed to run Bandit Codes locally</h3>
+            <p>Bandit Codes draws, scan-checks, and decodes QR codes inside your browser tab so nothing is ever uploaded to a server. Enable JavaScript for this page to use the tool.</p>
           </div>
         </noscript>
       </div>
     </div>
   </section>
 
-  <section class="band alt" aria-labelledby="how-h">
+  <section class="band alt" aria-labelledby="why-break-h">
     <div class="wrap">
       <div class="split-head">
         <div>
-          <p class="eyebrow">How it works</p>
-          <h2 id="how-h">No middleman. No expiring links.</h2>
+          <p class="eyebrow">The plain truth</p>
+          <h2 id="why-break-h">Why printed QR codes break</h2>
         </div>
-        <p class="muted">Bandit Codes puts your real content straight into the code. There is no redirect server that can break or start charging rent later.</p>
+        <p class="muted">A subscription "dynamic" QR code prints a short link on a vendor's domain. When the plan ends or the service closes, that domain stops forwarding and printed pieces stop working. Bandit Codes cannot bring back a code that already points at a vendor; it helps you stop making them and plan the replacement at your own pace, high-use pieces first.</p>
+      </div>
+      <ul class="grid g2 sub sub3">
+        <li class="card">
+          <p class="tag">The lock-in trap</p>
+          <h3>Vendor short links</h3>
+          <p>The code points at another company's domain. Even major free shorteners like <code>goo.gl</code> and <code>git.io</code> stopped making new links. Printed codes on a vendor's domain stop working when the vendor stops forwarding, no matter what tool you switch to.</p>
+        </li>
+        <li class="card">
+          <p class="tag">Your own address</p>
+          <h3>Your own domain</h3>
+          <p>Print a short path on your own website, like <code>yoursite.com/go/menu</code>. Add one forwarding line on your host (or paste the Bandit Codes snippet on a site builder) and visitors land straight on the destination with no extra page in between. This works as long as you keep your domain and website. <a href="/tools/qr-code-generator/guides/">Read the step-by-step install guides for 11 website platforms</a>.</p>
+        </li>
+        <li class="card">
+          <p class="tag">Changing files and bulk lists</p>
+          <h3>Files others update</h3>
+          <p>Your code points at a PDF someone else updates, like pamphlet A becoming A.1? Print your own web address on the code. It forwards straight to the current file with no lookup page, and editing one line updates every printed copy. Have a long list of codes? Import a spreadsheet (CSV) or paste two columns to build forwarding rules or a snippet for all of them at once.</p>
+        </li>
+        <li class="card">
+          <p class="tag">No domain needed</p>
+          <h3>Direct static codes</h3>
+          <p>Put the final web address, Wi-Fi login, or contact card straight into the pattern. It needs no host setup and stays valid as long as the destination page exists. The trade-off is plain: to change a link later, you reprint that code.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">Under the hood</p>
+          <h2 id="how-h">Private by design, portable by default</h2>
+        </div>
+        <p class="muted">Nothing leaves your device. Optional browser saving stays off until you turn it on, and every list exports cleanly to CSV and JSON.</p>
       </div>
       <ul class="grid g3 sub sub3">
         <li class="card">
           <p class="num">01</p>
-          <h3>Runs locally</h3>
-          <p>Your links, Wi-Fi keys, contact cards, and photos stay in this browser tab. No account, no upload, no analytics.</p>
+          <h3>Runs on your device</h3>
+          <p>New codes, uploaded photos of printed codes, forwarding rules, snippets, and escape plans stay inside this tab. No account, no upload, and no tracking.</p>
         </li>
         <li class="card">
           <p class="num">02</p>
           <h3>Checked before you print</h3>
-          <p>Every code is rasterized on an in-browser canvas and read back with an open source decoder at multiple module sizes.</p>
+          <p>Every new code is drawn in your browser and read back at multiple sizes the way a phone camera would, alongside a rule-of-thumb print width.</p>
         </li>
         <li class="card">
           <p class="num">03</p>
           <h3>MIT open source</h3>
-          <p>Includes a standalone web app and a Node CLI for batch generation. Read or fork the code on the <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">code account</a>.</p>
+          <p>Take your link lists anywhere in CSV or JSON, and read or fork the full <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">source code on GitHub</a>.</p>
         </li>
       </ul>
       <p class="muted small" style="margin-top:1.5rem">QR Code is a registered trademark of DENSO WAVE INCORPORATED.</p>
@@ -121,14 +229,38 @@ const schema = {
 </Base>
 
 <style>
-  .qr-hero-art { width: 100%; height: auto; display: block; }
-  .qr-hero-scan { opacity: 0.9; }
+  .qr-hero-art { width: 100%; height: auto; display: block; overflow: hidden; }
+  .qr-hero-scan-bar { transform: translateY(56px); }
+  .qr-hero-eye-glint { transform-box: fill-box; transform-origin: center; }
+  .qr-hero-snick-eyes { transform-box: fill-box; transform-origin: center; }
+  .qr-hero-center-bagel { transform-box: fill-box; transform-origin: center; }
+  .qr-hero-badge-spark { transform-box: fill-box; transform-origin: center; }
   @media (prefers-reduced-motion: no-preference) {
-    .qr-hero-scan { animation: qr-scan-sweep 3.4s ease-in-out infinite alternate; }
+    .qr-hero-scan-bar { animation: qr-hero-scan-move 7.5s ease-in-out infinite; }
+    .qr-hero-eye-glint { animation: qr-hero-glance 7.5s ease-in-out infinite; }
+    .qr-hero-snick-eyes { animation: qr-hero-glance 7.5s ease-in-out infinite; }
+    .qr-hero-center-bagel { animation: qr-hero-bagel-bob 4.4s ease-in-out infinite; }
+    .qr-hero-badge-spark { animation: qr-hero-spark 3.8s ease-in-out infinite; }
   }
-  @keyframes qr-scan-sweep {
-    from { transform: translateY(-76px); }
-    to { transform: translateY(76px); }
+  @keyframes qr-hero-scan-move {
+    0%, 100% { transform: translateY(-88px); }
+    48% { transform: translateY(88px); }
+    56% { transform: translateY(88px); }
+    94% { transform: translateY(-88px); }
+  }
+  @keyframes qr-hero-glance {
+    0%, 58%, 100% { transform: translateX(0); }
+    66% { transform: translateX(-1px); }
+    78% { transform: translateX(1.2px); }
+    88% { transform: translateX(0); }
+  }
+  @keyframes qr-hero-bagel-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-1.4px); }
+  }
+  @keyframes qr-hero-spark {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.8); }
   }
 </style>
 

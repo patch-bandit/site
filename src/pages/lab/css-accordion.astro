@@ -8,7 +8,7 @@ import DevNote from '../../components/lab/DevNote.astro';
 const faqs = [
   {
     q: 'How does opening one drawer close the others?',
-    a: 'Every <details> panel in this stack shares name="lab-faq". The browser treats them like a radio group: opening one panel closes whichever sibling was open before, with zero JavaScript.',
+    a: 'Every <details> panel in this stack shares name="lab-faq". The browser treats them like a radio group: opening one panel closes whichever sibling was open before, with no JavaScript.',
     open: true,
   },
   {
@@ -18,7 +18,7 @@ const faqs = [
   },
   {
     q: 'What happens in browsers without interpolate-size?',
-    a: 'The smooth height slide is wrapped inside @supports (interpolate-size: allow-keywords). Firefox and Safari skip only the slide and give you an instant, crisp native accordion with zero clipping.',
+    a: 'The smooth height slide is wrapped inside @supports (interpolate-size: allow-keywords). Firefox and Safari skip only the slide and give you an instant, crisp native accordion with no clipping.',
     open: false,
   },
   {
@@ -28,7 +28,7 @@ const faqs = [
   },
 ];
 
-const htmlSnippet = `<!-- Shared name makes the accordion exclusive (zero JS) -->
+const htmlSnippet = `<!-- Shared name makes the accordion exclusive (no JS) -->
 <div class="accordion">
   <details name="faq" open>
     <summary>How does an exclusive accordion work?</summary>
@@ -40,7 +40,7 @@ const htmlSnippet = `<!-- Shared name makes the accordion exclusive (zero JS) --
   </details>
   <details name="faq">
     <summary>What if a browser skips the smooth slide?</summary>
-    <p>It still opens cleanly — animation is an enhancement.</p>
+    <p>It still opens cleanly. Animation is an enhancement.</p>
   </details>
 </div>`;
 
@@ -103,7 +103,7 @@ const schema = {
 ---
 <Base
   title="CSS accordion with <details name> and smooth height"
-  description="Build a pure CSS accordion with linked <details name> panels, ::details-content styling, and smooth interpolate-size height animation — zero JavaScript."
+  description="Build a pure CSS accordion with linked <details name> panels, ::details-content styling, and smooth interpolate-size height animation, with no JavaScript."
   schema={schema}
   ogType="article"
 >
@@ -112,7 +112,7 @@ const schema = {
     <p class="eyebrow">Cinnamon roll · 2026-11-22</p>
     <h1>CSS accordion with native &lt;details name&gt;</h1>
     <p class="lead">A CSS accordion no longer needs hidden checkboxes, ARIA toggle scripts, or brittle <code>max-height</code> guesses. Link native HTML <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> panels with a shared <code>name</code> attribute so opening one closes its siblings automatically, style the body with <code>::details-content</code>, and layer <code>interpolate-size</code> for smooth height animation.</p>
-    <p class="story">No checkbox hacks, no max-height guesswork, no accordion script.</p>
+    <p class="story">Tossed the checkbox hacks and max-height guesses. Native HTML runs the whole accordion now.</p>
   </PageHero>
 
   <div class="route-host">
@@ -122,7 +122,7 @@ const schema = {
       <div class="wrap">
         <div class="split-head">
           <h2 id="acc-play-h">Click any drawer in the pure CSS accordion</h2>
-          <p class="muted">Every panel below shares <code>name="lab-faq"</code>, so opening one drawer automatically closes the others with zero JavaScript. Flip the enhancement toggle to compare smooth <code>interpolate-size</code> sliding against instant snapping.</p>
+          <p class="muted">Every panel below shares <code>name="lab-faq"</code>, so opening one drawer automatically closes the others with no JavaScript. Flip the enhancement toggle to compare smooth <code>interpolate-size</code> sliding against instant snapping.</p>
         </div>
 
         <div class="cols2 wide-left top acc-stage">
@@ -142,7 +142,7 @@ const schema = {
 
           <div class="card acc-panel">
             <h3>Smooth height enhancement</h3>
-            <p>Toggle <code>interpolate-size: allow-keywords</code> right here using pure CSS radio buttons — no script touches the page.</p>
+            <p>Toggle <code>interpolate-size: allow-keywords</code> right here using pure CSS radio buttons. No script touches the page.</p>
 
             <fieldset class="acc-toggle">
               <legend class="mono small">Transition mode</legend>
@@ -155,8 +155,8 @@ const schema = {
             </fieldset>
 
             <div class="acc-sup" role="status">
-              <p class="mono small sup-ok">This browser supports <code>interpolate-size: allow-keywords</code> — panels slide smoothly to <code>height: auto</code>.</p>
-              <p class="mono small sup-fb">This browser does not support <code>interpolate-size</code> yet — panels use the crisp native snap fallback.</p>
+              <p class="mono small sup-ok">This browser supports <code>interpolate-size: allow-keywords</code>. Panels slide smoothly to <code>height: auto</code>.</p>
+              <p class="mono small sup-fb">This browser does not support <code>interpolate-size</code> yet. Panels use the crisp native snap fallback.</p>
             </div>
 
             <p class="muted small acc-foot">Try pressing <kbd>Tab</kbd> and <kbd>Enter</kbd> on any summary row: keyboard support and expanded state are built straight into HTML.</p>
@@ -191,7 +191,7 @@ const schema = {
         </ul>
 
         <DevNote>
-          <p>Always gate the <code>block-size: 0</code> transition inside both <code>@supports (interpolate-size: allow-keywords)</code> and <code>@media (prefers-reduced-motion: no-preference)</code>. That way browsers that support <code>::details-content</code> without <code>interpolate-size</code> (and visitors with Reduced Motion turned on) get instant, reliable expansion with zero layout glitch. Also include <code>summary::-webkit-details-marker &#123; display: none; &#125;</code> alongside <code>list-style: none</code> so Safari hides the default disclosure triangle cleanly.</p>
+          <p>Always gate the <code>block-size: 0</code> transition inside both <code>@supports (interpolate-size: allow-keywords)</code> and <code>@media (prefers-reduced-motion: no-preference)</code>. That way browsers that support <code>::details-content</code> without <code>interpolate-size</code> (and visitors with Reduced Motion turned on) get instant, reliable expansion with no layout glitch. Also include <code>summary::-webkit-details-marker &#123; display: none; &#125;</code> alongside <code>list-style: none</code> so Safari hides the default disclosure triangle cleanly.</p>
         </DevNote>
       </div>
     </section>
@@ -207,7 +207,7 @@ const schema = {
           <div>
             <CodeBlock label="Progressive interpolate-size height animation (CSS)" code={animateCss} />
             <p class="note">
-              <strong>Browser support (checked 2026-11-22):</strong> Exclusive <code>&lt;details name&gt;</code> is Baseline Newly Available since September 2024 across Chrome 120+, Edge 120+, Safari 17.2+, and Firefox 130+ (<a href="https://webstatus.dev/features/details-name" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: details-name</a>). The <code>::details-content</code> pseudo-element is Baseline Newly Available since September 2025 across Chrome 131+, Edge 131+, Safari 18.4+, and Firefox 143+ (<a href="https://webstatus.dev/features/details-content" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: details-content</a>). Smooth <code>interpolate-size: allow-keywords</code> animation is an enhancement supported in Chrome 129+ and Edge 129+ (Safari Technology Preview; not yet in Firefox — <a href="https://webstatus.dev/features/interpolate-size" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: interpolate-size</a>). Tested in Chromium only.
+              <strong>Browser support (checked 2026-11-22):</strong> Exclusive <code>&lt;details name&gt;</code> is Baseline Newly Available since September 2024 across Chrome 120+, Edge 120+, Safari 17.2+, and Firefox 130+ (<a href="https://webstatus.dev/features/details-name" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: details-name</a>). The <code>::details-content</code> pseudo-element is Baseline Newly Available since September 2025 across Chrome 131+, Edge 131+, Safari 18.4+, and Firefox 143+ (<a href="https://webstatus.dev/features/details-content" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: details-content</a>). Smooth <code>interpolate-size: allow-keywords</code> animation is an enhancement supported in Chrome 129+ and Edge 129+ (Safari Technology Preview; not yet in Firefox; see <a href="https://webstatus.dev/features/interpolate-size" target="_blank" rel="noopener noreferrer">Web Platform Dashboard: interpolate-size</a>). Tested in Chromium only.
             </p>
           </div>
         </div>
@@ -217,7 +217,7 @@ const schema = {
     <WhyFree
       nextHref="/lab/css-popover/"
       nextTitle="CSS popover with no JavaScript"
-      nextBlurb="Auto vs manual popovers, blurred ::backdrop, and smooth @starting-style transitions."
+      nextBlurb="Floating boxes without a modal script. Compare auto and manual dismiss, blurred ::backdrop, and @starting-style fades."
     />
   </div>
 </Base>

@@ -5,22 +5,31 @@ import { GITHUB_URL, LAB_EXPERIMENTS, TOOLS_LABEL, inWords } from '../data/site'
 export const GET: APIRoute = async ({ site }) => {
   const base = site!.href;
   const drops = (await getCollection('drops')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  const qrGuides = (await getCollection('qrGuides')).sort((a, b) => a.data.order - b.data.order);
   const labCount = drops.length + LAB_EXPERIMENTS.length;
   const link = (p: string) => new URL(p, base).href;
   const lines = [
     '# Patch Bandit',
     '',
-    `> Raccoons who build free online tools to replace simple tools that charge a monthly fee, source included. So far: ${inWords(labCount)} CSS experiments, a CSS art page, and one live browser tool (Bandit Codes). No users, partners, or sponsors exist.`,
+    `> Raccoons who build free online tools to replace simple tools that charge a monthly fee, source included. So far: ${inWords(labCount)} CSS experiments, a CSS art page, and three live browser tools (Bandit Codes, px to rem converter, and UUID generator). No users, partners, or sponsors exist.`,
     '',
     '## Pages',
     `- [The story](${link('/')}): what we do and why, data security, what we want to replace, and an honest inventory of what exists`,
-    `- [${TOOLS_LABEL}](${link('/tools/')}): free online tools hub, featuring Bandit Codes (free QR code generator no sign up, live now)`,
-    `- [Bandit Codes — free QR code generator](${link('/tools/qr-code-generator/')}): make PNG and SVG QR codes locally in your browser with live scan verification, no account, no tracking, MIT licensed`,
+    `- [${TOOLS_LABEL}](${link('/tools/')}): free online tools hub, featuring Bandit Codes, px to rem converter, and UUID generator`,
+    `- [Bandit Codes: free QR code generator](${link('/tools/qr-code-generator/')}): make static or own-domain PNG and SVG QR codes locally, export redirect rules for seven hosts, and audit printed codes for subscription lock-in, MIT licensed`,
+    `- [Bandit Codes install guides](${link('/tools/qr-code-generator/guides/')}): plain-language setup guides for 11 website platforms`,
+    `- [px to rem converter](${link('/tools/px-to-rem/')}): two-way px and rem conversion with custom root font size and batch CSS conversion in your browser, no account, MIT licensed`,
+    `- [UUID generator and unique ID maker](${link('/tools/uuid-generator/')}): make 1 to 100 UUID v4, RFC 9562 UUID v7, or custom short random IDs in your browser with Web Crypto, nothing sent anywhere, MIT licensed`,
     `- [The stash](${link('/den/')}): open source project ideas, how the manifesto typing works, house rules, and how to build them together`,
     `- [The lab](${link('/lab/')}): the snack drop log of CSS experiments`,
     `- [The snack jar](${link('/snacks/')}): optional tips through Stripe; every tool stays free`,
     `- [Privacy](${link('/privacy/')}): no cookies, no tracking, tools run in your browser`,
     `- [CSS art raccoon](${link('/lab/css-art-raccoon/')}): a raccoon drawn in pure CSS, pulled apart piece by piece`,
+    '',
+    '## Bandit Codes install guides',
+    ...qrGuides
+      .filter((g) => g.id !== 'index')
+      .map((g) => `- [${g.data.h1}](${link(`/tools/qr-code-generator/guides/${g.id}/`)}): ${g.data.description}`),
     '',
     '## Experiments',
     ...LAB_EXPERIMENTS.map((d) => `- [${d.h1}](${link(d.path)}): ${d.summary}`),

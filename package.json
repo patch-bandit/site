@@ -4,9 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "astro build"
+    "build:qr": "rolldown qr-src/qr-generator.ts -o public/tools/qr-code-generator.bundle.mjs -f esm -p browser -m",
+    "build": "npm run build:qr && npm run verify:qr && astro build",
+    "test": "node --test tests/qr/*.test.ts tests/tools.test.ts",
+    "verify:qr": "node scripts/verify-qr-bundle.mjs"
   },
   "dependencies": {
-    "astro": "7.4.13"
+    "@zxing/library": "0.23.0",
+    "astro": "7.4.13",
+    "qrcode": "1.5.4",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "rolldown": "1.3.3"
   }
 }

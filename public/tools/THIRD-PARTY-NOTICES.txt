@@ -1,7 +1,7 @@
 Third-party notices for qr-code-generator.bundle.mjs
 
 Bandit Codes' own code is MIT (see LICENSE at the repo root). The bundle also contains the packages below, each under its own licence, reproduced in full.
-Bundle SHA-256: 407d2207fa71a18d9ad7c2baba086f1b64dac67b905d8dc9f05e66d85a9519ea
+Bundle SHA-256: cb09142b2dd85afef2a0a666217747f673b1b2a47af8294505add31118c6e8ea
 
 ========================================================================
 qrcode 1.5.4 (MIT)

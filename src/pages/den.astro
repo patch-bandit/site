@@ -38,20 +38,32 @@ const rules = [
 
 const ideas: { name: string; what: string; status: 'idea' | 'bench' | 'free'; label: string; href?: string }[] = [
   {
-    name: 'Bandit Codes — a free QR code generator',
-    what: 'Paste a link, Wi-Fi login, contact card, or event, get a crisp PNG or SVG QR code checked in your browser. No account, no watermark, and no expiring redirect.',
+    name: 'Bandit Codes: a free QR code generator',
+    what: 'Make static or own-domain QR codes, export redirect rules for seven hosts, and audit printed codes for lock-in right in your browser. No account, no watermark, and no expiring vendor link.',
     status: 'free',
     label: 'Set free',
     href: '/tools/qr-code-generator/',
   },
-  { name: 'A CSS grid generator', what: 'Pick columns and gaps, see the grid, copy the CSS. One page, no sign-up.', status: 'idea', label: 'In the stash' },
-  { name: 'A contrast checker', what: 'Two colors in, a pass or a fail out, with a plain-words reason.', status: 'idea', label: 'In the stash' },
-  { name: 'A README starter', what: 'A template with the honest sections already in it, including the required "Not yet" section.', status: 'idea', label: 'In the stash' },
-  { name: 'A unique ID maker', what: 'Click once, get a fresh random ID to copy. It runs in your browser and sends nothing anywhere.', status: 'idea', label: 'In the stash' },
-  { name: 'A markdown to HTML converter', what: 'Paste plain text with simple marks, get clean HTML back, right in the page.', status: 'idea', label: 'In the stash' },
-  { name: 'A px to rem converter', what: 'Type a pixel size, get the rem value, and see the math.', status: 'idea', label: 'In the stash' },
-  { name: 'A commit message cheer-up', what: 'Turns "stuff" into a message a human could read at 3 AM.', status: 'idea', label: 'In the stash' },
-  { name: 'An HTML snack starter', what: 'A single page with good defaults for headings, focus, and motion.', status: 'idea', label: 'In the stash' },
+  { name: 'A CSS grid generator', what: 'Pick columns and gaps, check the layout, copy the CSS. One page, no sign-up wall.', status: 'idea', label: 'Still in the stash. Paws off.' },
+  { name: 'A contrast checker', what: 'Two colors in, clear pass or fail out. It gives you the reason in plain words.', status: 'idea', label: 'Still in the stash. Paws off.' },
+  { name: 'A README starter', what: 'Honest sections wired in from the start. It even includes the required "Not yet" block so nothing gets oversold.', status: 'idea', label: 'Still in the stash. Paws off.' },
+  {
+    name: 'UUID generator and unique ID maker',
+    what: 'Make 1 to 100 UUID v4, time-sorted UUID v7, or custom short random IDs with Web Crypto. It runs in your browser and sends nothing anywhere.',
+    status: 'free',
+    label: 'Set free',
+    href: '/tools/uuid-generator/',
+  },
+  { name: 'A markdown to HTML converter', what: 'Paste plain text with simple marks and grab clean HTML right back. No server round-trip needed.', status: 'idea', label: 'Still in the stash. Paws off.' },
+  {
+    name: 'px to rem converter',
+    what: 'Two-way px and rem conversion with any root font size, plus batch CSS conversion right in your browser.',
+    status: 'free',
+    label: 'Set free',
+    href: '/tools/px-to-rem/',
+  },
+  { name: 'A commit message cheer-up', what: 'Takes your 3 AM "stuff" commit and turns it into a line a human can actually read.', status: 'idea', label: 'Still in the stash. Paws off.' },
+  { name: 'An HTML snack starter', what: 'Start from one clean page with solid defaults for headings, focus, and motion. No bloat to strip out first.', status: 'idea', label: 'Still in the stash. Paws off.' },
 ];
 
 const typingHtmlCss = `<!-- Render the full text in HTML so no-script and reduced-motion see it right away. -->
@@ -94,10 +106,10 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Op
 <Base title={page.title} description="Open source project ideas a crew of raccoons wants to build: free tools to replace needless fees, each with an honest status tag." schema={schema}>
   <PageHero tone="gold">
     <p class="crumbs"><a href="/">The story</a> / The stash</p>
-    <p class="eyebrow">The stash</p>
+    <p class="eyebrow">Inside the stash</p>
     <h1>Open source project ideas: the stash</h1>
     <p class="lead">These are the open source project ideas we'd like to build, kept in the stash where everyone can see them. Each one is a free tool that could replace a fee, a lock, or a tracker, and every card carries an honest status tag.</p>
-    <p class="story">Want real code today? The <a href="/lab/">lab</a> has {inWords(labCount)} working experiments you can copy, and <a href="/tools/qr-code-generator/">Bandit Codes</a> is live in <a href="/tools/">the loot</a>.</p>
+    <p class="story">Want working code right now? Grab {inWords(labCount)} live demos in the <a href="/lab/">lab</a>, or try three live tools over in <a href="/tools/">the loot</a>.</p>
     <Fragment slot="art">
       <svg class="heap" viewBox="0 0 400 360" role="img" aria-label="A stash of found things: a key, a gear, a chip, a disk, and a magnifier, each one an idea">
         <ellipse cx="200" cy="330" rx="170" ry="22" fill="#140a22" opacity="0.6" />
@@ -141,9 +153,9 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Op
           <p class="lead">Most of the stash is still ideas. When one moves to the bench or ships, its tag changes, and the inventory on the home page changes with it.</p>
         </div>
         <ul class="grid g3 sub sub3">
-          <li class="card rv"><p class="status idea">In the stash</p><h3>An idea</h3><p>Nothing built and no date. Eight cards below wear this tag today.</p></li>
-          <li class="card rv" style="--i:1"><p class="status bench">On the bench</p><h3>Being built</h3><p>Someone is building it in the open. The bench is open for the next pick now that Bandit Codes shipped.</p></li>
-          <li class="card rv" style="--i:2"><p class="status free">Set free</p><h3>Built and free</h3><p>Released, open, and free, with source you can read. <a href="/tools/qr-code-generator/">Bandit Codes</a> wears this tag now.</p></li>
+          <li class="card rv"><p class="status idea">Still in the stash. Paws off.</p><h3>An idea</h3><p>Nothing built and no ship date. Six cards below wear this tag today.</p></li>
+          <li class="card rv" style="--i:1"><p class="status bench">On the bench</p><h3>Being built</h3><p>Bolts are turning in the open. The bench is clear for the next build now that three tools shipped.</p></li>
+          <li class="card rv" style="--i:2"><p class="status free">Set free</p><h3>Built and free</h3><p>Done, open, and free, with source you can inspect. <a href="/tools/qr-code-generator/">Bandit Codes</a>, <a href="/tools/px-to-rem/">px to rem converter</a>, and <a href="/tools/uuid-generator/">UUID generator</a> wear this tag now.</p></li>
         </ul>
       </div>
     </section>
@@ -152,7 +164,7 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Op
       <div class="wrap">
         <div class="split-head rv">
           <h2 id="ideas-h">Ideas in the stash</h2>
-          <p class="muted">Each idea is a candidate, not a promise, and none has a date. Every one follows the house rules below: free, open, no account, no tracking.</p>
+          <p class="muted">Each idea is a candidate with no promise and no ship date. Every one follows the house rules below: free, open, no account, and no tracking.</p>
         </div>
         <ul class="grid g2 sub sub3 ideas">
           {ideas.map((i, n) => (
@@ -166,7 +178,7 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Op
             <p class="tag">Your turn</p>
             <h3>Got a better idea?</h3>
             <div class="pitch-body">
-              <p>Tell us which simple tool still hides behind a fee or a login. Type it in the stash terminal and push it as a public GitHub discussion.</p>
+              <p>Spot a simple tool hiding behind a fee or a login wall? Drop it into the stash terminal and send it straight to a public GitHub discussion.</p>
               <button type="button" class="btn" data-idea-open>Pitch an idea</button>
             </div>
           </li>
@@ -181,9 +193,9 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Op
           <p class="lead">The crew is one raccoon so far, and there are seats open. Here, "profit" means a tool you never pay for again, code nobody can lock away from you, and the know-how to fix it yourself.</p>
         </div>
         <ul class="grid g3 sub sub3">
-          <li class="card rv"><p class="num">01</p><h3>Copy a snippet</h3><p>Everything in the lab is MIT licensed: copy it, change it, and share it in your own page today.</p></li>
-          <li class="card rv" style="--i:1"><p class="num">02</p><h3>Pick an idea</h3><p>Choose a card from the stash and think about how you'd build it. When its repository opens, bring that plan.</p></li>
-          <li class="card rv" style="--i:2"><p class="num">03</p><h3>Bring a better way</h3><p>A fix, a cleaner approach, or an idea we missed. Once there's a repository, the code account is the door.</p></li>
+          <li class="card rv"><p class="num">01</p><h3>Copy a snippet</h3><p>Every snippet in the lab ships under MIT. Copy it, tweak it, and drop it into your own page today.</p></li>
+          <li class="card rv" style="--i:1"><p class="num">02</p><h3>Pick an idea</h3><p>Grab a card from the stash and sketch how you would build it. When its repo opens, bring that blueprint to the bench.</p></li>
+          <li class="card rv" style="--i:2"><p class="num">03</p><h3>Bring a better way</h3><p>Got a fix, a cleaner trick, or an idea we missed? Once a repo is up, the code account is the front door.</p></li>
         </ul>
         <div class="cta-row rv">
           <p class="muted">No sign-up and no newsletter. Ideas go straight to a public GitHub discussion.</p>
@@ -265,9 +277,9 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Op
               </svg>
             </div>
             <div class="snack-copy">
-              <p class="eyebrow">Optional</p>
+              <p class="eyebrow">No pressure</p>
               <h2 id="snack-jar-h" class="h-snack">The snack jar</h2>
-              <p>Everything here stays free, with or without support. If a tool saved you a monthly fee and you want to toss a bagel in the jar, this is the only place we'll mention it.</p>
+              <p>Every tool here stays free, tips or no tips. If one saved you a monthly bill and you want to drop a bagel in the jar, this is the only place we bring it up.</p>
             </div>
             <div class="snack-act">
               <a class="btn alt" href="/snacks/">Visit the snack jar</a>
@@ -280,7 +292,7 @@ const schema = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Op
     <section class="band night flash" data-node="end" aria-labelledby="origin-h">
       <div class="wrap cols2 wide-left">
         <div class="rv">
-          <p class="eyebrow">A joke, and it says so</p>
+          <p class="eyebrow">Tall tale, labeled as one</p>
           <h2 id="origin-h">How the raccoon got here</h2>
           <p>One night a raccoon named Snick found an old laptop in a box on a porch step. The box said "FREE, TAKE ONE." A sticky note on the screen said "TODO: fix everything." The raccoon read half of it, got confused, and committed anyway. The commit message was "stuff." That was 3 AM. By 3:05 it was regretted. By 3:10 there was a patch for the regret, and the patching hasn't stopped.</p>
           <p class="muted">This isn't a true story, and raccoons can't type. We call that a paw issue and won't take questions on it.</p>

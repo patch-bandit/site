@@ -18,9 +18,9 @@ export const CREED = 'We outsmart systems, never people.';
 export const SIGNOFF = 'Paws up. Masks on.';
 
 // Hero badge and inventory tools status: update here when tools ship.
-export const HERO_TOOLS_BADGE = 'Bandit Codes is live.';
-export const MANIFESTO_TOOLS_STATUS = 'tools: 1 set free (bandit-codes)';
-export const FOOTER_TOOLS_STATUS = 'Tools: 1 set free (Bandit Codes).';
+export const HERO_TOOLS_BADGE = 'Three tools set free.';
+export const MANIFESTO_TOOLS_STATUS = 'tools: 3 set free (bandit-codes, px-to-rem, uuid-generator)';
+export const FOOTER_TOOLS_STATUS = 'Set free so far: 3. Bandit Codes, px to rem, and UUID generator. More in the stash.';
 
 // Snack jar (tips): /snacks/ page plus the block on /den/. Paste the Stripe Payment Link into url; empty url shows 'opening soon'.
 export const SNACK_JAR = {
@@ -41,19 +41,19 @@ export const PATTERNS: PatternCard[] = [
   {
     tag: 'Pattern 01',
     title: 'Fees for easy jobs',
-    body: 'A monthly charge for something your browser can already do in one second, with no server in the way.',
+    body: 'Monthly bill for a one-second browser job. Your machine already does it with no server in the way.',
     href: '',
   },
   {
     tag: 'Pattern 02',
     title: 'Lock-in',
-    body: 'Your own file, kept in their format, behind their login. Leaving costs more than staying, and that is the point.',
+    body: 'Your file, locked in their format behind their login. They make leaving cost more than staying on purpose.',
     href: '',
   },
   {
     tag: 'Pattern 03',
     title: 'Watched while you work',
-    body: 'Trackers that follow you from page to page while you resize one picture. The job is small; the watching is not.',
+    body: 'Trackers tailing you from page to page while you resize one picture. The job is tiny, and the watching is not.',
     href: '',
   },
 ];
@@ -71,6 +71,8 @@ export const STATIC_PAGES = [
   { path: '/', title: `${SITE_NAME}: ${HEADLINE.replace(/\.$/, '')}` },
   { path: '/tools/', title: 'Free online tools from Patch Bandit: open source, no account' },
   { path: '/tools/qr-code-generator/', title: 'Free QR code generator (Bandit Codes) | Patch Bandit' },
+  { path: '/tools/px-to-rem/', title: 'px to rem converter | Patch Bandit' },
+  { path: '/tools/uuid-generator/', title: 'UUID generator and unique ID maker | Patch Bandit' },
   { path: '/den/', title: "Open source project ideas: the raccoon's stash" },
   { path: '/lab/', title: 'CSS experiments from the raccoon lab: live demos, free code' },
   { path: '/lab/css-art-raccoon/', title: 'CSS art: a raccoon drawn in pure CSS, taken apart' },
@@ -78,7 +80,7 @@ export const STATIC_PAGES = [
 
 // Lab experiments outside content/drops. The lab index, sitemap, llms.txt, and site-wide
 // counts read this array plus the drops collection automatically. Append the next three
-// lab pages here when ready (keep this list live-only — no placeholders).
+// lab pages here when ready (keep this list live-only, with no placeholders).
 export interface LabExperiment {
   id: string;
   path: string;
@@ -97,44 +99,44 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
     path: '/lab/css-container-queries/',
     title: 'CSS container query and style queries: live card demo',
     h1: 'CSS container query and style queries',
-    description: 'Build a responsive CSS container query card with inline-size, cqi fluid type, and style queries — zero media queries or JavaScript. Live demo and code.',
+    description: 'Build a responsive CSS container query card with inline-size, cqi fluid type, and style queries, with no media queries or JavaScript. Live demo and code.',
     phrase: 'css container query',
     date: '2026-11-22',
     snack: 'Waffle fry',
-    summary: 'A resizable component card using @container size breakpoints, cqi fluid type, and Baseline style queries.',
+    summary: 'This card sizes itself to its own box instead of the whole screen. Runs on @container breakpoints, cqi fluid type, and Baseline style queries.',
   },
   {
     id: 'html-dialog',
     path: '/lab/html-dialog/',
     title: 'HTML dialog modal with no JavaScript: commandfor demo',
-    h1: 'HTML dialog modal with zero JavaScript',
+    h1: 'HTML dialog modal with no JavaScript',
     description: 'Build an accessible HTML dialog modal with no JavaScript using commandfor, @starting-style, ::backdrop, and optional light-dismiss. Live demo and code.',
     phrase: 'html dialog',
     date: '2026-11-22',
     snack: 'Donut hole',
-    summary: 'Zero-script native <dialog> modal driven by commandfor, @starting-style transitions, and optional closedby="any".',
+    summary: 'Ditch the modal library. Native <dialog> runs on commandfor, @starting-style transitions, and optional closedby="any", with no script.',
   },
   {
     id: 'css-accordion',
     path: '/lab/css-accordion/',
     title: 'CSS accordion with <details name> and smooth height',
     h1: 'CSS accordion with native <details name>',
-    description: 'Build a pure CSS accordion with linked <details name> panels, ::details-content styling, and smooth interpolate-size height animation — zero JavaScript.',
+    description: 'Build a pure CSS accordion with linked <details name> panels, ::details-content styling, and smooth interpolate-size height animation, with no JavaScript.',
     phrase: 'css accordion',
     date: '2026-11-22',
     snack: 'Cinnamon roll',
-    summary: 'Exclusive <details name> accordion styled with ::details-content and progressive interpolate-size height animation.',
+    summary: 'One drawer opens, the rest shut on their own. Native <details name> styled with ::details-content and progressive interpolate-size height animation.',
   },
   {
     id: 'css-popover',
     path: '/lab/css-popover/',
     title: 'CSS popover with no JavaScript: auto, manual, backdrop',
     h1: 'CSS popover with no JavaScript',
-    description: 'Build a CSS popover with zero JavaScript: auto vs manual dismiss, ::backdrop styling, and @starting-style entry transitions. Live demo and code to copy.',
+    description: 'Build a CSS popover with no JavaScript: auto vs manual dismiss, ::backdrop styling, and @starting-style entry transitions. Live demo and code to copy.',
     phrase: 'css popover',
     date: '2026-11-22',
     snack: 'Pretzel',
-    summary: 'Zero-script popovers: auto vs manual dismiss, backdrop styling, and smooth @starting-style entry.',
+    summary: 'Pop open a box without a single script. Covers auto vs manual dismiss, backdrop styling, and smooth @starting-style entry.',
   },
   {
     id: 'css-text-wrap',
@@ -145,7 +147,7 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
     phrase: 'css text-wrap',
     date: '2026-11-22',
     snack: 'Popcorn',
-    summary: 'A live width slider showing headlines and paragraphs reflow between wrap, balance, and pretty.',
+    summary: 'Drag the width slider and watch sloppy line breaks fix themselves. Compares wrap, balance, and pretty live.',
   },
   {
     id: 'css-squircle',
@@ -156,18 +158,18 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
     phrase: 'squircle css',
     date: '2026-11-22',
     snack: 'Apple slice',
-    summary: 'A zero-script corner-shape playground with a live @supports check and a plain browser fallback.',
+    summary: 'Six corner shapes, no script. You get a live @supports check and a plain browser fallback.',
   },
   {
     id: 'css-parent-selector',
     path: '/lab/css-parent-selector/',
     title: 'CSS parent selector with :has(): cards and siblings',
     h1: 'CSS parent selector with :has()',
-    description: 'Use the CSS parent selector :has() to style a checked card and dim its unchecked siblings with zero JavaScript. Live demos and code to copy.',
+    description: 'Use the CSS parent selector :has() to style a checked card and dim its unchecked siblings with no JavaScript. Live demos and code to copy.',
     phrase: 'css parent selector',
     date: '2026-11-22',
     snack: 'Peanut',
-    summary: 'Pure-CSS :has() demos: cards that style themselves on check and quiet down their siblings.',
+    summary: 'Check one box, watch the whole card react. Pure CSS :has() highlights the pick and quiets its siblings.',
   },
   {
     id: 'css-animate-on-scroll',
@@ -178,7 +180,7 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
     phrase: 'css animate on scroll',
     date: '2026-11-22',
     snack: 'Blueberry',
-    summary: 'Pure-CSS animation-timeline: view() reveals and scroll progress bars, with reduced-motion fallback.',
+    summary: 'No scroll listener needed. Pure CSS animation-timeline: view() drives reveals and progress bars, with a reduced-motion fallback.',
   },
   {
     id: 'css-color-mix',
@@ -189,7 +191,7 @@ export const LAB_EXPERIMENTS: LabExperiment[] = [
     phrase: 'css color-mix',
     date: '2026-11-22',
     snack: 'Gummy bear',
-    summary: 'Two color pickers and a ratio slider comparing color-mix() across oklch, oklab, srgb, and hsl.',
+    summary: 'Two swatches in, four live blends out. Slide the ratio to compare color-mix() across oklch, oklab, srgb, and hsl.',
   },
   // Next three lab pages append here (keeps the 3-column /lab/ shelf even at 12 drops).
 ];

@@ -10,25 +10,25 @@ const doors = [
     tag: 'Start here',
     href: '/',
     title: 'The story',
-    body: 'Why we build free online tools with no accounts, no trackers, and no monthly fee, plus an honest inventory of what exists.',
+    body: 'Why we build free online tools with no accounts, no trackers, and no monthly bill. You also get the honest tally of what actually exists.',
   },
   {
     tag: TOOLS_LABEL,
     href: '/tools/',
     title: 'Free online tools',
-    body: 'Open Bandit Codes (our free QR code generator) and see the plain checks every tool passes before it ships.',
+    body: 'Fire up Bandit Codes, our browser QR code generator, and see the plain checks every tool has to pass before it ships.',
   },
   {
     tag: 'Live demos',
     href: '/lab/',
     title: 'The lab',
-    body: `Browse all ${inWords(labCount)} working CSS experiments and the CSS art raccoon, each with MIT-licensed code you can copy today.`,
+    body: `Dig through ${inWords(labCount)} live CSS experiments and the CSS art raccoon. Every snippet is MIT licensed and ready to paste today.`,
   },
   {
     tag: 'Ideas & rules',
     href: '/den/',
     title: 'The stash',
-    body: 'Read the ten house rules, see the tool ideas waiting for a bench slot, or pitch a tool you want built next.',
+    body: 'Check the ten house rules, browse tool ideas waiting for a bench slot, or pitch what should hit the bench next.',
   },
 ];
 ---
@@ -38,9 +38,9 @@ const doors = [
   noindex
 >
   <PageHero art="/art/raccoon-smirk.svg" alt="The raccoon, mask on, with a knowing smirk" tone="coral">
-    <p class="eyebrow mono">&gt; 404: path not found</p>
+    <p class="eyebrow mono">&gt; 404: empty corner</p>
     <h1>This page isn't in the stash</h1>
-    <p class="lead">Snick searched every corner and found only a bagel. The page you wanted is gone, or it never existed.</p>
+    <p class="lead">Snick checked every corner of the den and came back with half a bagel. Whatever you wanted is gone, or it was never here.</p>
     <div class="btn-row">
       <a class="btn" href="/">Back home</a>
       <a class="btn alt" href="/tools/">See the tools</a>
@@ -52,10 +52,10 @@ const doors = [
     <div class="wrap">
       <div class="split-head">
         <div>
-          <p class="eyebrow">Back on the trail</p>
+          <p class="eyebrow">Pick a door</p>
           <h2 id="where-h">Four real doors in this stash</h2>
         </div>
-        <p class="muted">Every page on this site lives behind one of these four doors. Pick where you meant to go, or grab a free CSS snippet while you are here.</p>
+        <p class="muted">Every real page on this site sits behind one of these four doors. Pick your spot, or grab a free CSS snippet on the way out.</p>
       </div>
       <ul class="grid g2 sub sub3">
         {doors.map((d) => (

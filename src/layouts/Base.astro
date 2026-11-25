@@ -49,7 +49,7 @@ const PRIVACY_LINE = true;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />}
     <script is:inline>
       // Theme before first paint: a saved pick (this browser only), else the device setting.
       (function () {

@@ -71,8 +71,8 @@ const schema = {
     <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
     <p class="eyebrow">Blueberry · 2026-11-22</p>
     <h1>CSS animate on scroll without JavaScript</h1>
-    <p class="lead">You can make elements CSS animate on scroll using one line of CSS — <code>animation-timeline: view()</code> — so cards glide into place and progress bars fill in sync with your scrollbar, with zero JavaScript and a clean static fallback.</p>
-    <p class="story">Scroll the little box below and watch CSS do the work by itself.</p>
+    <p class="lead">You can make elements CSS animate on scroll with one line of CSS (<code>animation-timeline: view()</code>), so cards glide into place and progress bars fill in sync with your scrollbar, with no JavaScript and a clean static fallback.</p>
+    <p class="story">Scroll the box. CSS does the work. No script, no fuss.</p>
   </PageHero>
 
   <div class="route-host">
@@ -83,7 +83,7 @@ const schema = {
         <div class="scroll-shell" role="group" aria-label="Scrollable CSS animation demo">
           <div class="scroll-head">
             <span class="mono small">Scroll inside this window</span>
-            <span class="mono small muted">pure CSS · zero script</span>
+            <span class="mono small muted">pure CSS · no script</span>
           </div>
           <div class="scroll-viewport" tabindex="0" aria-label="Scrollable milestone cards">
             <div class="scroll-bar-track" aria-hidden="true">
@@ -105,11 +105,11 @@ const schema = {
         <div>
           <h2 id="demo-h">Scroll inside the demo frame</h2>
           <p>The progress strip across the top of that frame uses <code>animation-timeline: scroll(nearest)</code>, while every card inside glides and extends its mint bar using <code>animation-timeline: view()</code>.</p>
-          <p>If you turn on Reduced Motion in your operating system settings, every card and bar sits quietly in its finished position with zero motion.</p>
+          <p>If you turn on Reduced Motion in your operating system settings, every card and bar sits quietly in its finished position with no motion.</p>
 
           <div class="sup-box" role="status">
-            <p class="mono small sup-on">Your browser supports <code>animation-timeline: view()</code> — the demo frame is live.</p>
-            <p class="mono small sup-off">Your browser does not support <code>animation-timeline: view()</code> yet — you are seeing the clean static fallback.</p>
+            <p class="mono small sup-on">Your browser supports <code>animation-timeline: view()</code>. The demo frame is live.</p>
+            <p class="mono small sup-off">Your browser does not support <code>animation-timeline: view()</code> yet. You are seeing the clean static fallback.</p>
           </div>
 
           <DevNote>
@@ -123,7 +123,7 @@ const schema = {
       <div class="wrap">
         <div class="split-head">
           <h2 id="parts-h">How scroll animation CSS works in three parts</h2>
-          <p class="muted">As you scroll down this page, the mint bar along the top of each card below also runs on <code>animation-timeline: view()</code> — no script observer attached.</p>
+          <p class="muted">As you scroll down this page, the mint bar along the top of each card below also runs on <code>animation-timeline: view()</code>, with no script observer attached.</p>
         </div>
 
         <ul class="grid g3 sub sub3">
@@ -162,7 +162,7 @@ const schema = {
     <WhyFree
       nextHref="/lab/css-color-mix/"
       nextTitle="CSS color-mix() playground"
-      nextBlurb="Mix two colors right in CSS and compare oklch, oklab, srgb, and hsl live."
+      nextBlurb="Two colors in, four live CSS blends out. Compare oklch, oklab, srgb, and hsl without opening a palette app."
     />
   </div>
 </Base>

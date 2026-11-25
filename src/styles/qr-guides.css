@@ -1,0 +1,176 @@
+/* Styling for Bandit Codes install guide pages under /tools/qr-code-generator/guides/.
+   Matches Night Alley (dark) and Dawn ([data-theme="light"]) tokens from global.css. */
+
+.guide-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.guide-layout > * {
+  min-width: 0;
+}
+@media (min-width: 62rem) {
+  .guide-layout {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+    gap: 2rem;
+  }
+  .guide-sidebar {
+    position: sticky;
+    top: 4.75rem;
+  }
+}
+
+.guide-prose {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.guide-prose code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.guide-prose h2 {
+  font-size: clamp(1.35rem, 2.5vw, 1.7rem);
+  margin: 1.85rem 0 0.65rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--rim-strong);
+}
+.guide-prose > h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.guide-prose h3 {
+  font-size: 1.12rem;
+  margin: 1.35rem 0 0.5rem;
+}
+.guide-prose p {
+  margin: 0 0 0.95rem;
+}
+.guide-prose ul,
+.guide-prose ol {
+  margin: 0 0 1.1rem;
+  padding-left: 1.45rem;
+}
+.guide-prose li {
+  margin-bottom: 0.48rem;
+}
+.guide-prose li > ul,
+.guide-prose li > ol {
+  margin-top: 0.45rem;
+  margin-bottom: 0.35rem;
+}
+.guide-prose blockquote {
+  margin: 1rem 0;
+  padding: 0.85rem 1.1rem;
+  border-left: 4px solid var(--accent);
+  background: var(--surface-2);
+  border-radius: 0 10px 10px 0;
+  color: var(--text);
+}
+.guide-prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+.guide-prose pre {
+  margin: 0.9rem 0 1.15rem;
+  padding: 1rem 1.1rem;
+  background: var(--code-bg);
+  color: var(--k-cream);
+  border: 1px solid var(--rim-strong);
+  border-radius: 12px;
+  overflow-x: auto;
+  max-width: 100%;
+  font: 400 0.86rem/1.6 var(--mono);
+}
+.guide-prose pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.guide-prose table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 1rem 0 1.25rem;
+  font-size: 0.92rem;
+}
+.guide-prose th,
+.guide-prose td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--rim-strong);
+  vertical-align: top;
+}
+.guide-prose th {
+  background: var(--surface-2);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.guide-note {
+  margin-top: 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--rim-strong);
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.guide-sidebar h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+}
+.guide-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.guide-nav-list a {
+  display: block;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+.guide-nav-list a:hover {
+  border-color: var(--accent);
+  color: var(--link);
+}
+.guide-nav-list a[aria-current="page"] {
+  background: var(--surface-2);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.guide-card-link {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  text-decoration: none;
+  color: var(--text);
+}
+.guide-card-link:hover {
+  border-color: var(--accent);
+}
+.guide-card-link h3 {
+  color: var(--link);
+}
+.guide-hero-art {
+  width: 100%;
+  height: auto;
+  display: block;
+}

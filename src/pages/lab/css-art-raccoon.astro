@@ -33,13 +33,13 @@ const apart = `/* Each piece group moves by its own offset, times one shared amo
 
 const schema = { '@context': 'https://schema.org', '@type': 'TechArticle', headline: 'CSS art: the raccoon, taken apart', url: 'https://patchbandit.com/lab/css-art-raccoon/' };
 ---
-<Base title={page.title} description="CSS art explained: a raccoon drawn with plain boxes, clip-path and shadows, no image. Pull it apart with a slider and copy three tricks to draw your own animal." schema={schema} ogType="article">
+<Base title={page.title} description="CSS art explained: a raccoon drawn with plain boxes, clip-path, and shadows, with no image. Pull it apart with a slider and copy three tricks to draw your own animal." schema={schema} ogType="article">
   <PageHero>
     <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
-    <p class="eyebrow">Also in the lab</p>
+    <p class="eyebrow">Bonus shiny</p>
     <h1>CSS art: the raccoon, taken apart</h1>
-    <p class="lead">This raccoon is CSS art: no image, just plain boxes cut into shapes and outlined with shadows. Here's how every piece is made, and three tricks you can take to draw your own animal.</p>
-    <p class="story">It's the mascot, so naturally we took it apart first.</p>
+    <p class="lead">This raccoon is CSS art: no image, just plain boxes cut into shapes and outlined with shadows. See how every piece is made, plus three tricks you can take to draw your own animal.</p>
+    <p class="story">Had to take the mascot apart first. Every ear, whisker, and ring is a plain CSS box.</p>
     <Fragment slot="art">
       <div class="hero-rc"><Raccoon size="min(70vw, 320px)" label="The raccoon, drawn in CSS with no image file" /></div>
     </Fragment>
@@ -82,7 +82,7 @@ const schema = { '@context': 'https://schema.org', '@type': 'TechArticle', headl
       </div>
     </section>
 
-    <WhyFree nextHref="/lab/css-star-rating/" nextTitle="CSS star rating with no JavaScript" nextBlurb="More clip-path, put to work: five radio buttons cut into stars." />
+    <WhyFree nextHref="/lab/css-star-rating/" nextTitle="CSS star rating with no JavaScript" nextBlurb="Put clip-path straight to work on a real widget. Five plain radio buttons cut into clickable, keyboard-ready stars." />
   </div>
 </Base>
 

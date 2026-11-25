@@ -19,4 +19,18 @@ const drops = defineCollection({
   }),
 });
 
-export const collections = { drops };
+// Plain-language Bandit Codes setup guides copied from patch-bandit/qr-rescue-kit (guides/).
+const qrGuides = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/qr-guides' }),
+  schema: z.object({
+    title: z.string(),
+    h1: z.string(),
+    description: z.string(),
+    platform: z.string(),
+    speed: z.string(),
+    order: z.number(),
+    source: z.string(),
+  }),
+});
+
+export const collections = { drops, qrGuides };

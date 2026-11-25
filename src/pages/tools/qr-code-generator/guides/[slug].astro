@@ -1,0 +1,81 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import PageHero from '../../../../components/PageHero.astro';
+import '../../../../styles/qr-guides.css';
+import { TOOLS_LABEL } from '../../../../data/site';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('qrGuides')).sort((a, b) => a.data.order - b.data.order);
+  const sub = all.filter((g) => g.id !== 'index');
+  return sub.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, allSub: sub },
+  }));
+}
+
+const { entry, allSub } = Astro.props;
+const { Content } = await render(entry);
+const { data } = entry;
+const currentPath = `/tools/qr-code-generator/guides/${entry.id}/`;
+---
+<Base title={data.title} description={data.description}>
+  <PageHero tone="mint">
+    <p class="crumbs">
+      <a href="/">The story</a> / <a href="/tools/">{TOOLS_LABEL}</a> / <a href="/tools/qr-code-generator/">Bandit Codes</a> / <a href="/tools/qr-code-generator/guides/">Install guides</a> / {data.platform}
+    </p>
+    <p class="eyebrow">Bandit Codes guide · {data.speed}</p>
+    <h1>{data.h1}</h1>
+    <p class="lead">{data.description}</p>
+    <div class="btn-row">
+      <a class="btn" href="/tools/qr-code-generator/">Open Bandit Codes studio</a>
+      <a class="btn alt" href="/tools/qr-code-generator/guides/">All install guides</a>
+    </div>
+    <Fragment slot="art">
+      <svg class="guide-hero-art" viewBox="0 0 280 280" role="img" aria-label={`Setup checklist illustration for ${data.platform}`}>
+        <rect x="26" y="28" width="228" height="224" rx="22" fill="#1e1033" stroke="#86e3be" stroke-width="4" />
+        <rect x="48" y="54" width="184" height="172" rx="14" fill="#fff2de" stroke="#140a22" stroke-width="4" />
+        <circle cx="80" cy="96" r="14" fill="#86e3be" stroke="#140a22" stroke-width="3" />
+        <path d="M74 96 L79 101 L87 91" fill="none" stroke="#140a22" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        <rect x="108" y="90" width="100" height="12" rx="6" fill="#140a22" />
+        <circle cx="80" cy="140" r="14" fill="#ffc857" stroke="#140a22" stroke-width="3" />
+        <path d="M74 140 L79 145 L87 135" fill="none" stroke="#140a22" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        <rect x="108" y="134" width="84" height="12" rx="6" fill="#4b2d6e" />
+        <circle cx="80" cy="184" r="14" fill="#ff7b67" stroke="#140a22" stroke-width="3" />
+        <path d="M74 184 L79 189 L87 179" fill="none" stroke="#140a22" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        <rect x="108" y="178" width="92" height="12" rx="6" fill="#4b2d6e" />
+      </svg>
+    </Fragment>
+  </PageHero>
+
+  <section class="band" aria-labelledby="guide-body-h">
+    <div class="wrap">
+      <h2 id="guide-body-h" class="sr">{data.h1} instructions</h2>
+      <div class="guide-layout">
+        <article class="card guide-prose">
+          <Content />
+          <p class="guide-note">
+            Platform menu names and plan tiers can change slightly over time; check your host's current settings if a label looks different. Source: <code>{data.source}</code>.
+          </p>
+        </article>
+        <aside class="card guide-sidebar" aria-label="Install guides navigation">
+          <h2>Install guides</h2>
+          <ul class="guide-nav-list">
+            <li><a href="/tools/qr-code-generator/">Back to Bandit Codes studio</a></li>
+            <li><a href="/tools/qr-code-generator/guides/">All install guides</a></li>
+            {allSub.map((g) => (
+              <li>
+                <a
+                  href={`/tools/qr-code-generator/guides/${g.id}/`}
+                  aria-current={`/tools/qr-code-generator/guides/${g.id}/` === currentPath ? 'page' : undefined}
+                >
+                  {g.data.platform}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>

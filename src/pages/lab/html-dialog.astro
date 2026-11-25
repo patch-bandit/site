@@ -5,7 +5,7 @@ import PageHero from '../../components/PageHero.astro';
 import WhyFree from '../../components/WhyFree.astro';
 import DevNote from '../../components/lab/DevNote.astro';
 
-const htmlSnippet = `<!-- Open and close a real modal with zero JavaScript -->
+const htmlSnippet = `<!-- Open and close a real modal with no JavaScript -->
 <button type="button" commandfor="stash-modal"
   command="show-modal">Open modal</button>
 
@@ -35,7 +35,7 @@ dialog::backdrop {
   backdrop-filter: blur(5px);
 }`;
 
-const startingCss = `/* Animate dialog in and out from display: none (zero JavaScript) */
+const startingCss = `/* Animate dialog in and out from display: none (no JavaScript) */
 @media (prefers-reduced-motion: no-preference) {
   dialog {
     opacity: 0;
@@ -77,7 +77,7 @@ const startingCss = `/* Animate dialog in and out from display: none (zero JavaS
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
-  headline: 'HTML dialog modal with zero JavaScript',
+  headline: 'HTML dialog modal with no JavaScript',
   datePublished: '2026-11-22',
   url: 'https://patchbandit.com/lab/html-dialog/',
 };
@@ -91,9 +91,9 @@ const schema = {
   <PageHero art="/art/raccoon-smirk.svg" alt="Snick the raccoon opening a native HTML modal dialog" tone="coral">
     <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
     <p class="eyebrow">Donut hole · 2026-11-22</p>
-    <h1>HTML dialog modal with zero JavaScript</h1>
-    <p class="lead">An HTML dialog element gives you a real accessible modal—top-layer stacking, an inert background, a blurred backdrop, and Escape to close—straight from the browser. Pair it with declarative invoker commands (<code>commandfor</code>) and <code>@starting-style</code>, and the whole HTML modal opens, animates from <code>display: none</code>, and closes with zero lines of JavaScript.</p>
-    <p class="story">Delete the modal library and let the browser handle the trap.</p>
+    <h1>HTML dialog modal with no JavaScript</h1>
+    <p class="lead">An HTML dialog element gives you a real accessible modal (top-layer stacking, an inert background, a blurred backdrop, and Escape to close) straight from the browser. Pair it with declarative invoker commands (<code>commandfor</code>) and <code>@starting-style</code>, and the whole HTML modal opens, animates from <code>display: none</code>, and closes with no JavaScript at all.</p>
+    <p class="story">Tossed the modal library out. Browser handles the trap now.</p>
   </PageHero>
 
   <div class="route-host">
@@ -102,11 +102,11 @@ const schema = {
     <section class="band" data-node aria-labelledby="dlg-play-h">
       <div class="wrap cols2 wide-right top dlg-lab">
         <div>
-          <h2 id="dlg-play-h">Try the zero-script modal</h2>
+          <h2 id="dlg-play-h">Try the no-script modal</h2>
           <p>Press the launch button to open a real <code>&lt;dialog&gt;</code> modal driven solely by <code>commandfor</code> and <code>command="show-modal"</code>. Notice how the page behind blurs out, keyboard focus moves straight inside, and <kbd>Esc</kbd> returns focus to the button you clicked.</p>
           <p>Use the optional <code>closedby="any"</code> switch in the launchpad if you also want clicks on the dimmed backdrop to close the modal.</p>
           <ul class="dlg-checks">
-            <li><strong>Zero JavaScript:</strong> no <code>showModal()</code> boilerplate and no click-outside listener.</li>
+            <li><strong>No JavaScript:</strong> no <code>showModal()</code> boilerplate and no click-outside listener.</li>
             <li><strong>Smooth <code>display: none</code> fade:</strong> CSS <code>@starting-style</code> handles both entry and exit.</li>
             <li><strong>Reduced motion safe:</strong> visitors who prefer reduced motion get an instant, steady open and close.</li>
           </ul>
@@ -132,8 +132,8 @@ const schema = {
           </p>
 
           <div class="dlg-launch-row">
-            <button type="button" class="btn launch-strict" commandfor="demo-dlg-strict" command="show-modal">Open zero-JS modal</button>
-            <button type="button" class="btn launch-any" commandfor="demo-dlg-any" command="show-modal">Open zero-JS modal (closedby="any")</button>
+            <button type="button" class="btn launch-strict" commandfor="demo-dlg-strict" command="show-modal">Open no-JS modal</button>
+            <button type="button" class="btn launch-any" commandfor="demo-dlg-any" command="show-modal">Open no-JS modal (closedby="any")</button>
           </div>
 
           <p class="muted small dlg-closedby-note">
@@ -143,7 +143,7 @@ const schema = {
       </div>
 
       <dialog id="demo-dlg-strict" class="pb-dialog" aria-labelledby="dlg-strict-h">
-        <p class="tag">Zero JavaScript · default modal</p>
+        <p class="tag">No JavaScript · default modal</p>
         <h3 id="dlg-strict-h">Native HTML dialog in the top layer</h3>
         <p>Opened with <code>commandfor="demo-dlg-strict"</code> and <code>command="show-modal"</code>, then faded in from <code>display: none</code> with CSS <code>@starting-style</code>.</p>
         <p>The page behind this box is inert right now. Press <kbd>Esc</kbd> or use the close button below to dismiss it and return focus cleanly.</p>
@@ -153,7 +153,7 @@ const schema = {
       </dialog>
 
       <dialog id="demo-dlg-any" class="pb-dialog is-any" closedby="any" aria-labelledby="dlg-any-h">
-        <p class="tag">Zero JavaScript · closedby="any"</p>
+        <p class="tag">No JavaScript · closedby="any"</p>
         <h3 id="dlg-any-h">Backdrop light-dismiss modal</h3>
         <p>This <code>&lt;dialog&gt;</code> adds <code>closedby="any"</code>, so clicking the blurred backdrop outside this box closes it alongside <kbd>Esc</kbd> and the close button.</p>
         <p>In Safari (where <code>closedby</code> is not yet supported), the browser safely ignores that attribute and keeps <kbd>Esc</kbd> and the button below working.</p>
@@ -194,7 +194,7 @@ const schema = {
         </ul>
 
         <DevNote>
-          <p>Always add <code>type="button"</code> to invoker buttons so a modal inside a form never triggers an accidental submit. To animate both opening and closing, list <code>overlay</code> and <code>display</code> with <code>allow-discrete</code> inside <code>@media (prefers-reduced-motion: no-preference)</code>. If you also need to support browsers older than Safari 26.2 or Firefox 144, pair <code>commandfor</code> with a tiny feature-checked <code>showModal()</code> listener — the underlying <code>&lt;dialog&gt;</code> element has been widely available since 2024.</p>
+          <p>Always add <code>type="button"</code> to invoker buttons so a modal inside a form never triggers an accidental submit. To animate both opening and closing, list <code>overlay</code> and <code>display</code> with <code>allow-discrete</code> inside <code>@media (prefers-reduced-motion: no-preference)</code>. If you also need to support browsers older than Safari 26.2 or Firefox 144, pair <code>commandfor</code> with a tiny feature-checked <code>showModal()</code> listener. The underlying <code>&lt;dialog&gt;</code> element has been widely available since 2024.</p>
         </DevNote>
       </div>
     </section>
@@ -204,7 +204,7 @@ const schema = {
         <h2 id="code-dlg-h">Copy the HTML dialog and CSS starting-style code</h2>
         <div class="cols2 top">
           <div>
-            <CodeBlock label="Zero-JS modal markup (HTML)" code={htmlSnippet} />
+            <CodeBlock label="No-JS modal markup (HTML)" code={htmlSnippet} />
             <CodeBlock label="Modal surface and ::backdrop (CSS)" code={baseCss} />
           </div>
           <div>
@@ -220,7 +220,7 @@ const schema = {
     <WhyFree
       nextHref="/lab/css-accordion/"
       nextTitle="CSS accordion with native <details name>"
-      nextBlurb="Exclusive FAQ drawers with ::details-content and progressive interpolate-size height animation."
+      nextBlurb="Open one drawer and the browser shuts the rest. Styled with ::details-content and progressive interpolate-size animation."
     />
   </div>
 </Base>

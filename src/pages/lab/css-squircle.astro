@@ -113,8 +113,8 @@ const schema = {
     <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
     <p class="eyebrow">Apple slice · 2026-11-22</p>
     <h1>Squircle CSS with corner-shape</h1>
-    <p class="lead">Squircle CSS lets you turn a plain rounded box into a smooth app-icon squircle, a ticket-stub scoop, a chamfered bevel, or a crisp notch using one new CSS property: <code>corner-shape</code>. Test all six shapes below with zero JavaScript, plus a live check for your browser.</p>
-    <p class="story">A sharper corner trick, without hand-coding twenty path points.</p>
+    <p class="lead">Squircle CSS lets you turn a plain rounded box into a smooth app-icon squircle, a ticket-stub scoop, a chamfered bevel, or a crisp notch using one new CSS property: <code>corner-shape</code>. Test all six shapes below with no JavaScript, plus a live check for your browser.</p>
+    <p class="story">Sharper corners, one line of CSS. Skip hand-coding twenty path points just to curve a box.</p>
   </PageHero>
 
   <div class="route-host">
@@ -123,14 +123,14 @@ const schema = {
     <section class="band" data-node aria-labelledby="sq-play-h">
       <div class="wrap">
         <div class="support-bar" role="status">
-          <span class="sup-pill sup-yes mono">This browser supports <code>corner-shape</code> natively — live tiles below use real CSS.</span>
-          <span class="sup-pill sup-no mono">This browser does not support <code>corner-shape</code> yet — live tiles show the plain <code>border-radius</code> fallback beside SVG silhouettes.</span>
+          <span class="sup-pill sup-yes mono">This browser supports <code>corner-shape</code> natively. Live tiles below use real CSS.</span>
+          <span class="sup-pill sup-no mono">This browser does not support <code>corner-shape</code> yet. Live tiles show the plain <code>border-radius</code> fallback beside SVG silhouettes.</span>
         </div>
 
         <div class="cols2 wide-left top sq-lab">
           <div class="card">
             <h2 id="sq-play-h">Pick a CSS corner-shape</h2>
-            <p>Choose a shape and corner size below. The whole switcher runs on radio buttons and CSS <code>:has()</code> — no script at all.</p>
+            <p>Choose a shape and corner size below. The whole switcher runs on radio buttons and CSS <code>:has()</code>, with no script at all.</p>
 
             <fieldset class="pick-group">
               <legend class="mono small">Corner shape</legend>
@@ -225,14 +225,14 @@ const schema = {
           <h2 id="code-h">Progressive CSS squircle</h2>
           <CodeBlock label="Progressive corner-shape (CSS)" code={cssCornerShape} />
           <DevNote>
-            <p><code>corner-shape</code> only works alongside a non-zero <code>border-radius</code>. Every keyword maps to a <code>superellipse(K)</code> number: <code>round</code> is <code>1</code>, <code>squircle</code> is <code>2</code>, <code>bevel</code> is <code>0</code>, <code>scoop</code> is <code>-1</code>, and <code>notch</code> is <code>-infinity</code>. For decorative cards, letting Firefox and Safari keep plain <code>border-radius</code> is usually the cleanest upgrade path.</p>
+            <p><code>corner-shape</code> only works alongside a <code>border-radius</code> above 0. Every keyword maps to a <code>superellipse(K)</code> number: <code>round</code> is <code>1</code>, <code>squircle</code> is <code>2</code>, <code>bevel</code> is <code>0</code>, <code>scoop</code> is <code>-1</code>, and <code>notch</code> is <code>-infinity</code>. For decorative cards, letting Firefox and Safari keep plain <code>border-radius</code> is usually the cleanest upgrade path.</p>
           </DevNote>
         </div>
 
         <div>
           <h2>Cross-browser fallback for today</h2>
           <CodeBlock label="SVG clip-path squircle fallback (HTML and CSS)" code={cssFallback} />
-          <p class="note"><strong>Browser support:</strong> <code>corner-shape</code> is cutting-edge CSS shipping in Chromium (Chrome and Edge 139+). Firefox and Safari do not support it yet and show standard <code>border-radius</code> unless you layer an SVG <code>clip-path</code> fallback like the snippet above. Tested in Chromium only.</p>
+          <p class="note"><strong>Browser support:</strong> <code>corner-shape</code> is new CSS shipping in Chromium (Chrome and Edge 139+). Firefox and Safari do not support it yet and show standard <code>border-radius</code> unless you layer an SVG <code>clip-path</code> fallback like the snippet above. Tested in Chromium only.</p>
         </div>
       </div>
     </section>
@@ -240,7 +240,7 @@ const schema = {
     <WhyFree
       nextHref="/lab/css-parent-selector/"
       nextTitle="CSS parent selector with :has()"
-      nextBlurb="Make a card light up when its checkbox is checked, and quiet its siblings — no script."
+      nextBlurb="Check one box, light up the card, and quiet its siblings. Plain CSS :has() handles the whole thing."
     />
   </div>
 </Base>

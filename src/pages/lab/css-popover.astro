@@ -90,7 +90,7 @@ const schema = {
 ---
 <Base
   title="CSS popover with no JavaScript: auto, manual, backdrop"
-  description="Build a CSS popover with zero JavaScript: auto vs manual dismiss, ::backdrop styling, and @starting-style entry transitions. Live demo and code to copy."
+  description="Build a CSS popover with no JavaScript: auto vs manual dismiss, ::backdrop styling, and @starting-style entry transitions. Live demo and code to copy."
   schema={schema}
   ogType="article"
 >
@@ -99,7 +99,7 @@ const schema = {
     <p class="eyebrow">Pretzel · 2026-11-22</p>
     <h1>CSS popover with no JavaScript</h1>
     <p class="lead">A CSS popover lets you open a floating panel, tooltip, or confirmation card on top of the page using plain HTML and CSS, with no JavaScript and no z-index math. The browser handles the stacking layer, the Escape key, and clicking outside for you.</p>
-    <p class="story">Why load a modal library just to pop open a polite little box?</p>
+    <p class="story">Whole library for one little box? Nah. Browser's got it.</p>
   </PageHero>
 
   <div class="route-host">
@@ -137,7 +137,7 @@ const schema = {
 
       <div id="demo-pop-auto" popover="auto" class="demo-pop demo-pop-auto">
         <p class="tag">popover="auto"</p>
-        <h3>Zero-script auto popover</h3>
+        <h3>No-script auto popover</h3>
         <p>This panel sits in the browser's top layer above sticky headers and cards, with a dimmed <code>::backdrop</code> behind it. Click outside, press <kbd>Esc</kbd>, or use the button below.</p>
         <div class="btn-row">
           <button type="button" class="btn alt" popovertarget="demo-pop-auto" popovertargetaction="hide">Close popover</button>
@@ -146,7 +146,7 @@ const schema = {
 
       <div id="demo-pop-manual" popover="manual" class="demo-pop demo-pop-manual">
         <p class="tag">popover="manual"</p>
-        <h3>Zero-script manual popover</h3>
+        <h3>No-script manual popover</h3>
         <p>Clicking the page behind this card will not close it, and pressing <kbd>Esc</kbd> will not dismiss it either. Use the button below to put it away.</p>
         <div class="btn-row">
           <button type="button" class="btn" popovertarget="demo-pop-manual" popovertargetaction="hide">Dismiss notice</button>
@@ -204,7 +204,7 @@ const schema = {
     <WhyFree
       nextHref="/lab/css-text-wrap/"
       nextTitle="CSS text-wrap: balance vs pretty, live"
-      nextBlurb="Drag one width slider and watch headlines and paragraphs clean up their own line breaks."
+      nextBlurb="Drag the slider and watch ragged line breaks tidy themselves up. No manual break tags required."
     />
   </div>
 </Base>

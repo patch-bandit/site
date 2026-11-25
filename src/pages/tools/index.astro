@@ -8,8 +8,8 @@ import { LAB_EXPERIMENTS, STATIC_PAGES, TOOLS_LABEL, inWords } from '../../data/
 const labCount = (await getCollection('drops')).length + LAB_EXPERIMENTS.length;
 const page = STATIC_PAGES.find((p) => p.path === '/tools/')!;
 const statusLines: TypedLine[] = [
-  { k: 'cmd', t: 'status bandit-codes' },
-  { k: 'gold', t: 'state:   set free (live)' },
+  { k: 'cmd', t: 'status ./tools' },
+  { k: 'gold', t: 'state:   3 set free (live)' },
   { k: 'out', t: 'runtime: your browser' },
   { k: 'out', t: 'uploads: none (stays on device)' },
   { k: 'dim', t: 'license: MIT · open now' },
@@ -29,7 +29,7 @@ const schema = {
 ---
 <Base
   title={page.title}
-  description="Free online tools from Patch Bandit: open source, no account, no trackers, and your files never leave your device. Starting with Bandit Codes, live now."
+  description="Free online tools from Patch Bandit: open source, no account, no trackers, and your files never leave your device. Three browser tools live now."
   schema={schema}
 >
   <section class="bench-opener flash" aria-labelledby="tools-h">
@@ -42,7 +42,7 @@ const schema = {
         </div>
         <div class="bench-pitch">
           <p class="lead">Our free online tools run right inside your browser tab with no sign-up, no tracking scripts, and full source code alongside every release.</p>
-          <p class="story">This shelf grows one tool at a time. Nothing is marked live until you can open it, use it, and read its source.</p>
+          <p class="story">One tool off the bench at a time. Nothing gets called live until you can run it yourself and read every line of its source.</p>
         </div>
       </div>
 
@@ -53,19 +53,19 @@ const schema = {
             size="min(72vw, 256px)"
             label="A CSS-drawn raccoon at a workbench tightening a hex bolt with a wrench, a small tied pouch beside the bench"
           />
-          <p class="bench-cap mono small">bench 01 · 1 tool set free</p>
+          <p class="bench-cap mono small">bench 01 · 3 tools set free</p>
         </div>
 
         <div class="card glint bench-card">
           <p class="status free">Set free</p>
-          <h2><a href="/tools/qr-code-generator/">Bandit Codes — QR code generator</a></h2>
-          <p>Paste a link, Wi-Fi login, contact card, or event and download a clean PNG or SVG right in your browser — a free QR code generator no sign up, no watermark, no tracking redirect, and live scan verification.</p>
+          <h2><a href="/tools/qr-code-generator/">Bandit Codes: QR code generator</a></h2>
+          <p>Make static or own-domain QR codes, export redirect rules for your own host, and check printed codes for lock-in. Free QR code generator with no sign-up, no watermark, and live scan checks built right in.</p>
           <p class="bench-act"><a class="btn" href="/tools/qr-code-generator/">Open Bandit Codes</a></p>
           <p class="mono small spec-line">runs in: your browser · cookies: none · MIT</p>
         </div>
 
         <div class="term tool-term" data-type>
-          <div class="term-bar"><i></i><i></i><i></i><span>~/tools/bandit-codes</span></div>
+          <div class="term-bar"><i></i><i></i><i></i><span>~/tools</span></div>
           <div class="term-body tool-body">
             <svg class="qr-art" viewBox="0 0 120 120" aria-hidden="true">
               <rect x="6" y="6" width="34" height="34" rx="4" fill="none" stroke="#86e3be" stroke-width="6" />
@@ -88,7 +88,7 @@ const schema = {
               <rect x="74" y="98" width="12" height="12" rx="2" fill="#86e3be" />
               <rect x="96" y="98" width="12" height="12" rx="2" fill="#ffc857" />
             </svg>
-            <TypedLines lines={statusLines} srLabel="Bandit Codes status" class="tool-lines" />
+            <TypedLines lines={statusLines} srLabel="Tools bench status" class="tool-lines" />
           </div>
           <div class="term-foot">
             <a href="/den/#how-typing-works">How the typing works &rarr;</a>
@@ -105,11 +105,43 @@ const schema = {
   <div class="route-host">
     <div class="route-rail" data-route aria-hidden="true"><i></i></div>
 
+    <section class="band alt" data-node aria-labelledby="all-tools-h">
+      <div class="wrap">
+        <div class="split-head rv">
+          <div>
+            <p class="eyebrow">Set free</p>
+            <h2 id="all-tools-h">Tools live right now</h2>
+          </div>
+          <p class="lead">Three browser tools released so far. Every one runs locally in your tab with no sign-up and no tracking.</p>
+        </div>
+        <ul class="grid g3 sub sub4">
+          <li class="card glint rv">
+            <p class="status free">Set free</p>
+            <h3><a href="/tools/qr-code-generator/">Bandit Codes</a></h3>
+            <p>Make PNG and SVG QR codes for links, Wi-Fi, contacts, and events with live in-browser scan verification.</p>
+            <p class="mono small muted">runs in: browser · PNG &amp; SVG · MIT</p>
+          </li>
+          <li class="card glint rv" style="--i:1">
+            <p class="status free">Set free</p>
+            <h3><a href="/tools/px-to-rem/">px to rem converter</a></h3>
+            <p>Two-way px and rem conversion with any root font size, quick reference tiles, and batch CSS conversion in one pass.</p>
+            <p class="mono small muted">runs in: browser · batch CSS · MIT</p>
+          </li>
+          <li class="card glint rv" style="--i:2">
+            <p class="status free">Set free</p>
+            <h3><a href="/tools/uuid-generator/">UUID generator</a></h3>
+            <p>Make 1 to 100 UUID v4, time-sorted RFC 9562 UUID v7, or custom short random IDs with browser Web Crypto.</p>
+            <p class="mono small muted">runs in: browser · Web Crypto · MIT</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
     <section class="band" data-node aria-labelledby="how-tools-h">
       <div class="wrap">
         <div class="split-head rv">
           <div>
-            <p class="eyebrow">Every tool, same rules</p>
+            <p class="eyebrow">Bench standards</p>
             <h2 id="how-tools-h">How every tool here works</h2>
           </div>
           <p class="lead">Before a tool lands on this page, it has to pass the same plain checks as the rest of the site.</p>
@@ -118,17 +150,17 @@ const schema = {
           <li class="card rv">
             <p class="num">01</p>
             <h3>Runs on your device</h3>
-            <p>Your file or text stays in your browser tab. Check your Network tab anytime: zero uploads and zero third-party requests.</p>
+            <p>Your files and text never leave your browser tab. Check the Network tab yourself: no uploads and no third-party requests.</p>
           </li>
           <li class="card rv" style="--i:1">
             <p class="num">02</p>
             <h3>No account, no fee</h3>
-            <p>Open the page, finish the job, close the tab. No login wall, no trial timer, and no watermark on what you make.</p>
+            <p>Open the page, get the job done, close the tab. You get no login wall, no trial countdown, and no watermark slapped on your work.</p>
           </li>
           <li class="card rv" style="--i:2">
             <p class="num">03</p>
             <h3>Source included</h3>
-            <p>Every tool ships under a permissive open license so anyone can inspect it, copy it, or host their own copy.</p>
+            <p>Every tool ships under a permissive open license. Read the code, fork it, or host your own copy without asking anyone.</p>
           </li>
         </ul>
       </div>
@@ -139,13 +171,13 @@ const schema = {
         <div class="card rv">
           <p class="tag">Need code today?</p>
           <h2 id="tools-next-h" class="h-sub">Open the lab</h2>
-          <p>Looking for code snippets too? The lab holds {inWords(labCount)} working CSS experiments and the CSS art raccoon, all live with MIT code to copy.</p>
+          <p>Want shiny CSS tricks you can copy today? The lab packs {inWords(labCount)} live experiments and the CSS art raccoon, all MIT licensed.</p>
           <p class="next-act"><a class="btn alt" href="/lab/">Open the lab</a></p>
         </div>
         <div class="card mint rv" style="--i:1">
           <p class="tag">More ideas</p>
           <h2 class="h-sub">See the stash</h2>
-          <p>Eight more tool ideas sit in the stash, plus the stash terminal where you can pitch a tool you want built next.</p>
+          <p>Six more tool ideas are sitting in the stash waiting for a bench slot. Got a better one? Pitch it straight through the stash terminal.</p>
           <p class="next-act"><a class="btn" href="/den/">See the stash</a></p>
         </div>
       </div>

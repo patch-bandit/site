@@ -1,0 +1,514 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+
+const title = "Snick's hidden stash | Patch Bandit";
+const description =
+  "You scanned the bagel QR code and found Snick's hidden corner. Track the toasted sesame bagel under three midnight crates.";
+---
+<Base title={title} description={description} noindex>
+  <PageHero tone="gold">
+    <p class="eyebrow mono">&gt; secret corner</p>
+    <h1>You found Snick's hidden stash.</h1>
+    <p class="lead">You pointed a camera at a raccoon joke and it actually worked. Snick tucked that toasted sesame bagel under one of three midnight crates, and you can win it back right here.</p>
+    <div class="btn-row">
+      <a class="btn alt" href="/tools/qr-code-generator/">Back to Bandit Codes</a>
+    </div>
+    <Fragment slot="art">
+      <svg class="stash-hero-art" viewBox="0 0 280 280" role="img" aria-label="A toasted golden sesame bagel framed by glowing four point glints and Snick's striped raccoon paw reaching from the corner">
+        <defs>
+          <radialGradient id="stash-bagel-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#ffc857" stop-opacity="0.34" />
+            <stop offset="1" stop-color="#ffc857" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="140" cy="138" r="118" fill="url(#stash-bagel-glow)" />
+        <g class="stash-spark s1">
+          <path d="M56 54 Q58.8 66.2 71 69 Q58.8 71.8 56 84 Q53.2 71.8 41 69 Q53.2 66.2 56 54 Z" fill="#ffc857" stroke="#140a22" stroke-width="3" stroke-linejoin="round" />
+        </g>
+        <g class="stash-spark s2">
+          <path d="M226 48 Q228.2 57.8 238 60 Q228.2 62.2 226 72 Q223.8 62.2 214 60 Q223.8 57.8 226 48 Z" fill="#86e3be" stroke="#140a22" stroke-width="3" stroke-linejoin="round" />
+        </g>
+        <g class="stash-spark s3">
+          <path d="M54 202 Q55.8 209.2 63 211 Q55.8 212.8 54 220 Q52.2 212.8 45 211 Q52.2 209.2 54 202 Z" fill="#ff7b67" stroke="#140a22" stroke-width="2.6" stroke-linejoin="round" />
+        </g>
+        <g class="stash-hero-bagel">
+          <circle cx="140" cy="134" r="68" fill="#ffc857" stroke="#140a22" stroke-width="9" />
+          <path d="M90 166 A54 54 0 0 0 186 104 A50 50 0 0 1 90 166 Z" fill="#e89a2c" />
+          <path d="M94 106 A48 48 0 0 1 162 84" fill="none" stroke="#ffe6a6" stroke-width="9" stroke-linecap="round" />
+          <circle cx="140" cy="134" r="21" fill="#1e1033" stroke="#140a22" stroke-width="8" />
+          <ellipse cx="108" cy="104" rx="7" ry="3.5" transform="rotate(-32 108 104)" fill="#fff2de" />
+          <ellipse cx="154" cy="92" rx="7" ry="3.5" transform="rotate(14 154 92)" fill="#140a22" />
+          <ellipse cx="182" cy="118" rx="7" ry="3.5" transform="rotate(62 182 118)" fill="#fff2de" />
+          <ellipse cx="174" cy="166" rx="7" ry="3.5" transform="rotate(-38 174 166)" fill="#fff2de" />
+          <ellipse cx="126" cy="176" rx="7" ry="3.5" transform="rotate(18 126 176)" fill="#140a22" />
+          <ellipse cx="96" cy="144" rx="7" ry="3.5" transform="rotate(78 96 144)" fill="#fff2de" />
+        </g>
+        <g transform="translate(0 6)">
+          <g transform="translate(226 228) rotate(42)">
+            <rect x="-4" y="-20" width="90" height="40" rx="10" fill="#86e3be" stroke="#140a22" stroke-width="6" stroke-linejoin="round" />
+            <rect x="-4" y="-20" width="14" height="40" rx="5" fill="#6ccfa8" stroke="#140a22" stroke-width="6" stroke-linejoin="round" />
+          </g>
+          <g transform="translate(212 214) rotate(42)">
+            <rect x="-17" y="-14" width="34" height="28" rx="9" fill="#c4bbd6" stroke="#140a22" stroke-width="5.5" stroke-linejoin="round" />
+            <rect x="-7" y="-12" width="6" height="24" rx="2" fill="#5b5075" />
+            <rect x="3" y="-12" width="6" height="24" rx="2" fill="#5b5075" />
+          </g>
+          <ellipse cx="198" cy="200" rx="15" ry="12" transform="rotate(42 198 200)" fill="#2b1a42" stroke="#140a22" stroke-width="5" />
+          <rect x="176" y="178" width="16" height="8" rx="4" transform="rotate(34 184 182)" fill="#2b1a42" stroke="#140a22" stroke-width="4" />
+          <rect x="183" y="185" width="16" height="8" rx="4" transform="rotate(44 191 189)" fill="#2b1a42" stroke="#140a22" stroke-width="4" />
+          <rect x="188" y="194" width="15" height="8" rx="4" transform="rotate(52 195 198)" fill="#2b1a42" stroke="#140a22" stroke-width="4" />
+        </g>
+      </svg>
+    </Fragment>
+  </PageHero>
+
+  <section class="band tight" aria-labelledby="game-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">Midnight alley game</p>
+          <h2 id="game-h">Find the bagel</h2>
+        </div>
+        <p class="muted">Watch where the toasted sesame bagel hides, follow the crates as Snick swaps them, then tap the crate you trust. Everything runs right here in your tab with no data sent anywhere.</p>
+      </div>
+
+      <div class="card stash-stage" data-bagel-game>
+        <div class="stash-stats" aria-label="Scoreboard">
+          <div class="stat-pill">
+            <span class="stat-k">Streak</span>
+            <strong class="stat-v" data-streak>0</strong>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-k">Best</span>
+            <strong class="stat-v" data-best>0</strong>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-k">Swaps</span>
+            <strong class="stat-v" data-swaps>3</strong>
+          </div>
+        </div>
+
+        <div class="crate-row" data-crate-row role="group" aria-label="Three midnight alley crates">
+          {[0, 1, 2].map((slot) => (
+            <button
+              type="button"
+              class:list={['crate-btn', slot === 1 && 'is-lifted is-bagel']}
+              data-crate={slot}
+              data-slot={slot}
+              aria-label={`Crate ${slot + 1}`}
+              disabled
+            >
+              <span class="crate-stage" aria-hidden="true">
+                <span class="prize prize-bagel">
+                  <svg viewBox="0 0 88 88">
+                    <circle cx="44" cy="44" r="28" fill="#ffc857" stroke="#140a22" stroke-width="5.5" />
+                    <path d="M23 57 A22 22 0 0 0 63 32 A20 20 0 0 1 23 57 Z" fill="#e89a2c" />
+                    <path d="M25 34 A19 19 0 0 1 53 24" fill="none" stroke="#ffe6a6" stroke-width="4" stroke-linecap="round" />
+                    <circle cx="44" cy="44" r="9" fill="#fff2de" stroke="#140a22" stroke-width="4.5" />
+                    <ellipse cx="32" cy="31" rx="3.2" ry="1.6" transform="rotate(-30 32 31)" fill="#fff2de" />
+                    <ellipse cx="50" cy="27" rx="3.2" ry="1.6" transform="rotate(15 50 27)" fill="#140a22" />
+                    <ellipse cx="60" cy="41" rx="3.2" ry="1.6" transform="rotate(65 60 41)" fill="#fff2de" />
+                    <ellipse cx="56" cy="58" rx="3.2" ry="1.6" transform="rotate(-40 56 58)" fill="#fff2de" />
+                    <ellipse cx="36" cy="61" rx="3.2" ry="1.6" transform="rotate(20 36 61)" fill="#140a22" />
+                  </svg>
+                </span>
+                <span class="prize prize-decoy" data-decoy></span>
+                <span class="crate-box">
+                  <svg viewBox="0 0 112 96">
+                    <rect x="8" y="10" width="96" height="78" rx="10" fill="#4b2d6e" stroke="#140a22" stroke-width="6" stroke-linejoin="round" />
+                    <path d="M10 34 H102 M10 62 H102" stroke="#140a22" stroke-width="5" />
+                    <rect x="18" y="18" width="76" height="10" rx="3" fill="#7a55b0" opacity="0.5" />
+                    <g fill="#86e3be" opacity="0.9">
+                      <ellipse cx="56" cy="52" rx="7" ry="5.5" />
+                      <circle cx="46" cy="44" r="3" />
+                      <circle cx="52.5" cy="40.5" r="3" />
+                      <circle cx="59.5" cy="40.5" r="3" />
+                      <circle cx="66" cy="44" r="3" />
+                    </g>
+                  </svg>
+                </span>
+              </span>
+              <span class="crate-num mono" data-crate-label>Crate {slot + 1}</span>
+            </button>
+          ))}
+        </div>
+
+        <p class="out stash-out" role="status" aria-live="polite" data-status>
+          The toasted sesame bagel starts under Crate 2. Tap the button below when you are ready for Snick to shuffle.
+        </p>
+
+        <div class="stash-actions">
+          <button type="button" class="btn" data-start>Shuffle the crates</button>
+          <button type="button" class="btn ghost small-btn" data-reset-best hidden>Reset best score</button>
+        </div>
+
+        <p class="muted small stash-fine">
+          Your best streak is saved only in local storage on this browser if you win a round. Nothing is collected or sent anywhere. Keyboard players can press 1, 2, or 3 to pick a crate.
+        </p>
+        <noscript>
+          <p class="note">JavaScript is needed to shuffle the crates. Even without script, you still found the hidden bagel corner.</p>
+        </noscript>
+
+        <template data-decoy-tpl="grape">
+          <svg viewBox="0 0 88 88">
+            <circle cx="44" cy="48" r="18" fill="#7a55b0" stroke="#140a22" stroke-width="5" />
+            <ellipse cx="38" cy="42" rx="5" ry="3" transform="rotate(-25 38 42)" fill="#c4bbd6" />
+            <path d="M44 30 C44 21 52 18 56 20" fill="none" stroke="#86e3be" stroke-width="4.5" stroke-linecap="round" />
+          </svg>
+        </template>
+        <template data-decoy-tpl="chip">
+          <svg viewBox="0 0 88 88">
+            <path d="M44 20 L68 62 Q44 70 20 62 Z" fill="#ffc857" stroke="#140a22" stroke-width="5" stroke-linejoin="round" />
+            <circle cx="44" cy="44" r="3" fill="#e89a2c" />
+            <circle cx="36" cy="54" r="2.5" fill="#e89a2c" />
+            <circle cx="52" cy="52" r="2.5" fill="#e89a2c" />
+          </svg>
+        </template>
+        <template data-decoy-tpl="note">
+          <svg viewBox="0 0 88 88">
+            <rect x="20" y="20" width="48" height="48" rx="6" fill="#ffe6a6" stroke="#140a22" stroke-width="5" />
+            <path d="M30 36 H58 M30 46 H52 M30 56 H44" stroke="#140a22" stroke-width="4" stroke-linecap="round" />
+          </svg>
+        </template>
+        <template data-decoy-tpl="semicolon">
+          <svg viewBox="0 0 88 88">
+            <circle cx="44" cy="30" r="8" fill="#86e3be" stroke="#140a22" stroke-width="4.5" />
+            <path d="M44 46 C50 46 53 51 50 58 C48 64 41 68 35 70" fill="none" stroke="#140a22" stroke-width="11" stroke-linecap="round" />
+            <path d="M44 46 C50 46 53 51 50 58 C48 64 41 68 35 70" fill="none" stroke="#86e3be" stroke-width="5.5" stroke-linecap="round" />
+          </svg>
+        </template>
+        <template data-decoy-tpl="puff">
+          <svg viewBox="0 0 88 88">
+            <path d="M24 58 C20 40 34 24 54 26 C66 28 70 42 60 50 C52 56 44 50 40 58 C36 66 26 66 24 58 Z" fill="#ff7b67" stroke="#140a22" stroke-width="5" stroke-linejoin="round" />
+          </svg>
+        </template>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .stash-hero-art { width: 100%; height: auto; display: block; overflow: visible; }
+  .stash-spark { transform-box: fill-box; transform-origin: center; }
+  .stash-hero-bagel { transform-box: fill-box; transform-origin: center; }
+
+  .stash-stage { display: flex; flex-direction: column; gap: 1.35rem; }
+  .stash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+  .stat-pill {
+    background: var(--code-bg); color: var(--k-cream);
+    border: 1px solid var(--rim-strong); border-radius: 12px;
+    padding: 0.7rem 0.9rem; display: flex; flex-direction: column; gap: 0.2rem; text-align: center;
+  }
+  .stat-k { font: 500 0.78rem/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--k-mint); }
+  .stat-v { font: 700 1.45rem/1.1 var(--mono); color: var(--k-cream); }
+
+  .crate-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem;
+    padding: 1.5rem 0.25rem 0.5rem; position: relative;
+  }
+  @media (min-width: 40rem) {
+    .crate-row { gap: 1.25rem; padding: 2rem 0.75rem 0.75rem; }
+  }
+
+  .crate-btn {
+    appearance: none; background: var(--surface-2); color: var(--text);
+    border: 2px solid var(--rim-strong); border-radius: 16px;
+    padding: 0.75rem 0.4rem 0.8rem; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 0.45rem;
+    min-height: 8.5rem; position: relative; will-change: transform;
+  }
+  .crate-btn:disabled { cursor: default; }
+  .crate-btn:not(:disabled):hover { border-color: var(--k-gold); box-shadow: 0 0 0 2px rgb(255 200 87 / 0.35); }
+  .crate-btn.is-win { border-color: var(--k-mint-deep); box-shadow: 0 0 0 3px rgb(134 227 190 / 0.45); }
+  .crate-btn.is-miss { border-color: var(--k-coral-deep); }
+  .crate-btn.is-peek { border-color: var(--k-gold-deep); }
+
+  .crate-stage {
+    position: relative; width: 100%; max-width: 7.5rem; aspect-ratio: 112 / 106;
+    display: block;
+  }
+  .prize {
+    position: absolute; left: 50%; bottom: 4%; width: 58%; transform: translateX(-50%);
+    opacity: 0; pointer-events: none;
+  }
+  .prize svg, .crate-box svg { display: block; width: 100%; height: auto; }
+  .crate-box {
+    position: absolute; left: 0; right: 0; bottom: 0; width: 100%;
+    transform: translateY(0); pointer-events: none;
+  }
+
+  .crate-btn.is-lifted .crate-box { transform: translateY(-42%) rotate(-4deg); }
+  .crate-btn.is-lifted.is-bagel .prize-bagel { opacity: 1; }
+  .crate-btn.is-lifted.is-decoy .prize-decoy { opacity: 1; }
+
+  .crate-num {
+    font-size: 0.85rem; font-weight: 600; color: var(--text);
+    background: var(--surface); border: 1px solid var(--rim);
+    border-radius: 999px; padding: 0.2rem 0.65rem;
+  }
+
+  .stash-out {
+    font: 500 1.02rem/1.55 var(--mono); min-height: 4.5em;
+    background: var(--code-bg); color: var(--k-cream);
+    border: 1px solid var(--rim-strong); border-radius: 12px;
+    padding: 0.95rem 1.1rem; margin: 0;
+  }
+  .stash-out::before { content: "> "; color: var(--k-mint); }
+
+  .stash-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem; }
+  .small-btn { font-size: 0.9rem; padding: 0.65rem 1rem; min-height: 2.6rem; }
+  .stash-fine { margin: 0; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .stash-spark { animation: stash-twinkle 4.2s ease-in-out infinite; }
+    .stash-spark.s2 { animation-delay: 1.4s; }
+    .stash-spark.s3 { animation-delay: 2.6s; }
+    .stash-hero-bagel { animation: stash-bob 5.5s ease-in-out infinite; }
+    .crate-box { transition: transform 0.34s cubic-bezier(0.25, 0.9, 0.3, 1.15); }
+    .prize { transition: opacity 0.25s ease; }
+    .crate-btn { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+  }
+  @keyframes stash-twinkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.82); }
+  }
+  @keyframes stash-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+</style>
+
+<script>
+  const game = document.querySelector<HTMLElement>('[data-bagel-game]');
+  if (game) {
+    const BEST_KEY = 'pb-bagel-best';
+    const allowMotion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    const row = game.querySelector<HTMLElement>('[data-crate-row]')!;
+    const buttons = [...game.querySelectorAll<HTMLButtonElement>('[data-crate]')];
+    const startBtn = game.querySelector<HTMLButtonElement>('[data-start]')!;
+    const resetBtn = game.querySelector<HTMLButtonElement>('[data-reset-best]')!;
+    const statusEl = game.querySelector<HTMLElement>('[data-status]')!;
+    const streakEl = game.querySelector<HTMLElement>('[data-streak]')!;
+    const bestEl = game.querySelector<HTMLElement>('[data-best]')!;
+    const swapsEl = game.querySelector<HTMLElement>('[data-swaps]')!;
+
+    const winLines = [
+      'Sharp eyes. You kept the toasted sesame bagel out of the snack ledger.',
+      'Direct hit. Snick rated that bagel a nine and you still found it.',
+      'Spot on. One toasted sesame bagel, zero monthly fees.',
+      'You tracked every paw move. Snick offers a quiet nod from the shadows.',
+      'Bagel secured. The three AM commit can wait five more minutes.',
+      'Clean find. Even the scanner beam paused in gold for that one.',
+    ];
+
+    const decoys = [
+      { id: 'grape', name: 'a lone grape named Grape' },
+      { id: 'chip', name: 'a crunchy keyboard chip' },
+      { id: 'note', name: 'a sticky note reading TODO fix everything' },
+      { id: 'semicolon', name: 'a missing semicolon from three AM' },
+      { id: 'puff', name: 'a spare cheese puff' },
+    ];
+
+    let bagelIndex = 1; // index into `buttons`
+    let order = [0, 1, 2]; // visual slot -> button index
+    let streak = 0;
+    let best = 0;
+    let busy = false;
+    let awaitingPick = false;
+    let winCursor = 0;
+
+    const readBest = () => {
+      try {
+        const saved = Number(localStorage.getItem(BEST_KEY) || '0');
+        return Number.isFinite(saved) && saved > 0 ? Math.floor(saved) : 0;
+      } catch {
+        return 0;
+      }
+    };
+
+    const writeBest = (val: number) => {
+      try {
+        if (val > 0) localStorage.setItem(BEST_KEY, String(val));
+        else localStorage.removeItem(BEST_KEY);
+      } catch {
+        /* private mode: best score stays for this tab only */
+      }
+    };
+
+    const swapsForStreak = (s: number) => Math.min(6, 3 + Math.floor((s + 1) / 2));
+
+    const paintStats = () => {
+      streakEl.textContent = String(streak);
+      bestEl.textContent = String(best);
+      swapsEl.textContent = String(swapsForStreak(streak));
+      resetBtn.hidden = best === 0;
+    };
+
+    const syncLabels = () => {
+      order.forEach((btnIdx, slot) => {
+        const b = buttons[btnIdx];
+        b.dataset.slot = String(slot);
+        b.setAttribute('aria-label', `Crate ${slot + 1}`);
+        const lbl = b.querySelector<HTMLElement>('[data-crate-label]');
+        if (lbl) lbl.textContent = `Crate ${slot + 1}`;
+      });
+    };
+
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+    const animateSwap = async (slotA: number, slotB: number, durationMs: number) => {
+      const idxA = order[slotA];
+      const idxB = order[slotB];
+      const elA = buttons[idxA];
+      const elB = buttons[idxB];
+
+      if (allowMotion) {
+        const rectA = elA.getBoundingClientRect();
+        const rectB = elB.getBoundingClientRect();
+        const dx = rectB.left - rectA.left;
+        elA.style.transition = `transform ${durationMs}ms cubic-bezier(0.35, 0.05, 0.25, 1)`;
+        elB.style.transition = `transform ${durationMs}ms cubic-bezier(0.35, 0.05, 0.25, 1)`;
+        elA.style.transform = `translate(${dx}px, -12px)`;
+        elB.style.transform = `translate(${-dx}px, 12px)`;
+        await wait(durationMs + 25);
+        elA.style.transition = 'none';
+        elB.style.transition = 'none';
+        elA.style.transform = '';
+        elB.style.transform = '';
+      }
+
+      // Commit DOM order so tab order and Crate 1..3 labels stay left to right
+      order[slotA] = idxB;
+      order[slotB] = idxA;
+      order.forEach((i) => row.appendChild(buttons[i]));
+      syncLabels();
+      if (allowMotion) {
+        void row.offsetWidth;
+        elA.style.transition = '';
+        elB.style.transition = '';
+      }
+    };
+
+    const clearRoundClasses = () => {
+      buttons.forEach((b) => {
+        b.classList.remove('is-lifted', 'is-bagel', 'is-decoy', 'is-win', 'is-miss', 'is-peek');
+        b.disabled = true;
+      });
+    };
+
+    const startRound = async () => {
+      if (busy) return;
+      busy = true;
+      awaitingPick = false;
+      startBtn.disabled = true;
+      clearRoundClasses();
+
+      // Show where the bagel starts before lowering
+      const currentBagelBtn = buttons[bagelIndex];
+      const startSlot = order.indexOf(bagelIndex);
+      currentBagelBtn.classList.add('is-lifted', 'is-bagel');
+      statusEl.textContent = allowMotion
+        ? `Eyes on Crate ${startSlot + 1}. Snick is lowering the crate now.`
+        : 'Snick is shuffling the crates without motion.';
+
+      if (allowMotion) {
+        await wait(520);
+        currentBagelBtn.classList.remove('is-lifted', 'is-bagel');
+        await wait(380);
+      } else {
+        currentBagelBtn.classList.remove('is-lifted', 'is-bagel');
+      }
+
+      const swapCount = swapsForStreak(streak);
+      const speedMs = Math.max(300, 440 - streak * 24);
+      let lastPair = '';
+
+      for (let s = 0; s < swapCount; s++) {
+        const pairs: [number, number][] = [[0, 1], [1, 2], [0, 2]];
+        const choices = pairs.filter(([a, b]) => `${a}-${b}` !== lastPair);
+        const [a, b] = choices[Math.floor(Math.random() * choices.length)];
+        lastPair = `${a}-${b}`;
+        await animateSwap(a, b, speedMs);
+      }
+
+      busy = false;
+      awaitingPick = true;
+      buttons.forEach((b) => {
+        b.disabled = false;
+      });
+      statusEl.textContent = allowMotion
+        ? 'Your turn. Tap the crate holding the toasted sesame bagel.'
+        : 'Crates shuffled with no motion. Tap Crate 1, Crate 2, or Crate 3 to guess where the bagel landed.';
+      buttons[order[0]].focus();
+    };
+
+    const pickCrate = (pickedIdx: number) => {
+      if (!awaitingPick || busy) return;
+      awaitingPick = false;
+      buttons.forEach((b) => {
+        b.disabled = true;
+      });
+
+      const pickedBtn = buttons[pickedIdx];
+      const bagelBtn = buttons[bagelIndex];
+      const bagelSlot = order.indexOf(bagelIndex) + 1;
+
+      if (pickedIdx === bagelIndex) {
+        streak += 1;
+        if (streak > best) {
+          best = streak;
+          writeBest(best);
+        }
+        pickedBtn.classList.add('is-lifted', 'is-bagel', 'is-win');
+        const line = winLines[winCursor % winLines.length];
+        winCursor += 1;
+        statusEl.textContent = `${line} Current streak: ${streak}.`;
+      } else {
+        streak = 0;
+        const decoy = decoys[Math.floor(Math.random() * decoys.length)];
+        const decoySlot = pickedBtn.querySelector<HTMLElement>('[data-decoy]');
+        const tpl = game.querySelector<HTMLTemplateElement>(`template[data-decoy-tpl="${decoy.id}"]`);
+        if (decoySlot && tpl) {
+          decoySlot.replaceChildren(tpl.content.cloneNode(true));
+        }
+        pickedBtn.classList.add('is-lifted', 'is-decoy', 'is-miss');
+        bagelBtn.classList.add('is-lifted', 'is-bagel', 'is-peek');
+        statusEl.textContent = `Empty crate, just ${decoy.name}. The toasted sesame bagel was under Crate ${bagelSlot}.`;
+      }
+
+      paintStats();
+      startBtn.disabled = false;
+      startBtn.textContent = 'Play another round';
+      startBtn.focus();
+    };
+
+    buttons.forEach((b, idx) => {
+      b.addEventListener('click', () => pickCrate(idx));
+    });
+
+    startBtn.addEventListener('click', () => {
+      void startRound();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      best = 0;
+      writeBest(0);
+      paintStats();
+      statusEl.textContent = 'Best score cleared from this browser. Tap to play another round.';
+    });
+
+    document.addEventListener('keydown', (ev) => {
+      if (!awaitingPick || busy) return;
+      if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+      if (ev.key === '1' || ev.key === '2' || ev.key === '3') {
+        const slot = Number(ev.key) - 1;
+        pickCrate(order[slot]);
+      }
+    });
+
+    best = readBest();
+    paintStats();
+    syncLabels();
+  }
+</script>

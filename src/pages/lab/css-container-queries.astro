@@ -68,7 +68,7 @@ const htmlSnippet = `<div class="card-slot is-featured">
       <span class="badge">Browser tool</span>
       <h3>Bandit Codes</h3>
       <p class="blurb">Build SVG and PNG codes locally with no login.</p>
-      <p class="meta">Zero uploads · MIT code</p>
+      <p class="meta">No uploads · MIT code</p>
     </div>
   </article>
 </div>`;
@@ -83,7 +83,7 @@ const schema = {
 ---
 <Base
   title="CSS container query and style queries: live card demo"
-  description="Build a responsive CSS container query card with inline-size, cqi fluid type, and style queries — zero media queries or JavaScript. Live demo and code."
+  description="Build a responsive CSS container query card with inline-size, cqi fluid type, and style queries, with no media queries or JavaScript. Live demo and code."
   schema={schema}
   ogType="article"
 >
@@ -91,8 +91,8 @@ const schema = {
     <p class="crumbs"><a href="/">The story</a> / <a href="/lab/">The lab</a></p>
     <p class="eyebrow">Waffle fry · 2026-11-22</p>
     <h1>CSS container query and style queries</h1>
-    <p class="lead">A CSS container query lets a component respond to the width of its own box instead of the whole browser screen, so one card works cleanly in a narrow sidebar or a wide grid. Pair size rules with CSS style queries and a single custom property can switch layouts and themes with zero JavaScript.</p>
-    <p class="story">Stop rewriting viewport breakpoints every time a card moves into a sidebar.</p>
+    <p class="lead">A CSS container query lets a component respond to the width of its own box instead of the whole browser screen, so one card works cleanly in a narrow sidebar or a wide grid. Pair size rules with CSS style queries and a single custom property can switch layouts and themes with no JavaScript.</p>
+    <p class="story">Card knows its own box width now. Stop rewriting viewport breakpoints every time it moves into a sidebar.</p>
   </PageHero>
 
   <div class="route-host">
@@ -104,7 +104,7 @@ const schema = {
           <div class="cq-head">
             <div>
               <h2 id="cq-play-h">Resize the container and switch its style variant</h2>
-              <p class="muted small">Pick a preset width below (or drag the bottom-right corner on desktop) and toggle <code>--variant</code> to test container size queries and container style queries together — zero JavaScript.</p>
+              <p class="muted small">Pick a preset width below (or drag the bottom-right corner on desktop) and toggle <code>--variant</code> to test container size queries and container style queries together, with no JavaScript.</p>
             </div>
             <div class="cq-controls">
               <fieldset class="cq-group">
@@ -157,11 +157,11 @@ const schema = {
                     <span class="cq-pill mono">Bandit Codes</span>
                     <span class="cq-state mono">
                       <span class="st-sm">Layout: badge (&lt; 340px)</span>
-                      <span class="st-md">Layout: stacked (340–539px)</span>
+                      <span class="st-md">Layout: stacked (340 to 539px)</span>
                       <span class="st-lg">Layout: split (&gt;= 540px)</span>
                     </span>
                   </div>
-                  <p class="cq-title">Free browser QR studio, zero login</p>
+                  <p class="cq-title">Free browser QR studio, no login</p>
                   <p class="cq-blurb">Generates sharp SVG and PNG codes right inside your browser tab. No account wall, no redirect links, and no monthly fee for plain squares.</p>
                   <p class="cq-meta mono">
                     <span>Type scales with <code>cqi</code></span>
@@ -184,7 +184,7 @@ const schema = {
           <p>With <strong>CSS container queries</strong>, you mark a parent wrapper with <code>container-type: inline-size</code>. Every child inside can then query that wrapper's width, scale text smoothly with <code>cqw</code> and <code>cqi</code> container query units, and read custom properties with <code>@container style(--variant: featured)</code>.</p>
 
           <DevNote>
-            <p>Always prefer <code>container-type: inline-size</code> over <code>size</code> for normal cards: <code>size</code> also enforces block containment, which collapses a box's height to zero unless you set an explicit height. Remember that a container cannot query itself — place <code>container-type</code> on the outer slot and put your <code>@container</code> rules on the component inside it.</p>
+            <p>Always prefer <code>container-type: inline-size</code> over <code>size</code> for normal cards: <code>size</code> also enforces block containment, which collapses a box's height to 0 unless you set an explicit height. Remember that a container cannot query itself: place <code>container-type</code> on the outer slot and put your <code>@container</code> rules on the component inside it.</p>
           </DevNote>
         </div>
 
@@ -196,7 +196,7 @@ const schema = {
               <p>Hides the decorative square graphic and tightens padding so the card fits inside tight rails and phone columns.</p>
             </li>
             <li>
-              <span class="mono cq-ref-tag">340px–539px · stacked card</span>
+              <span class="mono cq-ref-tag">340px to 539px · stacked card</span>
               <p>Reveals the emblem strip above the text and opens up spacing while fluid <code>cqi</code> type grows smoothly.</p>
             </li>
             <li>
@@ -232,8 +232,8 @@ const schema = {
 
     <WhyFree
       nextHref="/lab/html-dialog/"
-      nextTitle="HTML dialog modal with zero JavaScript"
-      nextBlurb="Open, animate from display: none, and close a native modal using commandfor and @starting-style."
+      nextTitle="HTML dialog modal with no JavaScript"
+      nextBlurb="Native modals with no script wrapper. Open, fade from display: none, and close using commandfor and @starting-style."
     />
   </div>
 </Base>

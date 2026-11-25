@@ -73,7 +73,7 @@ const schema = {
     <p class="eyebrow">Pickle · 2026-11-22</p>
     <h1>CSS star rating with no JavaScript</h1>
     <p class="lead">A CSS star rating is five radio buttons wearing a costume. Because they're real radio buttons, the keyboard and screen readers work on their own, and the CSS only has to make them look like stars. No script, no library, nothing to install.</p>
-    <p class="story">We took the stars apart to see how they work. Now you can too.</p>
+    <p class="story">Pulled the star widget apart, ditched the script. Five plain radio buttons do the whole job now.</p>
   </PageHero>
 
   <div class="route-host">
@@ -106,7 +106,7 @@ const schema = {
         <ul class="keys">
           <li><kbd>Tab</kbd> moves into the group, and out of it again.</li>
           <li><kbd>→</kbd> and <kbd>↓</kbd> add a star. <kbd>←</kbd> and <kbd>↑</kbd> take one away. The stars are listed 1 to 5 in the HTML, so the keys follow the picture.</li>
-          <li>Every star has a real text label, so a screen reader has something to read. We have not tested this with a screen reader, so treat that as likely, not proven.</li>
+          <li>Every star has a real text label, so a screen reader has something to read. We have not tested this with a screen reader, so treat screen-reader behavior as expected until you verify it.</li>
           <li>No script runs on this page apart from the copy buttons.</li>
         </ul>
       </div>
@@ -118,7 +118,7 @@ const schema = {
           <li><strong>Star shape.</strong> A plain square is cut into a star with <code>clip-path</code>.</li>
           <li><strong>Focus ring on the group.</strong> The clip also cuts off a normal focus outline, so the ring goes around the whole group with <code>:focus-within</code>.</li>
         </ol>
-        <p class="note">Tested in Chromium only. The earlier stars and the readout use <code>:has()</code>, which current browsers support. Where it is missing, the radio buttons still work and the chosen star still lights up, but the stars before it stay grey and the text line is missing. That is why the checked star has a rule of its own.</p>
+        <p class="note">Tested in Chromium only. The earlier stars and the readout use <code>:has()</code>, which current browsers support. Where it is missing, the radio buttons still work and the chosen star still lights up, but the stars before it stay gray and the text line is missing. That is why the checked star has a rule of its own.</p>
       </div>
     </div>
   </section>
@@ -137,7 +137,7 @@ const schema = {
     </div>
   </section>
 
-  <WhyFree nextHref="/lab/css-resize-handle/" nextTitle="CSS resize handle: the property and a custom one" nextBlurb="The little corner you drag to make a box bigger. One property, or one you build by hand." />
+  <WhyFree nextHref="/lab/css-resize-handle/" nextTitle="CSS resize handle: the property and a custom one" nextBlurb="Grab the corner and stretch the box. Try the one-line CSS property, or build a custom handle that works with arrow keys." />
   </div>
 </Base>
 

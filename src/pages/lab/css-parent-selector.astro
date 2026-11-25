@@ -59,7 +59,7 @@ const schema = {
 ---
 <Base
   title="CSS parent selector with :has(): cards and siblings"
-  description="Use the CSS parent selector :has() to style a checked card and dim its unchecked siblings with zero JavaScript. Live demos and code to copy."
+  description="Use the CSS parent selector :has() to style a checked card and dim its unchecked siblings with no JavaScript. Live demos and code to copy."
   schema={schema}
   ogType="article"
 >
@@ -68,7 +68,7 @@ const schema = {
     <p class="eyebrow">Peanut · 2026-11-22</p>
     <h1>CSS parent selector with :has()</h1>
     <p class="lead">A CSS parent selector lets a box change its own look based on what is happening inside it, like a card lighting up when you check its box or dimming the other cards in a row. For twenty years that took JavaScript; now <code>:has()</code> does it in one line of CSS.</p>
-    <p class="story">No toggle classes, no click listeners, no extra script bundle.</p>
+    <p class="story">No toggle classes, no click listeners, and no script bundle. CSS finally looks up the tree on its own.</p>
   </PageHero>
 
   <div class="route-host">
@@ -78,7 +78,7 @@ const schema = {
       <div class="wrap">
         <div class="split-head">
           <h2 id="deck-h">Check a card, watch the parent and siblings react</h2>
-          <p class="muted">Click any card below (or tab to a checkbox and press <kbd>Space</kbd>). The checked parent lights up with a mint rim while unchecked siblings step back into dashed frames — zero JavaScript.</p>
+          <p class="muted">Click any card below (or tab to a checkbox and press <kbd>Space</kbd>). The checked parent lights up with a mint rim while unchecked siblings step back into dashed frames, with no JavaScript.</p>
         </div>
 
         <div class="pick-stage">
@@ -124,9 +124,9 @@ const schema = {
           </div>
 
           <p class="deck-status mono" aria-live="polite">
-            <span class="ds-none">0 cards checked — all three cards sit at full weight.</span>
-            <span class="ds-some">Selection active — checked parent is highlighted and unchecked siblings step back.</span>
-            <span class="ds-all">All three cards checked — every parent matches :has(input:checked).</span>
+            <span class="ds-none">0 cards checked. All three cards sit at full weight.</span>
+            <span class="ds-some">Selection active. Checked parent is highlighted and unchecked siblings step back.</span>
+            <span class="ds-all">All three cards checked. Every parent matches :has(input:checked).</span>
           </p>
         </div>
       </div>
@@ -140,11 +140,11 @@ const schema = {
           <ol class="steps">
             <li><strong>Style the parent:</strong> <code>.card:has(input:checked)</code> matches the card itself whenever a checked input sits inside it.</li>
             <li><strong>Quiet the siblings:</strong> <code>.deck:has(input:checked) .card:not(:has(input:checked))</code> checks whether the whole group has an active pick, then softens only the cards that are not checked.</li>
-            <li><strong>Drive status bars:</strong> Even the readout line under the cards above flips using pure CSS <code>:has()</code> — no script touches the DOM.</li>
+            <li><strong>Drive status bars:</strong> Even the readout line under the cards above flips using pure CSS <code>:has()</code>. No script touches the DOM.</li>
           </ol>
 
           <DevNote>
-            <p>Keep two rules in mind when shipping <code>:has()</code>: first, you cannot nest one <code>:has()</code> inside another <code>:has()</code>; second, <code>:has()</code> takes the specificity of its strongest selector inside the parentheses. Also avoid dimming siblings with low <code>opacity</code> alone — shifting border style and surface tone keeps text contrast readable for everyone.</p>
+            <p>Keep two rules in mind when shipping <code>:has()</code>: first, you cannot nest one <code>:has()</code> inside another <code>:has()</code>; second, <code>:has()</code> takes the specificity of its strongest selector inside the parentheses. Also avoid dimming siblings with low <code>opacity</code> alone: shifting border style and surface tone keeps text contrast readable for everyone.</p>
           </DevNote>
         </div>
 
@@ -154,19 +154,19 @@ const schema = {
           <div class="dim-list" role="group" aria-label="Hover and focus sibling dimming demo">
             <button type="button" class="dim-row">
               <span class="mono dim-num">01</span>
-              <span><strong>Zero tracking scripts</strong> — nothing phones home when you click.</span>
+              <span><strong>No tracking scripts:</strong> nothing phones home when you click.</span>
             </button>
             <button type="button" class="dim-row">
               <span class="mono dim-num">02</span>
-              <span><strong>Keyboard friendly</strong> — works on <code>:focus-visible</code> as well as hover.</span>
+              <span><strong>Keyboard friendly:</strong> works on <code>:focus-visible</code> as well as hover.</span>
             </button>
             <button type="button" class="dim-row">
               <span class="mono dim-num">03</span>
-              <span><strong>Readable when dimmed</strong> — keeps high contrast instead of fading text out.</span>
+              <span><strong>Readable when dimmed:</strong> keeps high contrast instead of fading text out.</span>
             </button>
             <button type="button" class="dim-row">
               <span class="mono dim-num">04</span>
-              <span><strong>No wrapper script</strong> — four lines of CSS handle every row in the list.</span>
+              <span><strong>No wrapper script:</strong> four lines of CSS handle every row in the list.</span>
             </button>
           </div>
         </div>
@@ -189,7 +189,7 @@ const schema = {
     <WhyFree
       nextHref="/lab/css-animate-on-scroll/"
       nextTitle="CSS animate on scroll without JavaScript"
-      nextBlurb="Tie card motion and scroll progress bars straight to the scrollbar with animation-timeline: view()."
+      nextBlurb="Wire motion and progress bars straight to the scrollbar. Uses animation-timeline: view() with no scroll listener."
     />
   </div>
 </Base>

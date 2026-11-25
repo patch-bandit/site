@@ -5,7 +5,7 @@ description: "How a CSS resize handle works: the resize property, corner styling
 phrase: "css resize handle"
 date: 2026-11-22
 snack: "Cheese puff"
-summary: "The resize property, its little corner, and a custom handle you can steer with arrow keys."
+summary: "Grab the corner and stretch the box. Covers the native resize property and a custom handle built for arrow keys."
 custom: true
 ---
 Hand-built page. See src/pages/lab/css-resize-handle.astro.

@@ -1,0 +1,460 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import '../../../styles/tool-panels.css';
+import { ALPHABET_PRESETS } from '../../../lib/idMaker';
+import { GITHUB_URL, TOOLS_LABEL } from '../../../data/site';
+
+const title = 'UUID generator and unique ID maker | Patch Bandit';
+const description =
+  'Free UUID generator for UUID v4, time-sorted UUID v7, and short random IDs. Make 1 to 100 at once with browser Web Crypto. Nothing is ever sent anywhere.';
+const canonical = new URL('/tools/uuid-generator/', Astro.site).href;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'UUID generator and unique ID maker',
+  url: canonical,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+};
+
+const QUICK_COUNTS = [1, 5, 10, 25, 100];
+const QUICK_LENGTHS = [8, 12, 16, 21, 32];
+---
+<Base title={title} description={description} schema={schema}>
+  <PageHero tone="mint">
+    <p class="crumbs"><a href="/">The story</a> / <a href="/tools/">{TOOLS_LABEL}</a> / UUID generator</p>
+    <p class="eyebrow">Free tool · MIT</p>
+    <h1>UUID generator and unique ID maker</h1>
+    <p class="lead">Make UUID v4, time-sorted UUID v7, or custom short random IDs in batches of 1 to 100. Every ID is made in your browser with the Web Crypto API and never sent anywhere.</p>
+    <p class="story">Fresh IDs straight from your browser's own crypto engine. No server watching, no log file waiting.</p>
+    <Fragment slot="art">
+      <svg class="id-hero-art" viewBox="0 0 280 280" role="img" aria-label="Three stacked ID cards labeled v7, v4, and short ID">
+        <rect x="20" y="24" width="240" height="232" rx="22" fill="#241539" stroke="#140a22" stroke-width="6" />
+        <g>
+          <rect x="36" y="46" width="208" height="48" rx="10" fill="#140a22" stroke="#86e3be" stroke-width="2.5" />
+          <rect x="46" y="57" width="38" height="26" rx="6" fill="#86e3be" />
+          <text x="54" y="75" fill="#140a22" font-family="Fira Code, monospace" font-size="14" font-weight="700">v7</text>
+          <text x="96" y="75" fill="#c2ffe6" font-family="Fira Code, monospace" font-size="15" font-weight="600">019a-7c4e-8b</text>
+        </g>
+        <g class="id-hero-mid">
+          <rect x="36" y="114" width="208" height="48" rx="10" fill="#140a22" stroke="#ffc857" stroke-width="2.5" />
+          <rect x="46" y="125" width="38" height="26" rx="6" fill="#ffc857" />
+          <text x="54" y="143" fill="#140a22" font-family="Fira Code, monospace" font-size="14" font-weight="700">v4</text>
+          <text x="96" y="143" fill="#ffe6a6" font-family="Fira Code, monospace" font-size="15" font-weight="600">f47a-4b10-9d</text>
+        </g>
+        <g>
+          <rect x="36" y="182" width="208" height="48" rx="10" fill="#140a22" stroke="#ff7b67" stroke-width="2.5" />
+          <rect x="46" y="193" width="38" height="26" rx="6" fill="#ff7b67" />
+          <text x="54" y="211" fill="#140a22" font-family="Fira Code, monospace" font-size="14" font-weight="700">ID</text>
+          <text x="96" y="211" fill="#fff2de" font-family="Fira Code, monospace" font-size="15" font-weight="600">k8P2mX9qR4vT</text>
+        </g>
+      </svg>
+    </Fragment>
+  </PageHero>
+
+  <section class="band" aria-labelledby="tool-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">The tool</p>
+          <h2 id="tool-h">Make unique IDs</h2>
+        </div>
+        <p class="muted">Choose UUID v4, UUID v7, or a custom short ID, pick a batch count from 1 to 100, and copy a single line or the whole list.</p>
+      </div>
+
+      <div class="tool-shell" data-id-app>
+        <noscript>
+          <div class="card" style="margin-bottom:1.5rem">
+            <h3>JavaScript is needed to make IDs in your browser</h3>
+            <p>IDs are created locally in your browser using the Web Crypto API so they are never sent over the network. Enable JavaScript for this page to create IDs.</p>
+          </div>
+        </noscript>
+
+        <div class="id-workspace">
+          <div class="card id-controls-stack">
+            <div class="tool-card-head" style="margin-bottom:0">
+              <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">1</span>Format and batch</h3>
+            </div>
+
+            <fieldset class="tool-fieldset">
+              <legend>ID format</legend>
+              <div class="tool-seg-grid">
+                <button type="button" class="tool-seg-btn" data-mode="uuid-v4" aria-pressed="true">
+                  <span class="tool-seg-name">UUID v4</span>
+                  <span class="tool-seg-sub">Random, 122 bits</span>
+                </button>
+                <button type="button" class="tool-seg-btn" data-mode="uuid-v7" aria-pressed="false">
+                  <span class="tool-seg-name">UUID v7</span>
+                  <span class="tool-seg-sub">Time-sorted, RFC 9562</span>
+                </button>
+                <button type="button" class="tool-seg-btn" data-mode="short" aria-pressed="false">
+                  <span class="tool-seg-name">Short ID</span>
+                  <span class="tool-seg-sub">Custom length &amp; set</span>
+                </button>
+              </div>
+            </fieldset>
+
+            <div class="tool-field">
+              <label for="id-count">How many IDs (1 to 100)</label>
+              <div class="id-inline-row">
+                <input id="id-count" class="tool-input" type="number" inputmode="numeric" min="1" max="100" step="1" value="5" data-count />
+                <div class="tool-chip-row" role="group" aria-label="Quick batch counts">
+                  {QUICK_COUNTS.map((n) => (
+                    <button type="button" class="tool-chip" data-count-preset={n} aria-pressed={n === 5 ? 'true' : 'false'}>{n}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div class="id-checks-row" data-uuid-opts>
+              <label class="tool-check">
+                <input type="checkbox" data-uppercase />
+                <span>Uppercase hex</span>
+              </label>
+              <label class="tool-check">
+                <input type="checkbox" checked data-hyphens />
+                <span>Include hyphens</span>
+              </label>
+            </div>
+
+            <div class="id-controls-stack" data-short-opts hidden>
+              <div class="tool-field">
+                <label for="id-len">Short ID length (4 to 64)</label>
+                <div class="id-inline-row">
+                  <input id="id-len" class="tool-input" type="number" inputmode="numeric" min="4" max="64" step="1" value="12" data-length />
+                  <div class="tool-chip-row" role="group" aria-label="Quick short ID lengths">
+                    {QUICK_LENGTHS.map((n) => (
+                      <button type="button" class="tool-chip" data-len-preset={n} aria-pressed={n === 12 ? 'true' : 'false'}>{n}</button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div class="tool-field">
+                <label for="id-alphabet-preset">Alphabet preset</label>
+                <select id="id-alphabet-preset" class="tool-select" data-alphabet-preset>
+                  {ALPHABET_PRESETS.map((p) => (
+                    <option value={p.id}>{p.label}: {p.note}</option>
+                  ))}
+                  <option value="custom">Custom alphabet</option>
+                </select>
+              </div>
+
+              <div class="tool-field">
+                <label for="id-alphabet">Characters used (<span data-alpha-count>64</span> unique)</label>
+                <input
+                  id="id-alphabet"
+                  class="tool-input"
+                  type="text"
+                  spellcheck="false"
+                  autocomplete="off"
+                  value={ALPHABET_PRESETS[0].chars}
+                  data-alphabet
+                />
+              </div>
+            </div>
+
+            <div class="tool-actions">
+              <button type="button" class="btn" data-make>Make new IDs</button>
+              <button type="button" class="btn alt" data-copy-all>Copy all</button>
+            </div>
+
+            <p class="tool-badge-ok">Made in your browser using <code>crypto.getRandomValues()</code> and never sent anywhere. No logs, no network calls, no cookies.</p>
+          </div>
+
+          <div class="card id-output-card">
+            <div class="tool-card-head" style="margin-bottom:0">
+              <h3 class="tool-step-title"><span class="tool-step-num" aria-hidden="true">2</span>Fresh IDs</h3>
+              <button type="button" class="tool-btn-sm primary" data-copy-all-top>Copy all</button>
+            </div>
+
+            <div class="id-meta-row" data-meta>
+              <span>Format: UUID v4</span>
+              <span>Count: 5</span>
+              <span>Entropy: 122 bits</span>
+            </div>
+
+            <p class="tool-badge-warn" data-id-error hidden></p>
+
+            <ol class="id-list" id="id-list" aria-label="Created IDs" data-id-list></ol>
+
+            <p class="tool-status" role="status" aria-live="polite" data-id-status>Ready.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band alt" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div>
+          <p class="eyebrow">How it works</p>
+          <h2 id="how-h">Browser cryptography, nothing sent</h2>
+        </div>
+        <p class="muted">Every ID on this page comes from your browser's built-in cryptographic random engine, never from predictable math helpers.</p>
+      </div>
+      <ul class="grid g3 sub sub3">
+        <li class="card">
+          <p class="num">01</p>
+          <h3>Made in your browser</h3>
+          <p>IDs are created locally in this tab with <code>crypto.randomUUID()</code> and <code>crypto.getRandomValues()</code>. Nothing is sent over the network, stored on a server, or logged anywhere.</p>
+        </li>
+        <li class="card">
+          <p class="num">02</p>
+          <h3>UUID v4 vs. UUID v7</h3>
+          <p>UUID v4 fills 122 bits with cryptographic randomness. UUID v7 follows RFC 9562 with a 48-bit Unix millisecond prefix and monotonic counter so IDs sort cleanly in creation order. Anyone holding a v7 ID can read the exact millisecond it was made, so pick v4 if that clock needs to stay quiet.</p>
+        </li>
+        <li class="card">
+          <p class="num">03</p>
+          <h3>Unbiased short IDs</h3>
+          <p>Short IDs draw random bytes and apply bitmask rejection sampling over your chosen alphabet so every character has an equal chance. Tiny IDs are easy to guess, so reach for UUID v4 or at least 22 URL-safe characters for any token or reset link that has to stay secret. MIT source lives on the <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">code account</a>.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .id-hero-art { width: 100%; height: auto; display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .id-hero-mid { animation: id-pulse 3.2s ease-in-out infinite alternate; }
+  }
+  @keyframes id-pulse {
+    from { transform: translateX(-4px); }
+    to { transform: translateX(4px); }
+  }
+</style>
+
+<script>
+  import {
+    ALPHABET_PRESETS,
+    MAX_BATCH_COUNT,
+    MAX_SHORT_LENGTH,
+    MIN_BATCH_COUNT,
+    MIN_SHORT_LENGTH,
+    createUuidV7State,
+    dedupeAlphabet,
+    estimateEntropyBits,
+    makeIdBatch,
+    type IdMode,
+  } from '../../../lib/idMaker';
+
+  const app = document.querySelector<HTMLElement>('[data-id-app]');
+  if (app) {
+    const modeBtns = [...app.querySelectorAll<HTMLButtonElement>('[data-mode]')];
+    const countIn = app.querySelector<HTMLInputElement>('[data-count]')!;
+    const countPresets = [...app.querySelectorAll<HTMLButtonElement>('[data-count-preset]')];
+    const uuidOpts = app.querySelector<HTMLElement>('[data-uuid-opts]')!;
+    const upperIn = app.querySelector<HTMLInputElement>('[data-uppercase]')!;
+    const hyphensIn = app.querySelector<HTMLInputElement>('[data-hyphens]')!;
+
+    const shortOpts = app.querySelector<HTMLElement>('[data-short-opts]')!;
+    const lenIn = app.querySelector<HTMLInputElement>('[data-length]')!;
+    const lenPresets = [...app.querySelectorAll<HTMLButtonElement>('[data-len-preset]')];
+    const presetSel = app.querySelector<HTMLSelectElement>('[data-alphabet-preset]')!;
+    const alphaIn = app.querySelector<HTMLInputElement>('[data-alphabet]')!;
+    const alphaCountEl = app.querySelector<HTMLElement>('[data-alpha-count]')!;
+
+    const makeBtn = app.querySelector<HTMLButtonElement>('[data-make]')!;
+    const copyAllBtns = [
+      app.querySelector<HTMLButtonElement>('[data-copy-all]')!,
+      app.querySelector<HTMLButtonElement>('[data-copy-all-top]')!,
+    ];
+    const metaEl = app.querySelector<HTMLElement>('[data-meta]')!;
+    const errEl = app.querySelector<HTMLElement>('[data-id-error]')!;
+    const listEl = app.querySelector<HTMLOListElement>('[data-id-list]')!;
+    const statusEl = app.querySelector<HTMLElement>('[data-id-status]')!;
+
+    const v7State = createUuidV7State();
+    let mode: IdMode = 'uuid-v4';
+    let currentIds: string[] = [];
+    const copyTimers = new WeakMap<HTMLButtonElement, number>();
+
+    const clampInt = (raw: string, min: number, max: number, fallback: number): number => {
+      const n = Number.parseInt(raw, 10);
+      if (!Number.isInteger(n)) return fallback;
+      return Math.min(max, Math.max(min, n));
+    };
+
+    const modeLabel = (m: IdMode): string => {
+      if (m === 'uuid-v4') return 'UUID v4';
+      if (m === 'uuid-v7') return 'UUID v7';
+      return 'Short ID';
+    };
+
+    const syncButtons = () => {
+      modeBtns.forEach((b) => b.setAttribute('aria-pressed', b.dataset.mode === mode ? 'true' : 'false'));
+      uuidOpts.hidden = mode === 'short';
+      shortOpts.hidden = mode !== 'short';
+
+      const count = clampInt(countIn.value, MIN_BATCH_COUNT, MAX_BATCH_COUNT, 5);
+      countPresets.forEach((b) =>
+        b.setAttribute('aria-pressed', Number(b.dataset.countPreset) === count ? 'true' : 'false'),
+      );
+
+      const len = clampInt(lenIn.value, MIN_SHORT_LENGTH, MAX_SHORT_LENGTH, 12);
+      lenPresets.forEach((b) =>
+        b.setAttribute('aria-pressed', Number(b.dataset.lenPreset) === len ? 'true' : 'false'),
+      );
+    };
+
+    const copyText = async (text: string, msg: string, btn?: HTMLButtonElement) => {
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        statusEl.textContent = msg;
+        if (btn) {
+          if (!btn.dataset.origLabel) {
+            btn.dataset.origLabel = btn.textContent || '';
+          }
+          const prevTimer = copyTimers.get(btn);
+          if (prevTimer !== undefined) window.clearTimeout(prevTimer);
+          btn.textContent = 'Copied';
+          const timer = window.setTimeout(() => {
+            btn.textContent = btn.dataset.origLabel || '';
+            copyTimers.delete(btn);
+          }, 1400);
+          copyTimers.set(btn, timer);
+        }
+      } catch {
+        statusEl.textContent = 'Clipboard access was blocked. Select the ID text and press Ctrl+C.';
+      }
+    };
+
+    const render = () => {
+      syncButtons();
+      const count = clampInt(countIn.value, MIN_BATCH_COUNT, MAX_BATCH_COUNT, 5);
+      const length = clampInt(lenIn.value, MIN_SHORT_LENGTH, MAX_SHORT_LENGTH, 12);
+      const uniqueAlpha = dedupeAlphabet(alphaIn.value);
+      const alphaLen = Array.from(uniqueAlpha).length;
+      alphaCountEl.textContent = String(alphaLen);
+
+      if (mode === 'short' && (alphaLen < 2 || alphaLen > 256)) {
+        errEl.hidden = false;
+        errEl.textContent = 'Enter between 2 and 256 unique characters for the short ID alphabet.';
+        listEl.replaceChildren();
+        currentIds = [];
+        statusEl.textContent = 'Waiting for a valid alphabet.';
+        return;
+      }
+      errEl.hidden = true;
+      errEl.textContent = '';
+
+      currentIds = makeIdBatch({
+        mode,
+        count,
+        uppercase: upperIn.checked,
+        hyphens: hyphensIn.checked,
+        length,
+        alphabet: uniqueAlpha,
+        state: v7State,
+      });
+
+      const bits = estimateEntropyBits(mode, length, alphaLen);
+      const extraMeta = mode === 'uuid-v7' ? `${bits} random bits + 48-bit ms time` : `${bits} bits each`;
+      metaEl.replaceChildren();
+      [
+        `Format: ${modeLabel(mode)}`,
+        `Count: ${count}`,
+        `Entropy: ${extraMeta}`,
+      ].forEach((text) => {
+        const span = document.createElement('span');
+        span.textContent = text;
+        metaEl.appendChild(span);
+      });
+
+      const frag = document.createDocumentFragment();
+      currentIds.forEach((id, idx) => {
+        const li = document.createElement('li');
+        li.className = 'id-row';
+
+        const code = document.createElement('code');
+        code.className = 'id-val';
+        code.textContent = id;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'id-copy-btn';
+        btn.textContent = 'Copy';
+        btn.setAttribute('aria-label', `Copy ID ${idx + 1}`);
+        btn.addEventListener('click', () => copyText(id, `Copied ID ${idx + 1}.`, btn));
+
+        li.append(code, btn);
+        frag.appendChild(li);
+      });
+      listEl.replaceChildren(frag);
+      const noun = count === 1 ? 'ID' : 'IDs';
+      statusEl.textContent = `Made ${count} fresh ${modeLabel(mode)} ${noun} locally in your browser.`;
+    };
+
+    modeBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const next = btn.dataset.mode as IdMode;
+        if (next === 'uuid-v4' || next === 'uuid-v7' || next === 'short') {
+          mode = next;
+          render();
+        }
+      });
+    });
+
+    countIn.addEventListener('input', () => {
+      if (countIn.value.trim() !== '') render();
+    });
+    countIn.addEventListener('change', () => {
+      countIn.value = String(clampInt(countIn.value, MIN_BATCH_COUNT, MAX_BATCH_COUNT, 5));
+      render();
+    });
+    countPresets.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        countIn.value = btn.dataset.countPreset || '5';
+        render();
+      });
+    });
+
+    upperIn.addEventListener('change', render);
+    hyphensIn.addEventListener('change', render);
+
+    lenIn.addEventListener('input', () => {
+      if (lenIn.value.trim() !== '') render();
+    });
+    lenIn.addEventListener('change', () => {
+      lenIn.value = String(clampInt(lenIn.value, MIN_SHORT_LENGTH, MAX_SHORT_LENGTH, 12));
+      render();
+    });
+    lenPresets.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        lenIn.value = btn.dataset.lenPreset || '12';
+        render();
+      });
+    });
+
+    presetSel.addEventListener('change', () => {
+      const found = ALPHABET_PRESETS.find((p) => p.id === presetSel.value);
+      if (found) {
+        alphaIn.value = found.chars;
+      }
+      render();
+    });
+
+    alphaIn.addEventListener('input', () => {
+      const match = ALPHABET_PRESETS.find((p) => p.chars === alphaIn.value);
+      presetSel.value = match ? match.id : 'custom';
+      render();
+    });
+
+    makeBtn.addEventListener('click', render);
+    copyAllBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const noun = currentIds.length === 1 ? 'ID' : 'IDs';
+        copyText(currentIds.join('\n'), `Copied all ${currentIds.length} ${noun}.`, btn);
+      });
+    });
+
+    render();
+  }
+</script>
